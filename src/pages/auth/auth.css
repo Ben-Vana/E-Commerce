@@ -1,0 +1,87 @@
+.form-wrapper {
+  width: 60vw;
+  height: auto;
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-inline: auto;
+  padding-bottom: 10rem;
+}
+
+.form-wrapper > h3 {
+  color: #6405d2;
+  margin: 2rem 0;
+  font-size: 3rem;
+}
+
+.form-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.form-container > input {
+  width: 20vw;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  border-radius: 0.7rem;
+  border: none;
+  color: #6405d2;
+}
+
+.form-container > input:focus {
+  outline: 3px solid #6405d2;
+}
+
+.form-container > input:user-invalid {
+  outline: 3px solid rgba(255, 0, 0, 0.8);
+}
+
+.form-container > input:user-valid {
+  outline: 3px solid rgba(0, 255, 0, 0.8);
+}
+
+.form-container > label {
+  align-self: flex-start;
+  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-container > button {
+  padding: 0.7rem 3rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.form-container > button:hover {
+  background-color: #6405d2;
+  color: #fff;
+}
+
+.password-eye {
+  font-size: 1.5rem;
+  position: absolute;
+  bottom: 5.1rem;
+  right: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.password-eye:hover {
+  background: none;
+}
+
+#google-button {
+  margin-top: 2rem;
+}
