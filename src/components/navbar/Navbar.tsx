@@ -116,9 +116,10 @@ const Navbar = () => {
   return (
     <>
       <nav className="main-nav">
-        <div className="ham">
-          <span id="ham" onClick={handleOpenHamburger}>
+        <div className="ham-container">
+          <span className="ham" id="ham" onClick={handleOpenHamburger}>
             <img
+              className="nav-svg"
               src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iNTAiIGhlaWdodD0iNTAiCnZpZXdCb3g9IjAgMCA1MCA1MCI+CjxwYXRoIGQ9Ik0gMCA5IEwgMCAxMSBMIDUwIDExIEwgNTAgOSBaIE0gMCAyNCBMIDAgMjYgTCA1MCAyNiBMIDUwIDI0IFogTSAwIDM5IEwgMCA0MSBMIDUwIDQxIEwgNTAgMzkgWiI+PC9wYXRoPgo8L3N2Zz4="
               alt="svgImg"
             />

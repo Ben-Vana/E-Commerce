@@ -3,12 +3,13 @@ import "./navbar/navbar.css";
 
 const LinkSort = ({ label, link }: { label: string; link: string }) => {
   return (
-    <li>
+    <li className="nav-items">
       <NavLink
         isActive={(match: Match | null, location: object): boolean => {
           return match ? match && match.isExact : false;
         }}
         to={link}
+        className="nav-links"
       >
         {label}
       </NavLink>

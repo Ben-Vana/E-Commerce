@@ -41,7 +41,7 @@
   transition: transform 500ms ease-in-out;
 }
 
-.carousel-container > span {
+.arrow {
   position: absolute;
   z-index: 10;
   width: 2rem;
@@ -62,6 +62,6 @@
   left: 0;
 }
 
-span:hover {
+.arrow:hover {
   background-color: rgba(190, 190, 190, 0.5);
 }

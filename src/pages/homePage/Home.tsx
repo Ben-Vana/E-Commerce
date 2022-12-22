@@ -51,12 +51,12 @@ const Home = (): JSX.Element => {
   return (
     <>
       <h1 className="title">Puzzle Store</h1>
-      <h2 className="sub-title">Our Puzzles</h2>
+      <h2 className="sub-title">Categories</h2>
       <div className="carousel-container">
-        <span className="left" onClick={handleSlideLeft}>
+        <span className="arrow left" onClick={handleSlideLeft}>
           &#8249;
         </span>
-        <span className="right" onClick={handleSlideRight}>
+        <span className="arrow right" onClick={handleSlideRight}>
           &#8250;
         </span>
         <div className="grid-container" ref={sliderContainer}>

@@ -1,7 +1,7 @@
 import Home from "./pages/homePage/Home";
 import Navbar from "./components/navbar/Navbar";
-import Register from "./pages/auth/Register";
-import Login from "./pages/auth/Login";
+import Register from "./pages/authPages/Register";
+import Login from "./pages/authPages/Login";
 import useAutoLogin from "./hooks/useAutoLogin";
 import { Route, Switch } from "react-router-dom";
 import { useState, useEffect } from "react";
