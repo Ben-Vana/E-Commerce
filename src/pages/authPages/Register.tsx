@@ -26,23 +26,17 @@ const Register = (): JSX.Element => {
     switch (input) {
       case "name":
         if (nameLabel.current) {
-          nameLabel.current.style.bottom = "3rem";
-          nameLabel.current.style.left = "0";
-          nameLabel.current.style.opacity = "0.7";
+          nameLabel.current.classList.add("input-label-active");
         }
         break;
       case "email":
         if (emailLabel.current) {
-          emailLabel.current.style.bottom = "3rem";
-          emailLabel.current.style.left = "0";
-          emailLabel.current.style.opacity = "0.7";
+          emailLabel.current.classList.add("input-label-active");
         }
         break;
       case "password":
         if (passwordLabel.current) {
-          passwordLabel.current.style.bottom = "3rem";
-          passwordLabel.current.style.left = "0";
-          passwordLabel.current.style.opacity = "0.7";
+          passwordLabel.current.classList.add("input-label-active");
         }
         break;
     }
@@ -74,27 +68,21 @@ const Register = (): JSX.Element => {
           tempErrMsg.name = true;
           setErrMsg(tempErrMsg);
           if (!ev.target.value && nameLabel.current) {
-            nameLabel.current.style.bottom = "1rem";
-            nameLabel.current.style.left = "1rem";
-            nameLabel.current.style.opacity = "1";
+            nameLabel.current.classList.remove("input-label-active");
           }
           break;
         case "email":
           tempErrMsg.email = true;
           setErrMsg(tempErrMsg);
           if (!ev.target.value && emailLabel.current) {
-            emailLabel.current.style.bottom = "1rem";
-            emailLabel.current.style.left = "1rem";
-            emailLabel.current.style.opacity = "1";
+            emailLabel.current.classList.remove("input-label-active");
           }
           break;
         case "password":
           tempErrMsg.password = true;
           setErrMsg(tempErrMsg);
           if (!ev.target.value && passwordLabel.current) {
-            passwordLabel.current.style.bottom = "1rem";
-            passwordLabel.current.style.left = "1rem";
-            passwordLabel.current.style.opacity = "1";
+            passwordLabel.current.classList.remove("input-label-active");
           }
           break;
       }
@@ -139,7 +127,7 @@ const Register = (): JSX.Element => {
       <form className="form-container" onSubmit={handleSubmit}>
         <div className="input-container">
           <label className="input-label" htmlFor="name" ref={nameLabel}>
-            Name:
+            Name:<span className="label-required">*required</span>
           </label>
           <input
             className="form-input"
@@ -162,7 +150,7 @@ const Register = (): JSX.Element => {
         )}
         <div className="input-container">
           <label className="input-label" htmlFor="email" ref={emailLabel}>
-            Email:
+            Email:<span className="label-required">*required</span>
           </label>
           <input
             className="form-input"
@@ -182,7 +170,7 @@ const Register = (): JSX.Element => {
         )}
         <div className="input-container">
           <label className="input-label" htmlFor="password" ref={passwordLabel}>
-            Password:
+            Password:<span className="label-required">*required</span>
           </label>
           <input
             className="form-input"
