@@ -25,16 +25,12 @@ const Login = (): JSX.Element => {
     switch (input) {
       case "email":
         if (emailLabel.current) {
-          emailLabel.current.style.bottom = "3rem";
-          emailLabel.current.style.left = "0";
-          emailLabel.current.style.opacity = "0.7";
+          emailLabel.current.classList.add("input-label-active");
         }
         break;
       case "password":
         if (passwordLabel.current) {
-          passwordLabel.current.style.bottom = "3rem";
-          passwordLabel.current.style.left = "0";
-          passwordLabel.current.style.opacity = "0.7";
+          passwordLabel.current.classList.add("input-label-active");
         }
         break;
     }
@@ -46,14 +42,10 @@ const Login = (): JSX.Element => {
   ): void => {
     if (!ev.target.value) {
       if (input === "email" && emailLabel.current) {
-        emailLabel.current.style.bottom = "1rem";
-        emailLabel.current.style.left = "1rem";
-        emailLabel.current.style.opacity = "1";
+        emailLabel.current.classList.remove("input-label-active");
         return;
       } else if (input === "password" && passwordLabel.current) {
-        passwordLabel.current.style.bottom = "1rem";
-        passwordLabel.current.style.left = "1rem";
-        passwordLabel.current.style.opacity = "1";
+        passwordLabel.current.classList.remove("input-label-active");
       }
     }
   };
