@@ -119,3 +119,15 @@
   font-size: 0.8rem;
   color: rgba(255, 0, 0, 0.4);
 }
+
+.forgot-link {
+  color: #fff;
+  margin-top: -0.7rem;
+  text-decoration: underline;
+  align-self: flex-start;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  color: #fffa;
+}

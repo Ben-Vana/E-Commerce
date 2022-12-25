@@ -138,8 +138,10 @@ const Register = (): JSX.Element => {
             pattern="^[a-zA-Z]*$"
             minLength={2}
             maxLength={16}
-            onFocus={() => handelLabel("name")}
-            onBlur={(ev) => handleErrorMessage(ev, "name")}
+            onFocus={(): void => handelLabel("name")}
+            onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
+              handleErrorMessage(ev, "name")
+            }
             required
           />
         </div>
@@ -159,8 +161,10 @@ const Register = (): JSX.Element => {
             value={input.email}
             onChange={handleInputChange}
             pattern="^[a-z0-9][-a-z0-9._]+@([-a-z0-9]+[.])+[a-z]{2,5}$"
-            onFocus={() => handelLabel("email")}
-            onBlur={(ev) => handleErrorMessage(ev, "email")}
+            onFocus={(): void => handelLabel("email")}
+            onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
+              handleErrorMessage(ev, "email")
+            }
             autoComplete="off"
             required
           />
@@ -181,8 +185,10 @@ const Register = (): JSX.Element => {
             pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$"
             minLength={8}
             maxLength={64}
-            onFocus={() => handelLabel("password")}
-            onBlur={(ev) => handleErrorMessage(ev, "password")}
+            onFocus={(): void => handelLabel("password")}
+            onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
+              handleErrorMessage(ev, "password")
+            }
             required
             ref={passwordInput}
           />

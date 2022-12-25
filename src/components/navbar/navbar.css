@@ -63,6 +63,42 @@
   margin-right: 2rem;
 }
 
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-search {
+  width: 40vw;
+  padding: 0.4rem 3rem 0.4rem 0.6rem;
+  font-size: 1.1rem;
+  border: 1px solid #fffa;
+  border-radius: 0.5rem;
+  background-color: #222;
+  color: #fff;
+}
+
+.nav-search:focus {
+  outline: none;
+}
+
+.search-icon {
+  color: #fff;
+  position: absolute;
+  height: 100%;
+  width: 1.7rem;
+  right: 0rem;
+  border-radius: 0 0.4rem 0.4rem 0;
+  padding: 0 0.3rem 0 0.4rem;
+  border-left: 1px solid #fffa;
+  cursor: pointer;
+}
+
+.search-icon:hover {
+  background-color: #6405d2;
+}
+
 .nav-items {
   word-spacing: -0.5rem;
   cursor: pointer;

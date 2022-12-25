@@ -3,6 +3,8 @@ import Navbar from "./components/navbar/Navbar";
 import Register from "./pages/authPages/Register";
 import Login from "./pages/authPages/Login";
 import useAutoLogin from "./hooks/useAutoLogin";
+import ForgotPassword from "./pages/authPages/forgotPassword/ForgotPassword";
+import ResetPassword from "./pages/authPages/forgotPassword/ResetPassword";
 import { Route, Switch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -39,6 +41,8 @@ const App = (): JSX.Element => {
               <Route path="/" exact component={Home} />
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
+              <Route path="/forgotpassword" component={ForgotPassword} />
+              <Route path="/resetpassword/:token" component={ResetPassword} />
             </Switch>
           </div>
         </div>
