@@ -1,7 +1,7 @@
+import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth";
-import axios from "axios";
 
 const checkUser = (token: string | null): any => {
   if (token) return axios.get("/userInfo");

@@ -2,7 +2,7 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import useAutoLogin from "../../hooks/useAutoLogin";
 import { useState, useEffect, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import "./auth.css";
 
 declare global {
@@ -113,8 +113,10 @@ const Login = (): JSX.Element => {
             value={input.email}
             onChange={handleInputChange}
             autoComplete="off"
-            onFocus={() => handelLabel("email")}
-            onBlur={(ev) => handleBlur(ev, "email")}
+            onFocus={(): void => handelLabel("email")}
+            onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
+              handleBlur(ev, "email")
+            }
             required
           />
         </div>
@@ -128,13 +130,18 @@ const Login = (): JSX.Element => {
             id="password"
             value={input.password}
             onChange={handleInputChange}
-            onFocus={() => handelLabel("password")}
-            onBlur={(ev) => handleBlur(ev, "password")}
+            onFocus={(): void => handelLabel("password")}
+            onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
+              handleBlur(ev, "password")
+            }
             required
           />
         </div>
         {err && <span className="err-msg">Email or Password are invalid.</span>}
         <button className="submit-btn">Login</button>
+        <NavLink to="/forgotpassword" className="forgot-link">
+          Forgot password?
+        </NavLink>
         <div id="google-button"></div>
       </form>
     </div>

@@ -1,10 +1,13 @@
 import LinkSort from "../LinkSort";
-import { useRef, useEffect, RefObject } from "react";
-import { useSelector } from "react-redux";
+import { authActions } from "../../store/auth";
+import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { useRef, useEffect, RefObject, useState } from "react";
 import "./navbar.css";
 
 const navLinks: [
-  { label: string; link: string },
   { label: string; link: string },
   { label: string; link: string }
 ] = [
@@ -15,10 +18,6 @@ const navLinks: [
   {
     label: "About Us",
     link: "/aboutus",
-  },
-  {
-    label: "Collection",
-    link: "/collection",
   },
 ];
 
@@ -52,6 +51,10 @@ const authLinks: {
 };
 
 const Navbar = () => {
+  const [searchInput, setSearchInput] = useState("");
+
+  const dispatch = useDispatch();
+
   const navBarContainerRef = useRef() as RefObject<HTMLDivElement>;
   const isLoggedIn = useSelector(
     (state: { authReducer: { login: boolean } }): boolean =>
@@ -63,6 +66,7 @@ const Navbar = () => {
       state.authReducer.userData.admin
   );
 
+  const history = useHistory();
   let navSwitch = true;
 
   useEffect((): void => {
@@ -113,6 +117,18 @@ const Navbar = () => {
     }
   };
 
+  const handleSearch = (ev: React.KeyboardEvent<HTMLInputElement>) => {
+    if (ev.code === "Enter") {
+      history.push(`/search?s=${searchInput}`);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(authActions.logout);
+    window.location.reload();
+  };
+
   return (
     <>
       <nav className="main-nav">
@@ -143,10 +159,30 @@ const Navbar = () => {
                 />
               ))}
           </ul>
+          <ul className="search-container">
+            <input
+              type="search"
+              className="nav-search"
+              value={searchInput}
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchInput(ev.target.value)
+              }
+              onKeyDown={handleSearch}
+            />
+            <FontAwesomeIcon
+              onClick={(): void => history.push(`/search?s=${searchInput}`)}
+              className="search-icon"
+              icon={faMagnifyingGlass}
+            />
+          </ul>
           <ul className="sec-row">
             {isLoggedIn
               ? authLinks.loggedIn.map((item, index) => (
-                  <span key={item.label + index} className="logout">
+                  <span
+                    key={item.label + index}
+                    className="logout"
+                    onClick={handleLogout}
+                  >
                     {item.label}
                   </span>
                 ))
