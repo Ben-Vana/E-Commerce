@@ -4,6 +4,8 @@ import "../auth.css";
 
 const ForgotPassword = (): JSX.Element => {
   const [userEmail, setUserEmail] = useState("");
+  const [emailSend, setEmailSend] = useState(false);
+  const [error, setError] = useState("");
 
   const emailLabel = useRef() as React.RefObject<HTMLLabelElement>;
 
@@ -11,8 +13,12 @@ const ForgotPassword = (): JSX.Element => {
     ev.preventDefault();
     axios
       .post("/forgotpassword", { email: userEmail })
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
+      .then(() => setEmailSend(true))
+      .catch((err) => {
+        if (err.response.data.error === "User not found") {
+          setError("Email was not found");
+        }
+      });
   };
 
   return (
@@ -46,7 +52,24 @@ const ForgotPassword = (): JSX.Element => {
             required
           />
         </div>
-        <button className="submit-btn">Send Email</button>
+        {error && (
+          <span className="err-msg" style={{ margin: "-1rem" }}>
+            {error}
+          </span>
+        )}
+        {!emailSend ? (
+          <button className="submit-btn">Send Email</button>
+        ) : (
+          <div
+            style={{
+              fontSize: "2rem",
+              color: "#9336ff",
+              boxShadow: "0 0 5px 2px #9336ff",
+            }}
+          >
+            Check your mailbox
+          </div>
+        )}
       </form>
     </div>
   );
