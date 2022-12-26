@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useState, useRef } from "react";
 import axios from "axios";
 
@@ -7,6 +7,10 @@ const ResetPassword = (): JSX.Element => {
     newPassword: "",
     checkPassword: "",
   });
+
+  const [error, setError] = useState("");
+
+  const history = useHistory();
 
   interface routeParams {
     token: string;
@@ -79,9 +83,18 @@ const ResetPassword = (): JSX.Element => {
         .post(`/resetpassword/${params.token}`, {
           password: password.newPassword,
         })
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error));
-    }
+        .then(() => history.push("/login"))
+        .catch((err) => {
+          if (err.response.data.error.name === "TokenExpiredError") {
+            setError(
+              "Time limit has been reached, please try reseting the password again"
+            );
+            setInterval(() => {
+              history.push("/forgotpassword");
+            }, 5000);
+          }
+        });
+    } else setError("Password does not match");
   };
 
   return (
@@ -150,10 +163,21 @@ const ResetPassword = (): JSX.Element => {
             &#128065;
           </span>
         </div>
-        <div style={{ color: "#fff", margin: "-1.4rem 0 -0.5rem 0" }}>
+        <div
+          style={{
+            color: "#fff",
+            margin: "-1.4rem 0 -0.5rem 0",
+            fontSize: "0.9rem",
+          }}
+        >
           *Password must be 8+ characters long have at least 1 number, 1 letter
           and 1 special charater
         </div>
+        {error && (
+          <span className="err-msg" style={{ marginTop: "0rem" }}>
+            {error}
+          </span>
+        )}
         <button className="submit-btn">Reset Password</button>
       </form>
     </div>
