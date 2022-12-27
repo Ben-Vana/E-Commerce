@@ -52,6 +52,7 @@ const authLinks: {
 
 const Navbar = () => {
   const [searchInput, setSearchInput] = useState("");
+  const [showSerach, setShowSerach] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -72,20 +73,23 @@ const Navbar = () => {
   useEffect((): void => {
     //Responsive navbar
     if (navBarContainerRef.current) {
-      if (window.outerWidth < 900) {
+      if (window.outerWidth < 1000) {
         navBarContainerRef.current.style.top = "-15rem";
         navBarContainerRef.current.style.visibility = "hidden";
+        setShowSerach(true);
       }
     }
 
     window.addEventListener("resize", (): void => {
       if (navBarContainerRef.current) {
-        if (window.outerWidth > 900) {
+        if (window.outerWidth > 1000) {
           navBarContainerRef.current.style.top = "0";
           navBarContainerRef.current.style.visibility = "visible";
+          setShowSerach(false);
         } else {
           navBarContainerRef.current.style.visibility = "hidden";
           navBarContainerRef.current.style.top = "-15rem";
+          setShowSerach(true);
         }
       }
     });
@@ -141,6 +145,24 @@ const Navbar = () => {
             />
           </span>
         </div>
+        {showSerach && (
+          <div className="search-container">
+            <input
+              type="search"
+              className="nav-search"
+              value={searchInput}
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchInput(ev.target.value)
+              }
+              onKeyDown={handleSearch}
+            />
+            <FontAwesomeIcon
+              onClick={(): void => history.push(`/search?s=${searchInput}`)}
+              className="search-icon"
+              icon={faMagnifyingGlass}
+            />
+          </div>
+        )}
         <div className="nav" ref={navBarContainerRef}>
           <ul className="first-row">
             {navLinks.map((item, index) => (
@@ -159,22 +181,24 @@ const Navbar = () => {
                 />
               ))}
           </ul>
-          <ul className="search-container">
-            <input
-              type="search"
-              className="nav-search"
-              value={searchInput}
-              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                setSearchInput(ev.target.value)
-              }
-              onKeyDown={handleSearch}
-            />
-            <FontAwesomeIcon
-              onClick={(): void => history.push(`/search?s=${searchInput}`)}
-              className="search-icon"
-              icon={faMagnifyingGlass}
-            />
-          </ul>
+          {!showSerach && (
+            <ul className="search-container">
+              <input
+                type="search"
+                className="nav-search"
+                value={searchInput}
+                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchInput(ev.target.value)
+                }
+                onKeyDown={handleSearch}
+              />
+              <FontAwesomeIcon
+                onClick={(): void => history.push(`/search?s=${searchInput}`)}
+                className="search-icon"
+                icon={faMagnifyingGlass}
+              />
+            </ul>
+          )}
           <ul className="sec-row">
             {isLoggedIn
               ? authLinks.loggedIn.map((item, index) => (
