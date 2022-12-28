@@ -1,0 +1,26 @@
+.search-page-container {
+  display: grid;
+  grid-template-columns: 15% 85%;
+  width: 100%;
+}
+
+.result-container {
+  width: 99.9%;
+  grid-column: 2;
+  display: grid;
+  grid-template-rows: repeat(20, 13rem);
+  row-gap: 0.6rem;
+}
+
+.row-card {
+  width: 100%;
+  border: 1px solid #fff;
+  border-left: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.card-image {
+  width: 20%;
+  height: 100%;
+}
