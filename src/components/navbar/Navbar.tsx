@@ -154,10 +154,22 @@ const Navbar = () => {
               onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
                 setSearchInput(ev.target.value)
               }
-              onKeyDown={handleSearch}
+              onKeyDown={(
+                ev: React.KeyboardEvent<HTMLInputElement>
+              ): string | void =>
+                ev.code !== "Enter"
+                  ? ""
+                  : !searchInput
+                  ? history.push(`/`)
+                  : history.push(`/search?s=${searchInput}`)
+              }
             />
             <FontAwesomeIcon
-              onClick={(): void => history.push(`/search?s=${searchInput}`)}
+              onClick={(): void =>
+                !searchInput
+                  ? history.push(`/`)
+                  : history.push(`/search?s=${searchInput}`)
+              }
               className="search-icon"
               icon={faMagnifyingGlass}
             />
@@ -190,10 +202,22 @@ const Navbar = () => {
                 onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
                   setSearchInput(ev.target.value)
                 }
-                onKeyDown={handleSearch}
+                onKeyDown={(
+                  ev: React.KeyboardEvent<HTMLInputElement>
+                ): string | void =>
+                  ev.code !== "Enter"
+                    ? ""
+                    : !searchInput
+                    ? history.push(`/`)
+                    : history.push(`/search?s=${searchInput}`)
+                }
               />
               <FontAwesomeIcon
-                onClick={(): void => history.push(`/search?s=${searchInput}`)}
+                onClick={(): void =>
+                  !searchInput
+                    ? history.push(`/`)
+                    : history.push(`/search?s=${searchInput}`)
+                }
                 className="search-icon"
                 icon={faMagnifyingGlass}
               />
