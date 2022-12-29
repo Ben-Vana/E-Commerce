@@ -4,9 +4,8 @@ interface cardProp {
   name: string;
   price: number;
   description: string;
-  image: string | null;
+  image: string;
   quantity: number;
-  index: number;
 }
 
 const SearchRowCard = ({
@@ -15,29 +14,20 @@ const SearchRowCard = ({
   description,
   image,
   quantity,
-  index,
 }: cardProp): JSX.Element => {
   return (
-    <div
-      style={{
-        gridRow: `${index + 1}`,
-      }}
-      className="row-card"
-    >
-      <img className="card-image" src={""} alt="pic" />
-      <div
-        style={{
-          height: "20%",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          fontSize: "1.3rem",
-          width: "80%",
-        }}
-      >
-        <h4>{name}</h4>
-        <div>{price}</div>
+    <div className="row-card">
+      <h4 className="card-header" title={name}>
+        {name}
+      </h4>
+      <div className="image-container">
+        <img className="card-image" src={image} alt={name} />
+      </div>
+      <div className="card-content">
         <p>{description}</p>
+      </div>
+      <div className="card-footer">
+        <div>{price}$</div>
       </div>
     </div>
   );

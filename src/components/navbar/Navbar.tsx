@@ -1,6 +1,6 @@
 import LinkSort from "../LinkSort";
 import { authActions } from "../../store/auth";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,6 +55,7 @@ const Navbar = () => {
   const [showSerach, setShowSerach] = useState(false);
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const navBarContainerRef = useRef() as RefObject<HTMLDivElement>;
   const isLoggedIn = useSelector(
@@ -93,6 +94,12 @@ const Navbar = () => {
         }
       }
     });
+
+    const qParam = new URLSearchParams(location.search);
+    const search = qParam.get("s");
+    if (search) {
+      setSearchInput(search);
+    }
   }, []);
 
   const handleOpenHamburger = (): void => {
@@ -118,12 +125,6 @@ const Navbar = () => {
           ) as HTMLCollectionOf<HTMLElement>
         )[0].style.backgroundColor = "#333";
       }
-    }
-  };
-
-  const handleSearch = (ev: React.KeyboardEvent<HTMLInputElement>) => {
-    if (ev.code === "Enter") {
-      history.push(`/search?s=${searchInput}`);
     }
   };
 
