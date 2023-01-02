@@ -37,7 +37,7 @@ const App = (): JSX.Element => {
       {!tryLogin && (
         <div>
           <Navbar />
-          <div style={{ marginTop: "5rem" }}>
+          <div className="main-content">
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/register" component={Register} />

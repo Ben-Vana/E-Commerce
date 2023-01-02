@@ -4,10 +4,21 @@
   box-sizing: border-box;
 }
 
+:root {
+  --main-background: #272b30;
+  --container-background: #3c3e49;
+  --font-dark: #000;
+  --font-light: #edefee;
+}
+
 .main-div {
   width: 100vw;
   height: 100vh;
-  background-color: #333;
+  background-color: var(--main-background);
   overflow-x: hidden;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.main-content {
+  margin-top: 5.5rem;
 }
