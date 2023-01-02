@@ -29,7 +29,7 @@ const SearchPage = (): JSX.Element => {
 
   return (
     <div style={{}}>
-      <h3 className="search-result">Search result for "{userSearch}"</h3>
+      <h3 className="search-result">Search result for "{userSearch}":</h3>
       <div className="search-page-container">
         {productsArr[0]
           ? productsArr.map((item: cardProp, index) => (

@@ -2,7 +2,7 @@ import LinkSort from "../LinkSort";
 import { authActions } from "../../store/auth";
 import { useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faBars } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef, useEffect, RefObject, useState } from "react";
 import "./navbar.css";
@@ -109,13 +109,18 @@ const Navbar = () => {
       }
 
       if (navSwitch) {
-        navBarContainerRef.current.style.top = "7vh";
+        navBarContainerRef.current.style.top = "7.5vh";
         navSwitch = false;
         (
           document.body.getElementsByClassName(
             "main-div"
           ) as HTMLCollectionOf<HTMLElement>
-        )[0].style.backgroundColor = "rgba(0,0,0,0.9)";
+        )[0].style.backgroundColor = "#212429";
+        (
+          document.body.getElementsByClassName(
+            "main-content"
+          ) as HTMLCollectionOf<HTMLElement>
+        )[0].style.filter = "blur(4px)";
       } else if (!navSwitch) {
         navBarContainerRef.current.style.top = "-15rem";
         navSwitch = true;
@@ -123,7 +128,12 @@ const Navbar = () => {
           document.body.getElementsByClassName(
             "main-div"
           ) as HTMLCollectionOf<HTMLElement>
-        )[0].style.backgroundColor = "#333";
+        )[0].style.backgroundColor = "#272b30";
+        (
+          document.body.getElementsByClassName(
+            "main-content"
+          ) as HTMLCollectionOf<HTMLElement>
+        )[0].style.filter = "blur(0)";
       }
     }
   };
@@ -139,11 +149,7 @@ const Navbar = () => {
       <nav className="main-nav">
         <div className="ham-container">
           <span className="ham" id="ham" onClick={handleOpenHamburger}>
-            <img
-              className="nav-svg"
-              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iNTAiIGhlaWdodD0iNTAiCnZpZXdCb3g9IjAgMCA1MCA1MCI+CjxwYXRoIGQ9Ik0gMCA5IEwgMCAxMSBMIDUwIDExIEwgNTAgOSBaIE0gMCAyNCBMIDAgMjYgTCA1MCAyNiBMIDUwIDI0IFogTSAwIDM5IEwgMCA0MSBMIDUwIDQxIEwgNTAgMzkgWiI+PC9wYXRoPgo8L3N2Zz4="
-              alt="svgImg"
-            />
+            <FontAwesomeIcon icon={faBars} className="nav-svg" />
           </span>
         </div>
         {showSerach && (
@@ -243,6 +249,7 @@ const Navbar = () => {
                   />
                 ))}
           </ul>
+          <div className="rule"></div>
         </div>
       </nav>
     </>

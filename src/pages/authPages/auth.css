@@ -1,7 +1,7 @@
 .form-wrapper {
   width: 60vw;
   height: 45rem;
-  background-color: #222;
+  background-color: var(--container-background);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +11,7 @@
 }
 
 .form-title {
-  color: #9336ff;
+  color: var(--font-light);
   margin: 2rem 0;
   font-size: 3rem;
 }
@@ -34,13 +34,13 @@
 
 .form-input {
   width: 100%;
-  background-color: #222;
+  background-color: var(--container-background);
   margin-bottom: 1rem;
   font-size: 1.5rem;
   padding: 0.5rem;
   border: none;
-  border-bottom: 1px solid #fff;
-  color: #fff;
+  border-bottom: 1px solid var(--font-light);
+  color: var(--font-light);
 }
 
 .form-input:focus {
@@ -57,7 +57,7 @@
 
 .input-label {
   display: flex;
-  color: #fff;
+  color: var(--font-dark);
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
   position: absolute;
@@ -76,6 +76,8 @@
 }
 
 .submit-btn {
+  color: var(--font-dark);
+  background-color: var(--font-light);
   padding: 0.7rem 3rem;
   margin-top: 1rem;
   font-size: 1rem;
@@ -85,12 +87,11 @@
 }
 
 .submit-btn:hover {
-  background-color: #9336ff;
-  color: #fff;
+  opacity: 0.7;
 }
 
 .password-eye {
-  color: #fff;
+  color: var(--font-light);
   font-size: 1.5rem;
   position: absolute;
   bottom: 1.5rem;
@@ -111,17 +112,18 @@
 .err-msg {
   width: 100%;
   color: #f00;
+  font-family: Arial, Helvetica, sans-serif;
   margin: -1.5rem 0 0.2rem 0;
 }
 
 .label-required {
   align-self: flex-start;
   font-size: 0.8rem;
-  color: rgba(255, 0, 0, 0.4);
+  color: #f00;
 }
 
 .forgot-link {
-  color: #fff;
+  color: var(--font-light);
   margin-top: -0.7rem;
   text-decoration: underline;
   align-self: flex-start;
@@ -129,5 +131,5 @@
 }
 
 .forgot-link:hover {
-  color: #fffa;
+  color: var(--nav-search);
 }
