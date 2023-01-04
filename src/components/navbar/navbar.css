@@ -68,7 +68,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  width: calc(80vw - 15rem);
+  width: calc(70vw - 15rem);
 }
 
 .nav-search {
@@ -76,7 +76,7 @@
   padding: 0.4rem 3rem 0.4rem 0.6rem;
   font-size: 1.1rem;
   border: 1px solid var(--font-light);
-  border-radius: 0.5rem;
+  border-radius: 2rem;
   background-color: var(--container-background);
   color: #fff;
 }
@@ -89,10 +89,10 @@
   color: var(--font-light);
   position: absolute;
   height: 100%;
-  width: 1.7rem;
+  width: 1.5rem;
   right: 0rem;
-  border-radius: 0 0.41rem 0.41rem 0;
-  padding: 0 0.3rem 0 0.4rem;
+  border-radius: 0 0.92rem 0.92rem 0;
+  padding: 0 0.8rem 0 0.6rem;
   border-left: 1px solid var(--font-light);
   cursor: pointer;
 }

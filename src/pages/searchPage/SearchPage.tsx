@@ -1,34 +1,141 @@
 import axios from "axios";
+import SearchRowCard from "../../components/SearchRowCard";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./search.css";
-import SearchRowCard from "../../components/SearchRowCard";
+import SearchNavButtons from "../../components/SearchNavButtons";
+
+interface cardProp {
+  name: string;
+  price: number;
+  image: string;
+}
+let buttonLength = 1;
+let resultArrLength: number;
 
 const SearchPage = (): JSX.Element => {
-  const [productsArr, setProductsArr] = useState<Array<object>>([]);
+  const [productsArr, setProductsArr] = useState<Array<cardProp>>([]);
   const [userSearch, setUserSearch] = useState<string | null>("");
   const location = useLocation();
-
-  interface cardProp {
-    name: string;
-    price: number;
-    description: string;
-    image: string;
-    quantity: number;
-  }
 
   useEffect(() => {
     const qParams = new URLSearchParams(location.search);
     const search = qParams.get("s");
+    const page = qParams.get("p");
     setUserSearch(search);
     axios
       .get(`/product/${search}`)
-      .then(({ data }) => setProductsArr(data))
-      .catch((err) => console.log(err));
+      .then(({ data }): void | null => {
+        resultArrLength = data.length;
+        return page
+          ? setProductsArr(data.slice((+page - 1) * 2, +page * 2))
+          : null;
+      })
+      .catch((err): void => console.log(err));
   }, [location]);
 
+  const renderButton = () => {
+    const qParams = new URLSearchParams(location.search);
+    const page = qParams.get("p");
+    buttonLength = resultArrLength / 2;
+    let buttonArr = [];
+
+    //if number of pages is under 5
+    if (buttonLength < 5) {
+      for (let i = 0; i < buttonLength; i++) {
+        buttonArr.push(
+          <SearchNavButtons
+            key={"button" + i}
+            index={i + 1}
+            search={userSearch}
+          />
+        );
+      }
+    }
+    //if number of pages is grater then 5 and we are on the first or second page
+    else if (page) {
+      let pageNumber = +page;
+      if (pageNumber === 1 || pageNumber === 2) {
+        buttonArr.push(
+          <SearchNavButtons key={"button" + 1} index={1} search={userSearch} />
+        );
+        for (let i = pageNumber; i <= pageNumber + 2; i++) {
+          buttonArr.push(
+            <SearchNavButtons
+              key={"button" + (i + 1)}
+              index={pageNumber === 1 ? i + 1 : pageNumber === 2 ? i : i + 1}
+              search={userSearch}
+            />
+          );
+          if (i === pageNumber + 2) {
+            buttonArr.push(
+              <SearchNavButtons
+                key={"last-button"}
+                index={buttonLength || 0}
+                search={userSearch}
+              />
+            );
+          }
+        }
+      }
+      //if number of pages is grater then 5 and we are on the last or second to last page
+      else if (pageNumber + 1 === buttonLength || pageNumber === buttonLength) {
+        for (
+          let i = pageNumber === buttonLength ? pageNumber - 1 : pageNumber;
+          i >= pageNumber - (pageNumber === buttonLength ? 3 : 2);
+          i--
+        ) {
+          buttonArr.unshift(
+            <SearchNavButtons
+              key={"button" + (i - 1)}
+              index={i}
+              search={userSearch}
+            />
+          );
+        }
+        buttonArr.unshift(
+          <SearchNavButtons
+            key={"first-button"}
+            index={1}
+            search={userSearch}
+          />
+        );
+        buttonArr.push(
+          <SearchNavButtons
+            key={"last-button"}
+            index={buttonLength || 0}
+            search={userSearch}
+          />
+        );
+      }
+      //if number of pages is grater then 5 and we are in the middle pages
+      else {
+        buttonArr.push(
+          <SearchNavButtons key={"button" + 1} index={1} search={userSearch} />
+        );
+        for (let i = pageNumber - 1; i < pageNumber + 2; i++) {
+          buttonArr.push(
+            <SearchNavButtons
+              key={"button" + i}
+              index={i}
+              search={userSearch}
+            />
+          );
+        }
+        buttonArr.push(
+          <SearchNavButtons
+            key={"last-button"}
+            index={buttonLength || 0}
+            search={userSearch}
+          />
+        );
+      }
+    }
+    return buttonArr;
+  };
+
   return (
-    <div style={{}}>
+    <div>
       <h3 className="search-result">Search result for "{userSearch}":</h3>
       <div className="search-page-container">
         {productsArr[0]
@@ -37,13 +144,12 @@ const SearchPage = (): JSX.Element => {
                 key={item.name + index}
                 name={item.name}
                 price={item.price}
-                description={item.description}
                 image={item.image}
-                quantity={item.quantity}
               />
             ))
           : ""}
       </div>
+      {productsArr && <div className="page-buttons">{renderButton()}</div>}
     </div>
   );
 };
