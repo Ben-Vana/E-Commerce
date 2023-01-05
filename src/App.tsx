@@ -6,6 +6,7 @@ import useAutoLogin from "./hooks/useAutoLogin";
 import ForgotPassword from "./pages/authPages/forgotPassword/ForgotPassword";
 import ResetPassword from "./pages/authPages/forgotPassword/ResetPassword";
 import SearchPage from "./pages/searchPage/SearchPage";
+import ProductPage from "./pages/productPage/ProductPage";
 import { Route, Switch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -45,6 +46,7 @@ const App = (): JSX.Element => {
               <Route path="/forgotpassword" component={ForgotPassword} />
               <Route path="/resetpassword/:token" component={ResetPassword} />
               <Route path="/search" component={SearchPage} />
+              <Route path="/product" component={ProductPage} />
             </Switch>
           </div>
         </div>
