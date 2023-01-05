@@ -1,15 +1,17 @@
 import axios from "axios";
 import SearchRowCard from "../../components/SearchRowCard";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import "./search.css";
 import SearchNavButtons from "../../components/SearchNavButtons";
+import { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import "./search.css";
 
 interface cardProp {
+  _id: string;
   name: string;
   price: number;
   image: string;
 }
+const numberOfCardsPerPage = 10;
 let buttonLength = 1;
 let resultArrLength: number;
 
@@ -17,8 +19,9 @@ const SearchPage = (): JSX.Element => {
   const [productsArr, setProductsArr] = useState<Array<cardProp>>([]);
   const [userSearch, setUserSearch] = useState<string | null>("");
   const location = useLocation();
+  const history = useHistory();
 
-  useEffect(() => {
+  useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
     const search = qParams.get("s");
     const page = qParams.get("p");
@@ -28,16 +31,21 @@ const SearchPage = (): JSX.Element => {
       .then(({ data }): void | null => {
         resultArrLength = data.length;
         return page
-          ? setProductsArr(data.slice((+page - 1) * 2, +page * 2))
+          ? setProductsArr(
+              data.slice(
+                (+page - 1) * numberOfCardsPerPage,
+                +page * numberOfCardsPerPage
+              )
+            )
           : null;
       })
       .catch((err): void => console.log(err));
   }, [location]);
 
-  const renderButton = () => {
+  const renderButton = (): Array<JSX.Element> => {
     const qParams = new URLSearchParams(location.search);
     const page = qParams.get("p");
-    buttonLength = resultArrLength / 2;
+    buttonLength = resultArrLength / numberOfCardsPerPage;
     let buttonArr = [];
 
     //if number of pages is under 5
@@ -51,10 +59,9 @@ const SearchPage = (): JSX.Element => {
           />
         );
       }
-    }
-    //if number of pages is grater then 5 and we are on the first or second page
-    else if (page) {
+    } else if (page) {
       let pageNumber = +page;
+      //if number of pages is grater then 5 and we are on the first or second page
       if (pageNumber === 1 || pageNumber === 2) {
         buttonArr.push(
           <SearchNavButtons key={"button" + 1} index={1} search={userSearch} />
@@ -108,7 +115,7 @@ const SearchPage = (): JSX.Element => {
           />
         );
       }
-      //if number of pages is grater then 5 and we are in the middle pages
+      //if number of pages is grater then 5 and we are in the middle pages number
       else {
         buttonArr.push(
           <SearchNavButtons key={"button" + 1} index={1} search={userSearch} />
@@ -134,22 +141,30 @@ const SearchPage = (): JSX.Element => {
     return buttonArr;
   };
 
+  const handleProductPage = (id: string): void => {
+    history.push(`/product?pid=${id}`);
+  };
+
   return (
     <div>
       <h3 className="search-result">Search result for "{userSearch}":</h3>
       <div className="search-page-container">
-        {productsArr[0]
-          ? productsArr.map((item: cardProp, index) => (
-              <SearchRowCard
-                key={item.name + index}
-                name={item.name}
-                price={item.price}
-                image={item.image}
-              />
-            ))
-          : ""}
+        {productsArr[0] ? (
+          productsArr.map((item: cardProp, index) => (
+            <SearchRowCard
+              key={item.name + index}
+              id={item._id}
+              name={item.name}
+              price={item.price}
+              image={item.image}
+              click={handleProductPage}
+            />
+          ))
+        ) : (
+          <div>Wrong</div>
+        )}
       </div>
-      {productsArr && <div className="page-buttons">{renderButton()}</div>}
+      {productsArr[0] && <div className="page-buttons">{renderButton()}</div>}
     </div>
   );
 };
