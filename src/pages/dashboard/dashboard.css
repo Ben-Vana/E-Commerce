@@ -1,0 +1,30 @@
+.dash-nav {
+  position: fixed;
+  left: 0;
+  width: 15vw;
+  height: 100vh;
+  background-color: var(--container-background);
+  margin-top: -1rem;
+}
+
+.dash-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-list-item {
+  width: 100%;
+  text-align: center;
+  color: var(--font-light);
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.dash-list-item:hover {
+  background-color: var(--main-background);
+}
+
+.active-item {
+  background-color: rgba(232, 185, 35, 0.7);
+}

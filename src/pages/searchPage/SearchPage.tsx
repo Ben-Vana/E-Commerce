@@ -1,8 +1,8 @@
 import axios from "axios";
-import SearchRowCard from "../../components/SearchRowCard";
+import SearchPageCard from "../../components/SearchPageCard";
 import SearchNavButtons from "../../components/SearchNavButtons";
 import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./search.css";
 
 interface cardProp {
@@ -19,7 +19,6 @@ const SearchPage = (): JSX.Element => {
   const [productsArr, setProductsArr] = useState<Array<cardProp>>([]);
   const [userSearch, setUserSearch] = useState<string | null>("");
   const location = useLocation();
-  const history = useHistory();
 
   useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
@@ -141,23 +140,18 @@ const SearchPage = (): JSX.Element => {
     return buttonArr;
   };
 
-  const handleProductPage = (id: string): void => {
-    history.push(`/product?pid=${id}`);
-  };
-
   return (
     <div>
       <h3 className="search-result">Search result for "{userSearch}":</h3>
       <div className="search-page-container">
         {productsArr[0] ? (
           productsArr.map((item: cardProp, index) => (
-            <SearchRowCard
+            <SearchPageCard
               key={item.name + index}
               id={item._id}
               name={item.name}
               price={item.price}
               image={item.image}
-              click={handleProductPage}
             />
           ))
         ) : (
