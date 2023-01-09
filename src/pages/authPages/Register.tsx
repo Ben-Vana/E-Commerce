@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./auth.css";
 
 const Register = (): JSX.Element => {
@@ -20,7 +20,7 @@ const Register = (): JSX.Element => {
   const emailLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const passwordLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const passwordInput = useRef() as React.RefObject<HTMLInputElement>;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handelLabel = (input: string): void => {
     switch (input) {
@@ -117,7 +117,7 @@ const Register = (): JSX.Element => {
     ev.preventDefault();
     axios
       .post("/register", input)
-      .then(() => history.push("/login"))
+      .then(() => navigate("/login"))
       .catch((error) => console.log(error));
   };
 

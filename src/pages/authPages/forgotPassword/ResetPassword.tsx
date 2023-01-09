@@ -1,4 +1,4 @@
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useRef } from "react";
 import axios from "axios";
 
@@ -10,13 +10,9 @@ const ResetPassword = (): JSX.Element => {
 
   const [error, setError] = useState("");
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  interface routeParams {
-    token: string;
-  }
-
-  const params = useParams<routeParams>();
+  const params = useParams();
 
   const newPasswordLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const checkPasswordLabel = useRef() as React.RefObject<HTMLLabelElement>;
@@ -83,14 +79,14 @@ const ResetPassword = (): JSX.Element => {
         .post(`/resetpassword/${params.token}`, {
           password: password.newPassword,
         })
-        .then(() => history.push("/login"))
+        .then(() => navigate("/login"))
         .catch((err) => {
           if (err.response.data.error.name === "TokenExpiredError") {
             setError(
               "Time limit has been reached, please try reseting the password again"
             );
             setInterval(() => {
-              history.push("/forgotpassword");
+              navigate("/forgotpassword");
             }, 5000);
           }
         });

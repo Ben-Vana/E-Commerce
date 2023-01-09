@@ -9,7 +9,9 @@ import SearchPage from "./pages/searchPage/SearchPage";
 import ProductPage from "./pages/productPage/ProductPage";
 import AuthGuard from "./components/AuthGuard";
 import Dashboard from "./pages/dashboard/Dashboard";
-import { Route, Switch } from "react-router-dom";
+import DashAddProduct from "./pages/dashboard/addProduct/DashAddProduct";
+import DashStatistics from "./pages/dashboard/DashStatistics";
+import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import "./App.css";
@@ -41,16 +43,32 @@ const App = (): JSX.Element => {
         <div>
           <Navbar />
           <div className="main-content">
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/register" component={Register} />
-              <Route path="/login" component={Login} />
-              <Route path="/forgotpassword" component={ForgotPassword} />
-              <Route path="/resetpassword/:token" component={ResetPassword} />
-              <Route path="/search" component={SearchPage} />
-              <Route path="/product" component={ProductPage} />
-              <AuthGuard path="/dashboard" component={Dashboard} />
-            </Switch>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/forgotpassword" element={<ForgotPassword />} />
+              <Route path="/resetpassword/:token" element={<ResetPassword />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/product" element={<ProductPage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <AuthGuard>
+                    <Dashboard />
+                  </AuthGuard>
+                }
+              >
+                <Route
+                  path="/dashboard/statistics"
+                  element={<DashStatistics />}
+                />
+                <Route
+                  path="/dashboard/addproduct"
+                  element={<DashAddProduct />}
+                />
+              </Route>
+            </Routes>
           </div>
         </div>
       )}
