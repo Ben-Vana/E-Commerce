@@ -1,6 +1,6 @@
 import LinkSort from "../LinkSort";
 import { authActions } from "../../store/auth";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faBars } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -56,6 +56,8 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
+  let navSwitch = true;
 
   const navBarContainerRef = useRef() as RefObject<HTMLDivElement>;
   const isLoggedIn = useSelector(
@@ -68,8 +70,19 @@ const Navbar = () => {
       state.authReducer.userData.admin
   );
 
-  const history = useHistory();
-  let navSwitch = true;
+  window.addEventListener("resize", (): void => {
+    if (navBarContainerRef.current) {
+      if (window.outerWidth > 1000) {
+        navBarContainerRef.current.style.top = "0";
+        navBarContainerRef.current.style.visibility = "visible";
+        setShowSerach(false);
+      } else {
+        navBarContainerRef.current.style.visibility = "hidden";
+        navBarContainerRef.current.style.top = "-15rem";
+        setShowSerach(true);
+      }
+    }
+  });
 
   useEffect((): void => {
     //Responsive navbar
@@ -81,26 +94,11 @@ const Navbar = () => {
       }
     }
 
-    window.addEventListener("resize", (): void => {
-      if (navBarContainerRef.current) {
-        if (window.outerWidth > 1000) {
-          navBarContainerRef.current.style.top = "0";
-          navBarContainerRef.current.style.visibility = "visible";
-          setShowSerach(false);
-        } else {
-          navBarContainerRef.current.style.visibility = "hidden";
-          navBarContainerRef.current.style.top = "-15rem";
-          setShowSerach(true);
-        }
-      }
-    });
-
     const qParam = new URLSearchParams(location.search);
     const search = qParam.get("s");
-    if (search) {
-      setSearchInput(search);
-    }
-  }, []);
+    if (search) setSearchInput(search);
+    else setSearchInput("");
+  }, [location.search]);
 
   const handleOpenHamburger = (): void => {
     if (navBarContainerRef.current) {
@@ -167,15 +165,15 @@ const Navbar = () => {
                 ev.code !== "Enter"
                   ? ""
                   : !searchInput
-                  ? history.push(`/`)
-                  : history.push(`/search?s=${searchInput}&p=1`)
+                  ? navigate(`/`)
+                  : navigate(`/search?s=${searchInput}&p=1`)
               }
             />
             <FontAwesomeIcon
               onClick={(): void =>
                 !searchInput
-                  ? history.push(`/`)
-                  : history.push(`/search?s=${searchInput}&p=1`)
+                  ? navigate(`/`)
+                  : navigate(`/search?s=${searchInput}&p=1`)
               }
               className="search-icon"
               icon={faMagnifyingGlass}
@@ -215,15 +213,15 @@ const Navbar = () => {
                   ev.code !== "Enter"
                     ? ""
                     : !searchInput
-                    ? history.push(`/`)
-                    : history.push(`/search?s=${searchInput}&p=1`)
+                    ? navigate(`/`)
+                    : navigate(`/search?s=${searchInput}&p=1`)
                 }
               />
               <FontAwesomeIcon
                 onClick={(): void =>
                   !searchInput
-                    ? history.push(`/`)
-                    : history.push(`/search?s=${searchInput}&p=1`)
+                    ? navigate(`/`)
+                    : navigate(`/search?s=${searchInput}&p=1`)
                 }
                 className="search-icon"
                 icon={faMagnifyingGlass}

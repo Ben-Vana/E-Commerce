@@ -1,29 +1,13 @@
 import { useSelector } from "react-redux";
-import { Redirect, Route, RouterProps } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-interface propInterface {
-  path: string;
-  component: any;
-}
-
-const AuthGuard = ({
-  path,
-  component: Component,
-  ...rest
-}: propInterface): JSX.Element => {
+const AuthGuard = ({ children }: { children: JSX.Element }): JSX.Element => {
   const isAdmin = useSelector(
     (state: { authReducer: { userData: { admin: boolean } } }) =>
       state.authReducer.userData.admin
   );
 
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAdmin ? <Component path={path} {...props} /> : <Redirect to={"/"} />
-      }
-    ></Route>
-  );
+  return isAdmin ? children : <Navigate to="/" replace />;
 };
 
 export default AuthGuard;

@@ -2,7 +2,7 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import useAutoLogin from "../../hooks/useAutoLogin";
 import { useState, useEffect, useRef } from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./auth.css";
 
 declare global {
@@ -16,7 +16,7 @@ const Login = (): JSX.Element => {
   });
   const [err, setErr] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const autoLogin = useAutoLogin();
   const emailLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const passwordLabel = useRef() as React.RefObject<HTMLLabelElement>;
@@ -75,7 +75,7 @@ const Login = (): JSX.Element => {
       .then(({ data }) => {
         localStorage.setItem("token", data.token);
         autoLogin();
-        history.push("/");
+        navigate("/");
       })
       .catch(() => setErr(true));
   };
@@ -93,7 +93,7 @@ const Login = (): JSX.Element => {
       .then(({ data }) => {
         localStorage.setItem("token", data.token);
         autoLogin();
-        history.push("/");
+        navigate("/");
       })
       .catch(() => setErr(true));
   };
