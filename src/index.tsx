@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -10,11 +9,11 @@ import { BrowserRouter } from "react-router-dom";
 axios.defaults.baseURL = `http://127.0.0.1:8181/api`;
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) config.headers["auth-token"] = token;
+  if (token && config.headers) config.headers["auth-token"] = token;
   return config;
 });
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
   <Provider store={store}>
     <BrowserRouter>
