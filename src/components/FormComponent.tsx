@@ -5,6 +5,7 @@ interface formProps {
   focus: Function;
   change: Function;
   inputValue: string;
+  edit: boolean;
 }
 
 const FormComponent = ({
@@ -14,10 +15,15 @@ const FormComponent = ({
   focus,
   change,
   inputValue,
+  edit,
 }: formProps): JSX.Element => {
   return (
     <div className="input-container">
-      <label className="input-label" ref={reactRef} htmlFor={formLabel}>
+      <label
+        className={edit ? "input-label-active input-label" : "input-label"}
+        ref={reactRef}
+        htmlFor={formLabel}
+      >
         {formLabel.charAt(0).toUpperCase() + formLabel.slice(1)}:
       </label>
       <input
@@ -30,6 +36,11 @@ const FormComponent = ({
         }
         onChange={(ev: React.ChangeEvent<HTMLInputElement>) => change(ev)}
         value={inputValue}
+        pattern={
+          formLabel === "quantity" || formLabel === "price" ? "^[0-9]+$" : ".*"
+        }
+        minLength={2}
+        maxLength={1024}
         required
       />
     </div>

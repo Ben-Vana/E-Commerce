@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../pages/searchPage/search.css";
 
 interface cardProp {
@@ -6,9 +6,17 @@ interface cardProp {
   name: string;
   price: number;
   image: string;
+  admin: boolean;
 }
 
-const SearchPageCard = ({ id, name, price, image }: cardProp): JSX.Element => {
+const SearchPageCard = ({
+  id,
+  name,
+  price,
+  image,
+  admin,
+}: cardProp): JSX.Element => {
+  const navigate = useNavigate();
   return (
     <div className="row-card">
       <div className="image-container">
@@ -23,6 +31,14 @@ const SearchPageCard = ({ id, name, price, image }: cardProp): JSX.Element => {
           </h4>
         </NavLink>
         <div className="card-price">{price}$</div>
+        {admin && (
+          <button
+            className="edit-button"
+            onClick={(): void => navigate(`/dashboard/editproduct/${id}`)}
+          >
+            Edit
+          </button>
+        )}
       </div>
     </div>
   );

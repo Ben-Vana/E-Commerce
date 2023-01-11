@@ -1,8 +1,8 @@
 import axios from "axios";
 import FormComponent from "../../../components/FormComponent";
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./dashform.css";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import "../addProduct/dashform.css";
 
 interface formInterface {
   formName: string;
@@ -17,7 +17,7 @@ interface infoInterface {
   image: string;
 }
 
-const DashAddProduct = (): JSX.Element => {
+const DashEditProduct = (): JSX.Element => {
   const [productInfo, setProductInfo] = useState<infoInterface>({
     name: "",
     description: "",
@@ -28,6 +28,7 @@ const DashAddProduct = (): JSX.Element => {
 
   const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
+  const param = useParams();
 
   const nameLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const priceLabel = useRef() as React.RefObject<HTMLLabelElement>;
@@ -40,6 +41,21 @@ const DashAddProduct = (): JSX.Element => {
     { formName: "quantity", formRef: quantityLabel },
     { formName: "image", formRef: imageLabel },
   ];
+
+  useEffect((): void => {
+    axios
+      .get(`/product/product/${param.pid}`)
+      .then(({ data }) =>
+        setProductInfo({
+          name: data.name,
+          description: data.description.join("\n\n"),
+          price: data.price,
+          quantity: data.quantity,
+          image: data.image,
+        })
+      )
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleFocus = (labelName: string): void => {
     const label = formLabels.find((item) => item.formName === labelName);
@@ -72,10 +88,13 @@ const DashAddProduct = (): JSX.Element => {
     const tempProduct = JSON.parse(JSON.stringify(productInfo));
     tempProduct.description = productInfo.description.split(/\n+/);
     tempProduct.quantity = +tempProduct.quantity;
+    tempProduct.id = param.pid;
     axios
-      .post("/product", tempProduct)
-      .then(({ data }) => navigate(`/product?pid=${data._id}`))
-      .catch(() => setError(true));
+      .patch("/product", tempProduct)
+      .then(() => navigate(`/product?pid=${tempProduct.id}`))
+      .catch(() => {
+        setError(true);
+      });
   };
 
   return (
@@ -94,10 +113,10 @@ const DashAddProduct = (): JSX.Element => {
               focus={handleFocus}
               change={handleInputChange}
               inputValue={productInfo[item.formName as keyof infoInterface]}
-              edit={false}
+              edit={true}
             />
           ))}
-          <button className="product-submit">Add Product</button>
+          <button className="product-submit">Update Product Info</button>
           {error && (
             <div className="submit-error">
               *Error has occured, Please try again later.
@@ -132,4 +151,4 @@ const DashAddProduct = (): JSX.Element => {
   );
 };
 
-export default DashAddProduct;
+export default DashEditProduct;
