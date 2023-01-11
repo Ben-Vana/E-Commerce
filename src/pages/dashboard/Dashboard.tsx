@@ -1,7 +1,8 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import "./dashboard.css";
 
 const Dashboard = (): JSX.Element => {
+  const location = useLocation();
   return (
     <div className="dash-container">
       <div className="dash-nav">
@@ -26,6 +27,11 @@ const Dashboard = (): JSX.Element => {
               Add Product
             </NavLink>
           </li>
+          {location.pathname.includes("editproduct") && (
+            <li className="dash-list-item">
+              <span className="dash-nav-link active-dash">Edit Product</span>
+            </li>
+          )}
           <li className="dash-list-item">Users</li>
         </ul>
       </div>
