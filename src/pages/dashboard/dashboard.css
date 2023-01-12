@@ -8,7 +8,7 @@
 
 .dash-nav {
   grid-column: 1;
-  width: 15vw;
+  width: clamp(15vw, 15vw, 30vw);
   height: 100%;
   background-color: var(--container-background);
 }
@@ -40,4 +40,42 @@
 .active-dash {
   text-decoration: none;
   background-color: rgba(232, 185, 35, 0.7);
+}
+
+.dash-ham {
+  position: absolute;
+  right: -3.6rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 2.2rem;
+  border: 1px solid var(--font-light);
+  background-color: var(--container-background);
+  cursor: pointer;
+  color: var(--font-light);
+  display: none;
+}
+
+@media screen and (max-width: 1500px) {
+  .dash-nav {
+    width: 20vw;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .dash-container {
+    position: relative;
+    grid-template-columns: 0 100vw;
+    column-gap: 0;
+  }
+  .dash-nav {
+    position: absolute;
+    top: -0.5rem;
+    height: calc(100% + 0.5rem);
+    z-index: 10;
+    width: 30vw;
+    left: -30vw;
+    transition: left 400ms ease-in-out;
+  }
+  .dash-ham {
+    display: block;
+  }
 }

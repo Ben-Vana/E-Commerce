@@ -87,7 +87,7 @@ const Navbar = () => {
   useEffect((): void => {
     //Responsive navbar
     if (navBarContainerRef.current) {
-      if (window.outerWidth < 1000) {
+      if (window.outerWidth <= 1000) {
         navBarContainerRef.current.style.top = "-15rem";
         navBarContainerRef.current.style.visibility = "hidden";
         setShowSerach(true);
