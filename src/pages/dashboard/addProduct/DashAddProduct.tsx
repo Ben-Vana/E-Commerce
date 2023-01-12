@@ -97,12 +97,12 @@ const DashAddProduct = (): JSX.Element => {
               edit={false}
             />
           ))}
-          <button className="product-submit">Add Product</button>
           {error && (
             <div className="submit-error">
               *Error has occured, Please try again later.
             </div>
           )}
+          <button className="product-submit hide">Add Product</button>
         </div>
         <div className="text-area-desc">
           <label className="text-area-head" htmlFor="description">
@@ -127,6 +127,7 @@ const DashAddProduct = (): JSX.Element => {
             paragraph.
           </div>
         </div>
+        <button className="product-submit show">Add Product</button>
       </form>
     </div>
   );
