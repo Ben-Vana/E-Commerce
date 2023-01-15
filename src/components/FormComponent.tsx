@@ -39,7 +39,7 @@ const FormComponent = ({
         pattern={
           formLabel === "quantity" || formLabel === "price" ? "^[0-9]+$" : ".*"
         }
-        minLength={2}
+        minLength={formLabel === "quantity" || formLabel === "price" ? 1 : 2}
         maxLength={1024}
         required
       />

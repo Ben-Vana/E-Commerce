@@ -1,8 +1,13 @@
 import LinkSort from "../LinkSort";
 import { authActions } from "../../store/auth";
+import { NavLink } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faBars } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faBars,
+  faCartShopping,
+} from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef, useEffect, RefObject, useState } from "react";
 import "./navbar.css";
@@ -29,10 +34,14 @@ const adminLink: [{ label: string; link: string }] = [
 ];
 
 const authLinks: {
-  loggedIn: [{ label: string; link: string }];
+  loggedIn: [{ label: string; link: string }, { label: string; link: string }];
   loggedOut: [{ label: string; link: string }, { label: string; link: string }];
 } = {
   loggedIn: [
+    {
+      label: "cart",
+      link: "",
+    },
     {
       label: "Logout",
       link: "",
@@ -230,15 +239,25 @@ const Navbar = () => {
           )}
           <ul className="sec-row">
             {isLoggedIn
-              ? authLinks.loggedIn.map((item, index) => (
-                  <span
-                    key={item.label + index}
-                    className="logout"
-                    onClick={handleLogout}
-                  >
-                    {item.label}
-                  </span>
-                ))
+              ? authLinks.loggedIn.map((item, index) =>
+                  item.label === "Logout" ? (
+                    <span
+                      key={item.label + index}
+                      className="logout"
+                      onClick={handleLogout}
+                    >
+                      {item.label}
+                    </span>
+                  ) : (
+                    <NavLink
+                      key={item.label + index}
+                      to={item.link}
+                      className="cart"
+                    >
+                      <FontAwesomeIcon icon={faCartShopping} />
+                    </NavLink>
+                  )
+                )
               : authLinks.loggedOut.map((item, index) => (
                   <LinkSort
                     key={item.label + index}
