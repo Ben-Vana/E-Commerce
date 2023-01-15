@@ -24,6 +24,12 @@ const ProductPage = (): JSX.Element => {
       .catch((error) => console.log(error));
   }, []);
 
+  const handleAddProduct = () => {
+    const qParams = new URLSearchParams(location.search);
+    const productId = qParams.get("pid");
+    axios.post("/usercart/addproduct", { pid: productId });
+  };
+
   return (
     <div className="product-page">
       {product ? (
@@ -50,7 +56,9 @@ const ProductPage = (): JSX.Element => {
                     {product.quantity > 0 ? "In Stock" : "Out Of Stock"}.
                   </div>
                   <div>
-                    <button>Add to cart</button>
+                    <button className="add-cart-btn" onClick={handleAddProduct}>
+                      Add to cart
+                    </button>
                   </div>
                 </div>
               </div>

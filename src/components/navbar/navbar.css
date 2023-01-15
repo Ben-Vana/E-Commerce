@@ -139,6 +139,10 @@
   visibility: visible;
 }
 
+.cart {
+  color: var(--font-light);
+}
+
 @media screen and (max-width: 1000px) {
   .nav-svg {
     display: block;
