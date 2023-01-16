@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth";
 
 const checkUser = (token: string | null): Promise<info> | info => {
-  if (token) return axios.get("/userInfo");
+  if (token) return axios.get("/users/userinfo");
   else return { data: "" };
 };
 

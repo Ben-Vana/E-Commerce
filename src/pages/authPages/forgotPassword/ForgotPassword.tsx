@@ -12,7 +12,7 @@ const ForgotPassword = (): JSX.Element => {
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     axios
-      .post("/forgotpassword", { email: userEmail })
+      .post("/auth/forgotpassword", { email: userEmail })
       .then(() => setEmailSend(true))
       .catch((err) => {
         if (err.response.data.error === "User not found") {
