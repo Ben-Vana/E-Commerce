@@ -76,7 +76,7 @@ const ResetPassword = (): JSX.Element => {
     ev.preventDefault();
     if (password.checkPassword === password.newPassword) {
       axios
-        .post(`/resetpassword/${params.token}`, {
+        .post(`/auth/resetpassword/${params.token}`, {
           password: password.newPassword,
         })
         .then(() => navigate("/login"))

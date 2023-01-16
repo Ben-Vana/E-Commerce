@@ -71,7 +71,7 @@ const Login = (): JSX.Element => {
     }
     const userData: genericObject = jwtDecode(res.credential);
     axios
-      .post("/googlelogin", { name: userData.name, email: userData.email })
+      .post("/auth/googlelogin", { name: userData.name, email: userData.email })
       .then(({ data }) => {
         localStorage.setItem("token", data.token);
         autoLogin();
@@ -89,7 +89,7 @@ const Login = (): JSX.Element => {
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     axios
-      .post("/login", input)
+      .post("/auth/login", input)
       .then(({ data }) => {
         localStorage.setItem("token", data.token);
         autoLogin();

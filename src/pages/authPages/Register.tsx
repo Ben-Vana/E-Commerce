@@ -116,7 +116,7 @@ const Register = (): JSX.Element => {
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     axios
-      .post("/register", input)
+      .post("/auth/register", input)
       .then(() => navigate("/login"))
       .catch((error) => console.log(error));
   };
