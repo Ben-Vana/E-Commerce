@@ -1,19 +1,20 @@
 import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
 import ReviewsComponent from "../../components/ReviewsComponent";
+import { useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./productPage.css";
 
 interface productInterface {
   name: string;
   description: Array<string>;
-  image: string;
+  image: Array<string>;
   price: string;
   quantity: number;
-  reviews: Array<{
+  productReviews: Array<{
     userId: string;
     userName: string;
-    description: string;
+    description: Array<string>;
     rating: number;
     createdAt: string;
   }>;
@@ -26,11 +27,24 @@ interface reviewInterface {
 
 const ProductPage = (): JSX.Element => {
   const [product, setProduct] = useState<productInterface | null>(null);
+  const [postedReview, setPostedReview] = useState({ post: false, err: "" });
   const [addReview, setAddReview] = useState<reviewInterface>({
     description: "",
     rating: "1",
   });
+  const [addedRevOrCart, setAddedProp] = useState({
+    cart: false,
+    review: false,
+  });
+
+  const imageRef = useRef() as React.RefObject<HTMLImageElement>;
+
   const location = useLocation();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector(
+    (state: { authReducer: { login: boolean } }): boolean =>
+      state.authReducer.login
+  );
 
   useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
@@ -39,24 +53,62 @@ const ProductPage = (): JSX.Element => {
       .get(`/product/product/${productId}`)
       .then(({ data }) => setProduct(data))
       .catch((error) => console.log(error));
+    axios
+      .get("/users/userreviewinfo")
+      .then(({ data }) => {
+        const dbDate = data.userReviews[data.userReviews.length - 1].createdAt;
+        const d1 = new Date().getTime();
+        const d2 = new Date(dbDate).getTime();
+        if (d1 - d2 < 86400000) {
+          setPostedReview((state) => {
+            return { post: true, err: state.err };
+          });
+        }
+      })
+      .catch((err) => console.log(err));
   }, []);
 
-  const handleAddProduct = () => {
-    const qParams = new URLSearchParams(location.search);
-    const productId = qParams.get("pid");
-    axios.post("/usercart/addproduct", { pid: productId });
+  const handleAddProduct = (): void => {
+    // if (!isLoggedIn) navigate("/login");
+    // const qParams = new URLSearchParams(location.search);
+    // const productId = qParams.get("pid");
+    // axios
+    //   .post("/usercart/addproduct", { pid: productId })
+    //   .then(() =>
+    //     setAddedProp((state) => {
+    //       return { cart: true, review: state.review };
+    //     })
+    //   )
+    //   .catch((err) => console.log(err));
+    console.log(product);
   };
 
   const handleReviewChange = (
     ev: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
+  ): void => {
     const tempReview = JSON.parse(JSON.stringify(addReview));
     tempReview[ev.target.id] = ev.target.value;
     setAddReview(tempReview);
   };
 
-  const handleSubmitReview = (ev: React.FormEvent<HTMLFormElement>) => {
+  const handleChangeImage = (img: string): void => {
+    if (imageRef.current) {
+      imageRef.current.src = img;
+    }
+  };
+
+  const handleSubmitReview = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
+    if (!isLoggedIn) navigate("/login");
+    if (postedReview.post) {
+      setPostedReview((state) => {
+        return {
+          post: state.post,
+          err: "You have to wait 24 hours before posting your next review.",
+        };
+      });
+      return;
+    }
     const params = new URLSearchParams(location.search);
     const pid = params.get("pid");
     let tempReview = JSON.parse(JSON.stringify(addReview));
@@ -66,7 +118,11 @@ const ProductPage = (): JSX.Element => {
     tempReview.rating = +tempReview.rating;
     axios
       .post("/product/addreview", { productId: pid, ...tempReview })
-      .then(() => console.log("Yosh"))
+      .then(() =>
+        setAddedProp((state) => {
+          return { cart: state.cart, review: true };
+        })
+      )
       .catch((err) => console.log(err));
   };
 
@@ -76,10 +132,22 @@ const ProductPage = (): JSX.Element => {
         <div className="page-content-container">
           <div className="product-image-container">
             <img
-              src={product.image}
+              ref={imageRef}
+              src={product.image[0]}
               alt={product.name}
               className="product-image"
             />
+            <div className="display-container">
+              {product.image.map((item, index) => (
+                <div
+                  key={index}
+                  className="img-display"
+                  onClick={() => handleChangeImage(item)}
+                >
+                  <img src={item} alt={product.name} className="product-img" />
+                </div>
+              ))}
+            </div>
           </div>
           <div className="page-content">
             <h3 className="product-name">{product.name}</h3>
@@ -95,11 +163,15 @@ const ProductPage = (): JSX.Element => {
                 <div className="checkout-content">
                   <div>{product.price}$</div>
                   <div>
-                    {product.quantity > 0 ? "In Stock" : "Out Of Stock"}.
+                    {product.quantity > 0 ? "In Stock" : "Out Of Stock"}
                   </div>
                   <div>
-                    <button className="add-cart-btn" onClick={handleAddProduct}>
-                      Add to cart
+                    <button
+                      className="add-cart-btn"
+                      onClick={handleAddProduct}
+                      disabled={addedRevOrCart.cart}
+                    >
+                      {addedRevOrCart.cart ? "Added to cart" : "Add to cart"}
                     </button>
                   </div>
                 </div>
@@ -150,11 +222,21 @@ const ProductPage = (): JSX.Element => {
               </option>
             </select>
           </div>
-          <button className="submit-review add-cart-btn">Submit review</button>
+          <button
+            className="submit-review add-cart-btn"
+            disabled={addedRevOrCart.review}
+          >
+            {addedRevOrCart.review ? "Submitted review" : "Submit review"}
+          </button>
+          {postedReview.err && (
+            <div style={{ color: "#f00", marginTop: "0.5rem" }}>
+              {postedReview.err}
+            </div>
+          )}
         </form>
         <div className="reviews">
           {product &&
-            product.reviews.map((item, index) => (
+            product.productReviews.map((item, index) => (
               <ReviewsComponent
                 key={item.createdAt + index}
                 id={item.userId}
