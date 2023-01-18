@@ -30,15 +30,17 @@ const SearchPageCard = ({
             {name}
           </h4>
         </NavLink>
-        <div className="card-price">{price}$</div>
-        {admin && (
-          <button
-            className="edit-button"
-            onClick={(): void => navigate(`/dashboard/editproduct/${id}`)}
-          >
-            Edit
-          </button>
-        )}
+        <div className="content-props">
+          <div className="card-price">{price}$</div>
+          {admin && (
+            <button
+              className="edit-button"
+              onClick={(): void => navigate(`/dashboard/editproduct/${id}`)}
+            >
+              Edit
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -137,8 +137,8 @@ const DashAddProduct = (): JSX.Element => {
             />
           ))}
           <div className="input-container">
-            <label className={"input-label"} ref={imageLabel} htmlFor="image">
-              Image
+            <label className="input-label" ref={imageLabel} htmlFor="image">
+              Image:
             </label>
             <input
               style={{ paddingRight: "1.5rem" }}

@@ -175,14 +175,14 @@ const Navbar = () => {
                   ? ""
                   : !searchInput
                   ? navigate(`/`)
-                  : navigate(`/search?s=${searchInput}&p=1`)
+                  : navigate(`/search?q=${searchInput}&p=1`)
               }
             />
             <FontAwesomeIcon
               onClick={(): void =>
                 !searchInput
                   ? navigate(`/`)
-                  : navigate(`/search?s=${searchInput}&p=1`)
+                  : navigate(`/search?q=${searchInput}&p=1`)
               }
               className="search-icon"
               icon={faMagnifyingGlass}
@@ -223,14 +223,14 @@ const Navbar = () => {
                     ? ""
                     : !searchInput
                     ? navigate(`/`)
-                    : navigate(`/search?s=${searchInput}&p=1`)
+                    : navigate(`/search?q=${searchInput}&p=1`)
                 }
               />
               <FontAwesomeIcon
                 onClick={(): void =>
                   !searchInput
                     ? navigate(`/`)
-                    : navigate(`/search?s=${searchInput}&p=1`)
+                    : navigate(`/search?q=${searchInput}&p=1`)
                 }
                 className="search-icon"
                 icon={faMagnifyingGlass}

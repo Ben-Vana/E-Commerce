@@ -53,20 +53,15 @@ const ProductPage = (): JSX.Element => {
       .get(`/product/product/${productId}`)
       .then(({ data }) => setProduct(data))
       .catch((error) => console.log(error));
-    axios
-      .get("/users/userreviewinfo")
-      .then(({ data }) => {
-        const dbDate = data.userReviews[data.userReviews.length - 1].createdAt;
-        const d1 = new Date().getTime();
-        const d2 = new Date(dbDate).getTime();
-        if (d1 - d2 < 86400000) {
-          setPostedReview((state) => {
-            return { post: true, err: state.err };
-          });
-        }
-      })
-      .catch((err) => console.log(err));
   }, []);
+
+  const handleImgSize = () => {
+    if (imageRef.current) {
+      imageRef.current.naturalHeight > imageRef.current.naturalWidth
+        ? (imageRef.current.style.objectFit = "contain")
+        : (imageRef.current.style.objectFit = "fill");
+    }
+  };
 
   const handleAddProduct = (): void => {
     // if (!isLoggedIn) navigate("/login");
@@ -80,7 +75,10 @@ const ProductPage = (): JSX.Element => {
     //     })
     //   )
     //   .catch((err) => console.log(err));
-    console.log(product);
+    console.log(
+      imageRef.current?.naturalWidth,
+      imageRef.current?.naturalHeight
+    );
   };
 
   const handleReviewChange = (
@@ -99,6 +97,20 @@ const ProductPage = (): JSX.Element => {
 
   const handleSubmitReview = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
+    axios
+      .get("/users/userreviewinfo")
+      .then(({ data }) => {
+        const dbDate = data.userReviews[data.userReviews.length - 1].createdAt;
+        const d1 = new Date().getTime();
+        const d2 = new Date(dbDate).getTime();
+        if (d1 - d2 < 86400000) {
+          //86400000
+          setPostedReview((state) => {
+            return { post: true, err: state.err };
+          });
+        }
+      })
+      .catch((err) => console.log(err));
     if (!isLoggedIn) navigate("/login");
     if (postedReview.post) {
       setPostedReview((state) => {
@@ -130,13 +142,17 @@ const ProductPage = (): JSX.Element => {
     <div className="product-page">
       {product ? (
         <div className="page-content-container">
-          <div className="product-image-container">
-            <img
-              ref={imageRef}
-              src={product.image[0]}
-              alt={product.name}
-              className="product-image"
-            />
+          <h3 className="product-name show-name">{product.name}</h3>
+          <div className="product-gallery-container">
+            <div className="product-img-container">
+              <img
+                ref={imageRef}
+                src={product.image[0]}
+                alt={product.name}
+                className="product-image"
+                onLoad={handleImgSize}
+              />
+            </div>
             <div className="display-container">
               {product.image.map((item, index) => (
                 <div
@@ -150,7 +166,7 @@ const ProductPage = (): JSX.Element => {
             </div>
           </div>
           <div className="page-content">
-            <h3 className="product-name">{product.name}</h3>
+            <h3 className="product-name hide-name">{product.name}</h3>
             <div className="content-wrapper">
               <div className="desc-container">
                 {product.description.map((item, index) => (

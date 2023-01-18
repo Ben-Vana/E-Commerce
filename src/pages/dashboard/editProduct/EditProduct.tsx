@@ -27,6 +27,8 @@ const DashEditProduct = (): JSX.Element => {
   });
 
   const [error, setError] = useState<boolean>(false);
+  const [productImages, setImages] = useState<Array<string>>([]);
+
   const navigate = useNavigate();
   const param = useParams();
 
@@ -39,21 +41,21 @@ const DashEditProduct = (): JSX.Element => {
     { formName: "name", formRef: nameLabel },
     { formName: "price", formRef: priceLabel },
     { formName: "quantity", formRef: quantityLabel },
-    { formName: "image", formRef: imageLabel },
   ];
 
   useEffect((): void => {
     axios
       .get(`/product/product/${param.pid}`)
-      .then(({ data }) =>
+      .then(({ data }) => {
         setProductInfo({
           name: data.name,
           description: data.description.join("\n\n"),
           price: data.price,
           quantity: data.quantity,
-          image: data.image,
-        })
-      )
+          image: "",
+        });
+        setImages(data.image);
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -83,11 +85,31 @@ const DashEditProduct = (): JSX.Element => {
     setProductInfo(tempInfo);
   };
 
+  const handleAddImage = (): void => {
+    if (!productInfo.image) return;
+    let tempImageArr = JSON.parse(JSON.stringify(productImages));
+    const tempProduct = JSON.parse(JSON.stringify(productInfo));
+    tempImageArr.unshift(productInfo.image);
+    setImages(tempImageArr);
+    tempProduct.image = "";
+    setProductInfo(tempProduct);
+  };
+
+  const handleDeleteImage = (id: string): void => {
+    const removeIndex = productImages.findIndex((item) => item === id);
+    const tempImagesArr = JSON.parse(JSON.stringify(productImages));
+    const newImagesArr = tempImagesArr
+      .slice(0, removeIndex)
+      .concat(tempImagesArr.slice(removeIndex + 1));
+    setImages(newImagesArr);
+  };
+
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     const tempProduct = JSON.parse(JSON.stringify(productInfo));
     tempProduct.description = productInfo.description.split(/\n+/);
     tempProduct.quantity = +tempProduct.quantity;
+    tempProduct.image = productImages;
     tempProduct.id = param.pid;
     axios
       .patch("/product", tempProduct)
@@ -116,6 +138,36 @@ const DashEditProduct = (): JSX.Element => {
               edit={true}
             />
           ))}
+          <div className="input-container">
+            <label
+              className="input-label input-label-active"
+              ref={imageLabel}
+              htmlFor="image"
+            >
+              Image:
+            </label>
+            <input
+              style={{ paddingRight: "1.5rem" }}
+              className="form-input dash-form-input"
+              type="text"
+              id="image"
+              onFocus={() => handleFocus("image")}
+              onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
+                handleBlur(ev, "image")
+              }
+              onChange={handleInputChange}
+              value={productInfo.image}
+              minLength={2}
+              maxLength={1024}
+            />
+            <span
+              className="add-img"
+              title="Add image"
+              onClick={handleAddImage}
+            >
+              +
+            </span>
+          </div>
           {error && (
             <div className="submit-error">
               *Error has occured, Please try again later.
@@ -145,6 +197,18 @@ const DashEditProduct = (): JSX.Element => {
             text to different paragraphs by going down one line between each
             paragraph.
           </div>
+          {productImages[0] &&
+            productImages.map((item, index) => (
+              <div key={index} className="img-frame">
+                <img src={item} alt={productInfo.name} className="added-img" />
+                <span
+                  className="remove-img"
+                  onClick={() => handleDeleteImage(item)}
+                >
+                  +
+                </span>
+              </div>
+            ))}
         </div>
         <button className="product-submit show">Update Product Info</button>
       </form>
