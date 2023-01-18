@@ -10,7 +10,7 @@ interface cardProp {
   _id: string;
   name: string;
   price: number;
-  image: string;
+  image: Array<string>;
 }
 const numberOfCardsPerPage = 10;
 let buttonLength = 1;
@@ -28,7 +28,7 @@ const SearchPage = (): JSX.Element => {
 
   useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
-    const search = qParams.get("s");
+    const search = qParams.get("q");
     const page = qParams.get("p");
     setUserSearch(search);
     axios
@@ -157,7 +157,7 @@ const SearchPage = (): JSX.Element => {
               id={item._id}
               name={item.name}
               price={item.price}
-              image={item.image}
+              image={item.image[0]}
               admin={isAdmin}
             />
           ))

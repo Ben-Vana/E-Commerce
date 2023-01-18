@@ -132,3 +132,42 @@
 .edit-button:hover {
   background-color: rgba(39, 43, 48, 0.6);
 }
+
+@media screen and (max-width: 1000px) {
+  .row-card {
+    flex-direction: column;
+    height: auto;
+  }
+  .image-container {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid rgba(232, 185, 35, 0.4);
+    border-radius: 0.6rem 0.6rem 0 0;
+  }
+  .card-content {
+    width: 100%;
+    padding: 0;
+  }
+  .card-header {
+    padding: 1rem;
+  }
+  .content-props {
+    width: 100%;
+    background-color: var(--main-background);
+    border-radius: 0 0 0.6rem 0.6rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .edit-button {
+    position: static;
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .search-page-container {
+    width: 85%;
+  }
+}
