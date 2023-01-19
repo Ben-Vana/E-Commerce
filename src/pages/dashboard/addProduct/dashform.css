@@ -79,6 +79,7 @@
   cursor: pointer;
   font-size: 0.9rem;
   align-self: center;
+  margin-bottom: 2rem;
 }
 
 .product-submit:hover {
@@ -113,9 +114,15 @@
   opacity: 0.6;
 }
 
+.add-img-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
 .img-frame {
   width: 35vw;
-  margin-top: 0.5rem;
   position: relative;
   border: 1px solid var(--font-light);
   min-height: 2.5rem;
@@ -164,8 +171,17 @@
   .hide {
     display: none;
   }
-
   .show {
     display: block;
+  }
+  .add-img-container {
+    align-items: center;
+  }
+  .img-frame {
+    width: 70vw;
+  }
+  .remove-img {
+    font-size: 4rem;
+    top: -1rem;
   }
 }

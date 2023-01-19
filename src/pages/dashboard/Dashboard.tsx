@@ -11,9 +11,11 @@ const Dashboard = (): JSX.Element => {
   const handleDashHam = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (isOpen === false && ev.currentTarget.parentElement) {
       ev.currentTarget.parentElement.style.left = "0";
+      ev.currentTarget.style.left = "30vw";
       setIsOpen(true);
     } else if (isOpen === true && ev.currentTarget.parentElement) {
       ev.currentTarget.parentElement.style.left = "-30vw";
+      ev.currentTarget.style.left = "0";
       setIsOpen(false);
     }
   };

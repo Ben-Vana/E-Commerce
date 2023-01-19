@@ -170,6 +170,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 0.2rem;
+  position: relative;
 }
 
 .review-username {
@@ -179,6 +180,22 @@
 
 .review-description {
   margin-top: 1rem;
+  margin-right: 1.5rem;
+}
+
+.delete-review {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  cursor: pointer;
+  font-size: 1.3rem;
+  border: none;
+  background-color: var(--container-background);
+  color: rgba(255, 0, 0, 0.6);
+}
+
+.delete-review:hover {
+  color: rgba(255, 0, 0, 0.4);
 }
 
 .display-container {
