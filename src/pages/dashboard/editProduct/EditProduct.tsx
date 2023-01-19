@@ -197,18 +197,24 @@ const DashEditProduct = (): JSX.Element => {
             text to different paragraphs by going down one line between each
             paragraph.
           </div>
-          {productImages[0] &&
-            productImages.map((item, index) => (
-              <div key={index} className="img-frame">
-                <img src={item} alt={productInfo.name} className="added-img" />
-                <span
-                  className="remove-img"
-                  onClick={() => handleDeleteImage(item)}
-                >
-                  +
-                </span>
-              </div>
-            ))}
+          <div className="add-img-container">
+            {productImages[0] &&
+              productImages.map((item, index) => (
+                <div key={index} className="img-frame">
+                  <img
+                    src={item}
+                    alt={productInfo.name}
+                    className="added-img"
+                  />
+                  <span
+                    className="remove-img"
+                    onClick={() => handleDeleteImage(item)}
+                  >
+                    +
+                  </span>
+                </div>
+              ))}
+          </div>
         </div>
         <button className="product-submit show">Update Product Info</button>
       </form>

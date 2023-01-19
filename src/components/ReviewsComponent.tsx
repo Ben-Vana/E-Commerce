@@ -1,18 +1,24 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faTrash, faFlag } from "@fortawesome/free-solid-svg-icons";
 
 interface reviewInterface {
-  id: string;
+  userId: string;
+  revId: string;
   user: string;
   revBody: Array<string>;
   revRate: number;
+  admin: boolean;
+  deleteRev: Function;
 }
 
 const ReviewsComponent = ({
-  id,
+  userId,
+  revId,
   user,
   revBody,
   revRate,
+  admin,
+  deleteRev,
 }: reviewInterface): JSX.Element => {
   return (
     <div className="review-comp-wrapper">
@@ -60,6 +66,15 @@ const ReviewsComponent = ({
         />
       </div>
       <div className="review-description">{revBody.join(" ")}</div>
+      {admin ? (
+        <button onClick={() => deleteRev(revId)} className="delete-review">
+          <FontAwesomeIcon icon={faTrash} />
+        </button>
+      ) : (
+        <button title="Report" className="delete-review">
+          <FontAwesomeIcon icon={faFlag} />
+        </button>
+      )}
     </div>
   );
 };

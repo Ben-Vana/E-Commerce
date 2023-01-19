@@ -17,6 +17,7 @@ interface productInterface {
     description: Array<string>;
     rating: number;
     createdAt: string;
+    _id: string;
   }>;
 }
 
@@ -45,6 +46,10 @@ const ProductPage = (): JSX.Element => {
     (state: { authReducer: { login: boolean } }): boolean =>
       state.authReducer.login
   );
+  const isAdmin = useSelector(
+    (state: { authReducer: { userData: { admin: boolean } } }) =>
+      state.authReducer.userData.admin
+  );
 
   useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
@@ -64,21 +69,17 @@ const ProductPage = (): JSX.Element => {
   };
 
   const handleAddProduct = (): void => {
-    // if (!isLoggedIn) navigate("/login");
-    // const qParams = new URLSearchParams(location.search);
-    // const productId = qParams.get("pid");
-    // axios
-    //   .post("/usercart/addproduct", { pid: productId })
-    //   .then(() =>
-    //     setAddedProp((state) => {
-    //       return { cart: true, review: state.review };
-    //     })
-    //   )
-    //   .catch((err) => console.log(err));
-    console.log(
-      imageRef.current?.naturalWidth,
-      imageRef.current?.naturalHeight
-    );
+    if (!isLoggedIn) navigate("/login");
+    const qParams = new URLSearchParams(location.search);
+    const productId = qParams.get("pid");
+    axios
+      .post("/usercart/addproduct", { pid: productId })
+      .then(() =>
+        setAddedProp((state) => {
+          return { cart: true, review: state.review };
+        })
+      )
+      .catch((err) => console.log(err));
   };
 
   const handleReviewChange = (
@@ -95,8 +96,30 @@ const ProductPage = (): JSX.Element => {
     }
   };
 
+  const handleDeleteReview = (id: string): void => {
+    const qParams = new URLSearchParams(location.search);
+    const productId = qParams.get("pid");
+    axios
+      .post("/product/revtoken", { pid: productId, rid: id })
+      .then(({ data }) => {
+        axios
+          .delete(`/product/deletereview/${data}`)
+          .then(({ data }) => {
+            const tempProduct = JSON.parse(JSON.stringify(product));
+            tempProduct.productReviews = data.productReviews;
+            setProduct(tempProduct);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  };
+
   const handleSubmitReview = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
     axios
       .get("/users/userreviewinfo")
       .then(({ data }) => {
@@ -104,37 +127,28 @@ const ProductPage = (): JSX.Element => {
         const d1 = new Date().getTime();
         const d2 = new Date(dbDate).getTime();
         if (d1 - d2 < 86400000) {
-          //86400000
-          setPostedReview((state) => {
-            return { post: true, err: state.err };
+          setPostedReview({
+            post: true,
+            err: "You have to wait 24 hours before posting your next review.",
           });
+        } else {
+          const params = new URLSearchParams(location.search);
+          const pid = params.get("pid");
+          let tempReview = JSON.parse(JSON.stringify(addReview));
+          tempReview.description = tempReview.description.split(/\n+/);
+          for (let i = 0; i < tempReview.description.length; i++)
+            tempReview.description[i] = tempReview.description[i].trim();
+          tempReview.rating = +tempReview.rating;
+          axios
+            .post("/product/addreview", { productId: pid, ...tempReview })
+            .then(() =>
+              setAddedProp((state) => {
+                return { cart: state.cart, review: true };
+              })
+            )
+            .catch((err) => console.log(err));
         }
       })
-      .catch((err) => console.log(err));
-    if (!isLoggedIn) navigate("/login");
-    if (postedReview.post) {
-      setPostedReview((state) => {
-        return {
-          post: state.post,
-          err: "You have to wait 24 hours before posting your next review.",
-        };
-      });
-      return;
-    }
-    const params = new URLSearchParams(location.search);
-    const pid = params.get("pid");
-    let tempReview = JSON.parse(JSON.stringify(addReview));
-    tempReview.description = tempReview.description.split(/\n+/);
-    for (let i = 0; i < tempReview.description.length; i++)
-      tempReview.description[i] = tempReview.description[i].trim();
-    tempReview.rating = +tempReview.rating;
-    axios
-      .post("/product/addreview", { productId: pid, ...tempReview })
-      .then(() =>
-        setAddedProp((state) => {
-          return { cart: state.cart, review: true };
-        })
-      )
       .catch((err) => console.log(err));
   };
 
@@ -255,10 +269,13 @@ const ProductPage = (): JSX.Element => {
             product.productReviews.map((item, index) => (
               <ReviewsComponent
                 key={item.createdAt + index}
-                id={item.userId}
+                userId={item.userId}
+                revId={item._id}
                 user={item.userName}
                 revBody={item.description}
                 revRate={item.rating}
+                admin={isAdmin}
+                deleteRev={handleDeleteReview}
               />
             ))}
         </div>

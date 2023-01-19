@@ -104,7 +104,7 @@ const Navbar = () => {
     }
 
     const qParam = new URLSearchParams(location.search);
-    const search = qParam.get("s");
+    const search = qParam.get("q");
     if (search) setSearchInput(search);
     else setSearchInput("");
   }, [location.search]);

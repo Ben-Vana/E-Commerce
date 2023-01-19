@@ -162,18 +162,6 @@ const DashAddProduct = (): JSX.Element => {
               +
             </span>
           </div>
-          {/* {productImages[0] &&
-            productImages.map((item, index) => (
-              <div key={index} className="img-frame">
-                <img src={item} alt={productInfo.name} className="added-img" />
-                <span
-                  className="remove-img"
-                  onClick={() => handleDeleteImage(item)}
-                >
-                  +
-                </span>
-              </div>
-            ))} */}
           {error.imgErr && (
             <div className="submit-error">
               *Make sure you pressed the plus button to upload the image.
@@ -208,18 +196,24 @@ const DashAddProduct = (): JSX.Element => {
             text to different paragraphs by going down one line between each
             paragraph.
           </div>
-          {productImages[0] &&
-            productImages.map((item, index) => (
-              <div key={index} className="img-frame">
-                <img src={item} alt={productInfo.name} className="added-img" />
-                <span
-                  className="remove-img"
-                  onClick={() => handleDeleteImage(item)}
-                >
-                  +
-                </span>
-              </div>
-            ))}
+          <div className="add-img-container">
+            {productImages[0] &&
+              productImages.map((item, index) => (
+                <div key={index} className="img-frame">
+                  <img
+                    src={item}
+                    alt={productInfo.name}
+                    className="added-img"
+                  />
+                  <span
+                    className="remove-img"
+                    onClick={() => handleDeleteImage(item)}
+                  >
+                    +
+                  </span>
+                </div>
+              ))}
+          </div>
         </div>
         <button className="product-submit show">Add Product</button>
       </form>

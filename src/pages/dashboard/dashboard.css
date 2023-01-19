@@ -43,8 +43,8 @@
 }
 
 .dash-ham {
-  position: absolute;
-  right: -3.6rem;
+  position: fixed;
+  left: 0;
   padding: 0.4rem 0.8rem;
   font-size: 2.2rem;
   border: 1px solid var(--font-light);
@@ -52,6 +52,7 @@
   cursor: pointer;
   color: var(--font-light);
   display: none;
+  transition: left 400ms ease-in-out;
 }
 
 @media screen and (max-width: 1500px) {
@@ -67,9 +68,9 @@
     column-gap: 0;
   }
   .dash-nav {
-    position: absolute;
-    top: -0.5rem;
-    height: calc(100% + 0.5rem);
+    position: fixed;
+    top: 4.5rem;
+    height: 100%;
     z-index: 10;
     width: 30vw;
     left: -30vw;
