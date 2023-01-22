@@ -96,14 +96,14 @@ const ProductPage = (): JSX.Element => {
     }
   };
 
-  const handleDeleteReview = (id: string): void => {
+  const handleDeleteReview = (reviewId: string, userId: string): void => {
     const qParams = new URLSearchParams(location.search);
     const productId = qParams.get("pid");
     axios
-      .post("/product/revtoken", { pid: productId, rid: id })
+      .post("/review/revtoken", { pid: productId, rid: reviewId, uid: userId })
       .then(({ data }) => {
         axios
-          .delete(`/product/deletereview/${data}`)
+          .delete(`/review/deletereview/${data}`)
           .then(({ data }) => {
             const tempProduct = JSON.parse(JSON.stringify(product));
             tempProduct.productReviews = data.productReviews;
@@ -123,10 +123,14 @@ const ProductPage = (): JSX.Element => {
     axios
       .get("/users/userreviewinfo")
       .then(({ data }) => {
-        const dbDate = data.userReviews[data.userReviews.length - 1].createdAt;
+        const dbDate =
+          data.userReviews.length > 0
+            ? data.userReviews[data.userReviews.length - 1].createdAt
+            : 0;
         const d1 = new Date().getTime();
         const d2 = new Date(dbDate).getTime();
-        if (d1 - d2 < 86400000) {
+        if (d1 - d2 < 0) {
+          //86400000
           setPostedReview({
             post: true,
             err: "You have to wait 24 hours before posting your next review.",
@@ -140,7 +144,7 @@ const ProductPage = (): JSX.Element => {
             tempReview.description[i] = tempReview.description[i].trim();
           tempReview.rating = +tempReview.rating;
           axios
-            .post("/product/addreview", { productId: pid, ...tempReview })
+            .post("/review/addreview", { productId: pid, ...tempReview })
             .then(() =>
               setAddedProp((state) => {
                 return { cart: state.cart, review: true };
