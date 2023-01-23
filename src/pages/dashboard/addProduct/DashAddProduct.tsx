@@ -105,14 +105,14 @@ const DashAddProduct = (): JSX.Element => {
     }
     const tempProduct = JSON.parse(JSON.stringify(productInfo));
     tempProduct.description = productInfo.description.split(/\n+/);
-    tempProduct.quantity = +tempProduct.quantity;
     tempProduct.image = productImages;
     axios
       .post("/product", {
         name: tempProduct.name,
         description: tempProduct.description,
         price: tempProduct.price,
-        quantity: tempProduct.quantity,
+        quantity: +tempProduct.quantity,
+        image: tempProduct.image,
       })
       .then(({ data }) => navigate(`/product?pid=${data._id}`))
       .catch(() =>
@@ -143,14 +143,14 @@ const DashAddProduct = (): JSX.Element => {
             />
           ))}
           <div className="input-container">
-            <label className="input-label" ref={imageLabel} htmlFor="images">
+            <label className="input-label" ref={imageLabel} htmlFor="image">
               Image:
             </label>
             <input
               style={{ paddingRight: "1.5rem" }}
               className="form-input dash-form-input"
               type="text"
-              id="images"
+              id="image"
               onFocus={() => handleFocus("image")}
               onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
                 handleBlur(ev, "image")
