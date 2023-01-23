@@ -99,6 +99,22 @@
   display: none;
 }
 
+.file-label {
+  color: var(--font-light);
+  font-family: inherit;
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  margin-left: 1rem;
+}
+
+.file-input {
+  margin-left: 1rem;
+  color: var(--font-light);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
 .add-img {
   position: absolute;
   font-size: 2rem;
