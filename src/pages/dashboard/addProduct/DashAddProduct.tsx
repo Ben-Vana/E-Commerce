@@ -14,7 +14,6 @@ interface infoInterface {
   description: string;
   price: string;
   quantity: string;
-  image: string;
 }
 
 const DashAddProduct = (): JSX.Element => {
@@ -23,10 +22,9 @@ const DashAddProduct = (): JSX.Element => {
     description: "",
     price: "",
     quantity: "",
-    image: "",
   });
 
-  const [productImages, setImages] = useState<Array<string>>([]);
+  const [productImages, setImages] = useState<FileList | null>(null);
 
   const [error, setError] = useState({ imgErr: false, formErr: false });
   const navigate = useNavigate();
@@ -43,29 +41,21 @@ const DashAddProduct = (): JSX.Element => {
   ];
 
   const handleFocus = (labelName: string): void => {
-    if (labelName === "image" && imageLabel.current)
-      imageLabel.current.classList.add("input-label-active");
-    else {
-      const label = formLabels.find((item) => item.formName === labelName);
-      label &&
-        label.formRef.current &&
-        label.formRef.current.classList.add("input-label-active");
-    }
+    const label = formLabels.find((item) => item.formName === labelName);
+    label &&
+      label.formRef.current &&
+      label.formRef.current.classList.add("input-label-active");
   };
 
   const handleBlur = (
     ev: React.FocusEvent<HTMLInputElement>,
     labelName: string
   ): void => {
-    if (labelName === "image" && !ev.target.value && imageLabel.current)
-      imageLabel.current.classList.remove("input-label-active");
-    else {
-      const label = formLabels.find((item) => item.formName === labelName);
-      !ev.target.value &&
-        label &&
-        label.formRef.current &&
-        label.formRef.current.classList.remove("input-label-active");
-    }
+    const label = formLabels.find((item) => item.formName === labelName);
+    !ev.target.value &&
+      label &&
+      label.formRef.current &&
+      label.formRef.current.classList.remove("input-label-active");
   };
 
   const handleInputChange = (
@@ -76,50 +66,30 @@ const DashAddProduct = (): JSX.Element => {
     setProductInfo(tempInfo);
   };
 
-  const handleAddImage = (): void => {
-    if (!productInfo.image) return;
-    let tempImageArr = JSON.parse(JSON.stringify(productImages));
-    const tempProduct = JSON.parse(JSON.stringify(productInfo));
-    tempImageArr.unshift(productInfo.image);
-    setImages(tempImageArr);
-    tempProduct.image = "";
-    setProductInfo(tempProduct);
-  };
-
-  const handleDeleteImage = (id: string): void => {
-    const removeIndex = productImages.findIndex((item) => item === id);
-    const tempImagesArr = JSON.parse(JSON.stringify(productImages));
-    const newImagesArr = tempImagesArr
-      .slice(0, removeIndex)
-      .concat(tempImagesArr.slice(removeIndex + 1));
-    setImages(newImagesArr);
+  const handleFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setImages(ev.target.files);
   };
 
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
-    if (!productImages[0]) {
-      setError((state) => {
-        return { imgErr: true, formErr: state.formErr };
-      });
-      return;
+    if (productImages) {
+      const formData = new FormData();
+      for (let i = 0; i < productImages.length; i++)
+        formData.append("images", productImages[i]);
+      const tempProduct = JSON.parse(JSON.stringify(productInfo));
+      tempProduct.description = productInfo.description.split(/\n+/);
+      const fields = Object.keys(tempProduct);
+      for (const field of fields) formData.append(field, tempProduct[field]);
+      axios
+        .post("/product", formData)
+        .then(({ data }) => navigate(`/product?pid=${data._id}`))
+        .catch((err) => {
+          console.log(err);
+          setError((state) => {
+            return { imgErr: state.imgErr, formErr: true };
+          });
+        });
     }
-    const tempProduct = JSON.parse(JSON.stringify(productInfo));
-    tempProduct.description = productInfo.description.split(/\n+/);
-    tempProduct.image = productImages;
-    axios
-      .post("/product", {
-        name: tempProduct.name,
-        description: tempProduct.description,
-        price: tempProduct.price,
-        quantity: +tempProduct.quantity,
-        image: tempProduct.image,
-      })
-      .then(({ data }) => navigate(`/product?pid=${data._id}`))
-      .catch(() =>
-        setError((state) => {
-          return { imgErr: state.imgErr, formErr: true };
-        })
-      );
   };
 
   return (
@@ -127,7 +97,7 @@ const DashAddProduct = (): JSX.Element => {
       <form
         className="form-container dash-form-container"
         onSubmit={handleSubmit}
-        encType=""
+        encType="multipart/form-data"
       >
         <div className="dash-input-container">
           {formLabels.map((item, index) => (
@@ -143,30 +113,18 @@ const DashAddProduct = (): JSX.Element => {
             />
           ))}
           <div className="input-container">
-            <label className="input-label" ref={imageLabel} htmlFor="image">
+            <label className="file-label" ref={imageLabel} htmlFor="images">
               Image:
             </label>
             <input
               style={{ paddingRight: "1.5rem" }}
-              className="form-input dash-form-input"
-              type="text"
-              id="image"
-              onFocus={() => handleFocus("image")}
-              onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
-                handleBlur(ev, "image")
-              }
-              onChange={handleInputChange}
-              value={productInfo.image}
-              minLength={2}
-              maxLength={1024}
+              className="file-input"
+              type="file"
+              id="images"
+              onChange={handleFileChange}
+              multiple
+              required
             />
-            <span
-              className="add-img"
-              title="Add image"
-              onClick={handleAddImage}
-            >
-              +
-            </span>
           </div>
           {error.imgErr && (
             <div className="submit-error">
@@ -203,7 +161,7 @@ const DashAddProduct = (): JSX.Element => {
             paragraph.
           </div>
           <div className="add-img-container">
-            {productImages[0] &&
+            {/* {productImages[0] &&
               productImages.map((item, index) => (
                 <div key={index} className="img-frame">
                   <img
@@ -218,7 +176,7 @@ const DashAddProduct = (): JSX.Element => {
                     +
                   </span>
                 </div>
-              ))}
+              ))} */}
           </div>
         </div>
         <button className="product-submit show">Add Product</button>
