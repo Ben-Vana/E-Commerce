@@ -64,7 +64,7 @@ const ProductPage = (): JSX.Element => {
     if (imageRef.current) {
       imageRef.current.naturalHeight > imageRef.current.naturalWidth
         ? (imageRef.current.style.objectFit = "contain")
-        : (imageRef.current.style.objectFit = "fill");
+        : (imageRef.current.style.objectFit = "cover");
     }
   };
 
@@ -92,7 +92,7 @@ const ProductPage = (): JSX.Element => {
 
   const handleChangeImage = (img: string): void => {
     if (imageRef.current) {
-      imageRef.current.src = img;
+      imageRef.current.src = `http://localhost:8181/public/images/${img}`;
     }
   };
 
@@ -165,10 +165,11 @@ const ProductPage = (): JSX.Element => {
             <div className="product-img-container">
               <img
                 ref={imageRef}
-                src={product.image[0]}
+                src={`http://localhost:8181/public/images/${product.image[0]}`}
                 alt={product.name}
                 className="product-image"
                 onLoad={handleImgSize}
+                crossOrigin="anonymous"
               />
             </div>
             <div className="display-container">
@@ -178,7 +179,12 @@ const ProductPage = (): JSX.Element => {
                   className="img-display"
                   onClick={() => handleChangeImage(item)}
                 >
-                  <img src={item} alt={product.name} className="product-img" />
+                  <img
+                    src={`http://localhost:8181/public/images/${item}`}
+                    alt={product.name}
+                    className="product-img"
+                    crossOrigin="anonymous"
+                  />
                 </div>
               ))}
             </div>

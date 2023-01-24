@@ -21,7 +21,12 @@ const SearchPageCard = ({
     <div className="row-card">
       <div className="image-container">
         <NavLink to={`/product?pid=${id}`}>
-          <img className="card-image" src={image} alt={name} />
+          <img
+            className="card-image"
+            src={`http://localhost:8181/public/images/${image}`}
+            alt={name}
+            crossOrigin="anonymous"
+          />
         </NavLink>
       </div>
       <div className="card-content">
