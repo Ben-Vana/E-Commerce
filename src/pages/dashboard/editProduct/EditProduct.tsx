@@ -14,7 +14,6 @@ interface infoInterface {
   description: string;
   price: string;
   quantity: string;
-  image: string;
 }
 
 const DashEditProduct = (): JSX.Element => {
@@ -23,11 +22,12 @@ const DashEditProduct = (): JSX.Element => {
     description: "",
     price: "",
     quantity: "",
-    image: "",
   });
 
   const [error, setError] = useState<boolean>(false);
-  const [productImages, setImages] = useState<Array<string>>([]);
+  const [productImages, setImages] = useState<FileList | null>(null);
+  const [oldProductImages, setOldImages] = useState<Array<string> | null>(null);
+  const [delProductImages, setDelImages] = useState<Array<string>>([]);
 
   const navigate = useNavigate();
   const param = useParams();
@@ -35,7 +35,6 @@ const DashEditProduct = (): JSX.Element => {
   const nameLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const priceLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const quantityLabel = useRef() as React.RefObject<HTMLLabelElement>;
-  const imageLabel = useRef() as React.RefObject<HTMLLabelElement>;
 
   const formLabels: formInterface[] = [
     { formName: "name", formRef: nameLabel },
@@ -52,9 +51,8 @@ const DashEditProduct = (): JSX.Element => {
           description: data.description.join("\n\n"),
           price: data.price,
           quantity: data.quantity,
-          image: "",
         });
-        setImages(data.image);
+        setOldImages(data.image);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -85,35 +83,40 @@ const DashEditProduct = (): JSX.Element => {
     setProductInfo(tempInfo);
   };
 
-  const handleAddImage = (): void => {
-    if (!productInfo.image) return;
-    let tempImageArr = JSON.parse(JSON.stringify(productImages));
-    const tempProduct = JSON.parse(JSON.stringify(productInfo));
-    tempImageArr.unshift(productInfo.image);
-    setImages(tempImageArr);
-    tempProduct.image = "";
-    setProductInfo(tempProduct);
+  const handleFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setImages(ev.target.files);
   };
 
   const handleDeleteImage = (id: string): void => {
-    const removeIndex = productImages.findIndex((item) => item === id);
-    const tempImagesArr = JSON.parse(JSON.stringify(productImages));
-    const newImagesArr = tempImagesArr
-      .slice(0, removeIndex)
-      .concat(tempImagesArr.slice(removeIndex + 1));
-    setImages(newImagesArr);
+    if (oldProductImages) {
+      const removeIndex = oldProductImages.findIndex((item) => item === id);
+      const tempImagesArr = JSON.parse(JSON.stringify(oldProductImages));
+      const tempDelImagesArr = JSON.parse(JSON.stringify(delProductImages));
+      tempDelImagesArr.push(tempImagesArr[removeIndex]);
+      const newImagesArr = tempImagesArr
+        .slice(0, removeIndex)
+        .concat(tempImagesArr.slice(removeIndex + 1));
+      setDelImages(tempDelImagesArr);
+      setOldImages(newImagesArr);
+    }
   };
 
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
+    const formData = new FormData();
+    if (productImages) {
+      for (let i = 0; i < productImages.length; i++)
+        formData.append("images", productImages[i]);
+    }
     const tempProduct = JSON.parse(JSON.stringify(productInfo));
     tempProduct.description = productInfo.description.split(/\n+/);
-    tempProduct.quantity = +tempProduct.quantity;
-    tempProduct.image = productImages;
-    tempProduct.id = param.pid;
+    tempProduct.image = oldProductImages;
+    tempProduct.delImages = delProductImages;
+    const fileds = Object.keys(tempProduct);
+    for (const field of fileds) formData.append(field, tempProduct[field]);
     axios
-      .patch("/product", tempProduct)
-      .then(() => navigate(`/product?pid=${tempProduct.id}`))
+      .patch(`/product/${param.pid}`, formData)
+      .then(() => navigate(`/product?pid=${param.pid}`))
       .catch(() => {
         setError(true);
       });
@@ -124,6 +127,7 @@ const DashEditProduct = (): JSX.Element => {
       <form
         className="form-container dash-form-container"
         onSubmit={handleSubmit}
+        encType="multipart/form-data"
       >
         <div className="dash-input-container">
           {formLabels.map((item, index) => (
@@ -139,34 +143,17 @@ const DashEditProduct = (): JSX.Element => {
             />
           ))}
           <div className="input-container">
-            <label
-              className="input-label input-label-active"
-              ref={imageLabel}
-              htmlFor="image"
-            >
+            <label className="file-label" htmlFor="images">
               Image:
             </label>
             <input
               style={{ paddingRight: "1.5rem" }}
-              className="form-input dash-form-input"
-              type="text"
-              id="image"
-              onFocus={() => handleFocus("image")}
-              onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
-                handleBlur(ev, "image")
-              }
-              onChange={handleInputChange}
-              value={productInfo.image}
-              minLength={2}
-              maxLength={1024}
+              className="file-input"
+              type="file"
+              id="images"
+              onChange={handleFileChange}
+              multiple
             />
-            <span
-              className="add-img"
-              title="Add image"
-              onClick={handleAddImage}
-            >
-              +
-            </span>
           </div>
           {error && (
             <div className="submit-error">
@@ -198,13 +185,14 @@ const DashEditProduct = (): JSX.Element => {
             paragraph.
           </div>
           <div className="add-img-container">
-            {productImages[0] &&
-              productImages.map((item, index) => (
+            {oldProductImages &&
+              oldProductImages.map((item, index) => (
                 <div key={index} className="img-frame">
                   <img
-                    src={item}
+                    src={`http://localhost:8181/public/images/${item}`}
                     alt={productInfo.name}
                     className="added-img"
+                    crossOrigin="anonymous"
                   />
                   <span
                     className="remove-img"
