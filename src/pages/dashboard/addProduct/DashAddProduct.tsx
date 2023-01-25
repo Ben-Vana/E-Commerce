@@ -77,7 +77,9 @@ const DashAddProduct = (): JSX.Element => {
       for (let i = 0; i < productImages.length; i++)
         formData.append("images", productImages[i]);
       const tempProduct = JSON.parse(JSON.stringify(productInfo));
-      tempProduct.description = productInfo.description.split(/\n+/);
+      tempProduct.description = productInfo.description
+        .replace(/,/g, "{commaREPLACE}")
+        .split(/\n+/);
       const fields = Object.keys(tempProduct);
       for (const field of fields) formData.append(field, tempProduct[field]);
       axios
