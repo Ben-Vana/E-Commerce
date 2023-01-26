@@ -4,7 +4,6 @@ import SearchNavButtons from "../../components/SearchNavButtons";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./search.css";
-import { useSelector } from "react-redux";
 
 interface cardProp {
   _id: string;
@@ -20,11 +19,6 @@ const SearchPage = (): JSX.Element => {
   const [productsArr, setProductsArr] = useState<Array<cardProp>>([]);
   const [userSearch, setUserSearch] = useState<string | null>("");
   const location = useLocation();
-
-  const isAdmin = useSelector(
-    (state: { authReducer: { userData: { admin: boolean } } }) =>
-      state.authReducer.userData.admin
-  );
 
   useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
@@ -158,7 +152,12 @@ const SearchPage = (): JSX.Element => {
               name={item.name}
               price={item.price}
               image={item.image[0]}
-              admin={isAdmin}
+              admin={{
+                admin: false,
+                delFunc: () => {
+                  return;
+                },
+              }}
             />
           ))
         ) : (

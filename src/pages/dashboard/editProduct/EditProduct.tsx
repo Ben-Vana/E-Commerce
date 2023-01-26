@@ -117,9 +117,7 @@ const DashEditProduct = (): JSX.Element => {
     axios
       .patch(`/product/${param.pid}`, formData)
       .then(() => navigate(`/product?pid=${param.pid}`))
-      .catch(() => {
-        setError(true);
-      });
+      .catch(() => setError(true));
   };
 
   return (
