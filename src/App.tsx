@@ -12,6 +12,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import DashAddProduct from "./pages/dashboard/addProduct/DashAddProduct";
 import DashStatistics from "./pages/dashboard/DashStatistics";
 import DashEditProduct from "./pages/dashboard/editProduct/EditProduct";
+import AllProducts from "./pages/dashboard/allProducts/AllProducts";
 import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -67,6 +68,10 @@ const App = (): JSX.Element => {
                 <Route
                   path="/dashboard/addproduct"
                   element={<DashAddProduct />}
+                />
+                <Route
+                  path="/dashboard/manageproduct"
+                  element={<AllProducts />}
                 />
                 <Route
                   path="/dashboard/editproduct/:pid"

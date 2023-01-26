@@ -1,0 +1,105 @@
+.ap-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-column: 2;
+}
+
+.ap-search {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background-color: var(--container-background);
+  border-radius: 0 0 0.7rem 0.7rem;
+}
+
+.ap-input-container {
+  width: 50%;
+  position: relative;
+  margin-right: 9.8%;
+}
+
+.ap-input {
+  width: 100%;
+  padding: 0.5rem;
+  color: var(--font-light);
+  background-color: var(--main-background);
+  border: 1px solid rgba(232, 185, 35, 0.4);
+  font-size: 1.2rem;
+  border-radius: 0.7rem;
+}
+
+.ap-input:focus {
+  outline: none;
+}
+
+.ap-icon-container {
+  position: absolute;
+  height: 100%;
+  cursor: pointer;
+  right: 0;
+  top: 0;
+  background-color: var(--main-background);
+  display: flex;
+  align-items: center;
+  padding-inline: 1rem;
+  border-radius: 0 0.7rem 0.7rem 0;
+  border: 1px solid rgba(232, 185, 35, 0.4);
+}
+
+.ap-search-icon {
+  font-size: 1.4rem;
+  color: var(--font-light);
+}
+
+.ap-icon-container:hover {
+  border: 1px solid rgba(232, 185, 35, 0.8);
+}
+
+.ap-res {
+  margin-right: 25%;
+}
+
+.admin-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  color: var(--font-light);
+  background-color: var(--main-background);
+  border: 1px solid rgba(232, 185, 35, 0.4);
+  border-radius: 0.3rem;
+}
+
+.edit-button:hover {
+  background-color: rgba(39, 43, 48, 0.6);
+}
+
+.btn-confirm {
+  border: 1px solid #f00;
+}
+
+@media screen and (max-width: 1100px) {
+  .ap-res {
+    margin-right: auto;
+  }
+  .edit-button {
+    position: static;
+    margin: 0;
+  }
+  .ap-input-container {
+    margin-right: 0;
+    width: 65%;
+  }
+  .admin-btn {
+    margin: 0.1rem 0.5rem;
+  }
+}

@@ -45,6 +45,16 @@ const Dashboard = (): JSX.Element => {
               className={({ isActive }) =>
                 isActive ? "dash-nav-link active-dash" : "dash-nav-link"
               }
+              to="/dashboard/manageproduct"
+            >
+              Product manager
+            </NavLink>
+          </li>
+          <li className="dash-list-item">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "dash-nav-link active-dash" : "dash-nav-link"
+              }
               to="/dashboard/addproduct"
             >
               Add Product

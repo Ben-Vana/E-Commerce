@@ -116,23 +116,6 @@
   background-color: rgba(232, 185, 35, 0.7);
 }
 
-.edit-button {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 1rem;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  color: var(--font-light);
-  background-color: var(--main-background);
-  border: 1px solid rgba(232, 185, 35, 0.4);
-  border-radius: 0.3rem;
-}
-
-.edit-button:hover {
-  background-color: rgba(39, 43, 48, 0.6);
-}
-
 @media screen and (max-width: 1000px) {
   .row-card {
     flex-direction: column;
@@ -159,10 +142,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  .edit-button {
-    position: static;
-    margin: 0;
   }
 }
 

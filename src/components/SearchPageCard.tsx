@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "../pages/searchPage/search.css";
 
 interface cardProp {
@@ -6,7 +7,7 @@ interface cardProp {
   name: string;
   price: number;
   image: string;
-  admin: boolean;
+  admin: { admin: boolean; delFunc: Function };
 }
 
 const SearchPageCard = ({
@@ -16,6 +17,7 @@ const SearchPageCard = ({
   image,
   admin,
 }: cardProp): JSX.Element => {
+  const [confirmDelete, setDelete] = useState(false);
   const navigate = useNavigate();
   return (
     <div className="row-card">
@@ -37,13 +39,30 @@ const SearchPageCard = ({
         </NavLink>
         <div className="content-props">
           <div className="card-price">{price}$</div>
-          {admin && (
-            <button
-              className="edit-button"
-              onClick={(): void => navigate(`/dashboard/editproduct/${id}`)}
-            >
-              Edit
-            </button>
+          {admin.admin && (
+            <div className="admin-btn">
+              <button
+                className="edit-button"
+                onClick={(): void => navigate(`/dashboard/editproduct/${id}`)}
+              >
+                Edit
+              </button>
+              {confirmDelete ? (
+                <button
+                  className="edit-button btn-confirm"
+                  onClick={(): void => admin.delFunc(id)}
+                >
+                  Confirm Delete
+                </button>
+              ) : (
+                <button
+                  className="edit-button"
+                  onClick={(): void => setDelete(true)}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
