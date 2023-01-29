@@ -10,7 +10,7 @@ import "./allproducts.css";
 interface cardProp {
   _id: string;
   name: string;
-  price: number;
+  price: string;
   image: Array<string>;
 }
 

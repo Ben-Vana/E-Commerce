@@ -116,6 +116,54 @@
   background-color: rgba(232, 185, 35, 0.7);
 }
 
+.sort-container {
+  position: relative;
+}
+
+.sort-txt {
+  color: var(--font-light);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.sort-txt:hover {
+  opacity: 0.8;
+}
+
+.sort-options {
+  position: absolute;
+  display: none;
+  width: 10%;
+  flex-direction: column;
+  color: var(--font-light);
+  z-index: 999;
+  background-color: var(--container-background);
+}
+
+.sort-style {
+  width: 100%;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.sort-style:hover {
+  background-color: rgba(232, 185, 35, 0.7);
+}
+
+.sort-active {
+  background-color: rgba(232, 185, 35, 0.7);
+}
+
+.show-pop {
+  display: flex;
+}
+
+.sort-rule {
+  width: 100%;
+  margin-top: -0.5rem;
+  border-top: 1px solid #fff;
+}
+
 @media screen and (max-width: 1000px) {
   .row-card {
     flex-direction: column;

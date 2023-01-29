@@ -1,14 +1,15 @@
 import axios from "axios";
 import SearchPageCard from "../../components/SearchPageCard";
 import SearchNavButtons from "../../components/SearchNavButtons";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useSortData } from "../../hooks/useSortData";
+import { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./search.css";
 
 interface cardProp {
   _id: string;
   name: string;
-  price: number;
+  price: string;
   image: Array<string>;
 }
 const numberOfCardsPerPage = 10;
@@ -18,10 +19,16 @@ let resultArrLength: number;
 const SearchPage = (): JSX.Element => {
   const [productsArr, setProductsArr] = useState<Array<cardProp>>([]);
   const [userSearch, setUserSearch] = useState<string | null>("");
+
   const location = useLocation();
+  const navigate = useNavigate();
+  const sortData = useSortData();
+
+  const sortRef = useRef() as React.RefObject<HTMLDivElement>;
 
   useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
+    const sort = qParams.get("s");
     const search = qParams.get("q");
     const page = qParams.get("p");
     setUserSearch(search);
@@ -29,21 +36,37 @@ const SearchPage = (): JSX.Element => {
       .get(`/product/${search}`)
       .then(({ data }): void | null => {
         resultArrLength = data.length;
-        return page
-          ? setProductsArr(
-              data.slice(
-                (+page - 1) * numberOfCardsPerPage,
-                +page * numberOfCardsPerPage
-              )
-            )
-          : null;
+        setProductsArr(sortData(data, sort, page, numberOfCardsPerPage));
       })
       .catch((err): void => console.log(err));
   }, [location]);
 
+  const handleShowSort = () => {
+    if (sortRef.current) {
+      if (sortRef.current.classList.contains("show-pop"))
+        sortRef.current.classList.remove("show-pop");
+      else sortRef.current.classList.add("show-pop");
+    }
+  };
+
+  const handleSort = (sort: string): void => {
+    const qParams = new URLSearchParams(location.search);
+    qParams.set("s", sort);
+    qParams.set("p", "1");
+    navigate(`/search?${qParams.toString()}`);
+    if (sortRef.current) sortRef.current.classList.remove("show-pop");
+  };
+
+  const handleActiveStyle = (option: string): string => {
+    const qParams = new URLSearchParams(location.search);
+    const sortState = qParams.get("s");
+    return sortState === option ? "sort-style sort-active" : "sort-style";
+  };
+
   const renderButton = (): Array<JSX.Element> => {
     const qParams = new URLSearchParams(location.search);
     const page = qParams.get("p");
+    const sort = qParams.get("s");
     buttonLength = resultArrLength / numberOfCardsPerPage;
     let buttonArr = [];
 
@@ -55,6 +78,7 @@ const SearchPage = (): JSX.Element => {
             key={"button" + i}
             index={i + 1}
             search={userSearch}
+            sort={sort}
           />
         );
       }
@@ -63,7 +87,12 @@ const SearchPage = (): JSX.Element => {
       //if number of pages is grater then 5 and we are on the first or second page
       if (pageNumber === 1 || pageNumber === 2) {
         buttonArr.push(
-          <SearchNavButtons key={"button" + 1} index={1} search={userSearch} />
+          <SearchNavButtons
+            key={"button" + 1}
+            index={1}
+            search={userSearch}
+            sort={sort}
+          />
         );
         for (let i = pageNumber; i <= pageNumber + 2; i++) {
           buttonArr.push(
@@ -71,6 +100,7 @@ const SearchPage = (): JSX.Element => {
               key={"button" + (i + 1)}
               index={pageNumber === 1 ? i + 1 : pageNumber === 2 ? i : i + 1}
               search={userSearch}
+              sort={sort}
             />
           );
           if (i === pageNumber + 2) {
@@ -79,6 +109,7 @@ const SearchPage = (): JSX.Element => {
                 key={"last-button"}
                 index={buttonLength || 0}
                 search={userSearch}
+                sort={sort}
               />
             );
           }
@@ -96,6 +127,7 @@ const SearchPage = (): JSX.Element => {
               key={"button" + (i - 1)}
               index={i}
               search={userSearch}
+              sort={sort}
             />
           );
         }
@@ -104,6 +136,7 @@ const SearchPage = (): JSX.Element => {
             key={"first-button"}
             index={1}
             search={userSearch}
+            sort={sort}
           />
         );
         buttonArr.push(
@@ -111,13 +144,19 @@ const SearchPage = (): JSX.Element => {
             key={"last-button"}
             index={buttonLength || 0}
             search={userSearch}
+            sort={sort}
           />
         );
       }
       //if number of pages is grater then 5 and we are in the middle pages number
       else {
         buttonArr.push(
-          <SearchNavButtons key={"button" + 1} index={1} search={userSearch} />
+          <SearchNavButtons
+            key={"button" + 1}
+            index={1}
+            search={userSearch}
+            sort={sort}
+          />
         );
         for (let i = pageNumber - 1; i < pageNumber + 2; i++) {
           buttonArr.push(
@@ -125,6 +164,7 @@ const SearchPage = (): JSX.Element => {
               key={"button" + i}
               index={i}
               search={userSearch}
+              sort={sort}
             />
           );
         }
@@ -133,6 +173,7 @@ const SearchPage = (): JSX.Element => {
             key={"last-button"}
             index={buttonLength || 0}
             search={userSearch}
+            sort={sort}
           />
         );
       }
@@ -144,6 +185,38 @@ const SearchPage = (): JSX.Element => {
     <div>
       <h3 className="search-result">Search result for "{userSearch}":</h3>
       <div className="search-page-container">
+        <div className="sort-container">
+          <span className="sort-txt" onClick={handleShowSort}>
+            Sort &#709;
+          </span>
+          <div className="sort-options" ref={sortRef}>
+            <span
+              className={handleActiveStyle("price")}
+              onClick={(): void => handleSort("priceHTL")}
+            >
+              Price high to low
+            </span>
+            <span
+              className={handleActiveStyle("price")}
+              onClick={(): void => handleSort("priceLTH")}
+            >
+              Price low to high
+            </span>
+            <span
+              className={handleActiveStyle("name")}
+              onClick={(): void => handleSort("nameAZ")}
+            >
+              Name A-Z
+            </span>
+            <span
+              className={handleActiveStyle("name")}
+              onClick={(): void => handleSort("nameZA")}
+            >
+              Name Z-A
+            </span>
+          </div>
+        </div>
+        <div className="sort-rule"></div>
         {productsArr[0] ? (
           productsArr.map((item: cardProp, index) => (
             <SearchPageCard
