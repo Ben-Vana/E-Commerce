@@ -5,7 +5,7 @@ import "../pages/searchPage/search.css";
 interface cardProp {
   id: string;
   name: string;
-  price: number;
+  price: string;
   image: string;
   admin: { admin: boolean; delFunc: Function };
 }
