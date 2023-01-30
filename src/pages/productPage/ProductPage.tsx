@@ -96,11 +96,20 @@ const ProductPage = (): JSX.Element => {
     }
   };
 
-  const handleDeleteReview = (reviewId: string, userId: string): void => {
+  const handleDeleteReview = (
+    reviewId: string,
+    userId: string,
+    revRate: number
+  ): void => {
     const qParams = new URLSearchParams(location.search);
     const productId = qParams.get("pid");
     axios
-      .post("/review/revtoken", { pid: productId, rid: reviewId, uid: userId })
+      .post("/review/revtoken", {
+        pid: productId,
+        rid: reviewId,
+        uid: userId,
+        revRate,
+      })
       .then(({ data }) => {
         axios
           .delete(`/review/deletereview/${data}`)

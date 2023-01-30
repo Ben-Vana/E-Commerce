@@ -68,7 +68,7 @@ const ReviewsComponent = ({
       <div className="review-description">{revBody.join(" ")}</div>
       {admin ? (
         <button
-          onClick={() => deleteRev(revId, userId)}
+          onClick={() => deleteRev(revId, userId, revRate)}
           className="delete-review"
         >
           <FontAwesomeIcon icon={faTrash} />

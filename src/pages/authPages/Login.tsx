@@ -60,7 +60,7 @@ const Login = (): JSX.Element => {
     });
     //Create google button
     google.accounts.id.renderButton(
-      document.getElementById("google-button") as HTMLDivElement,
+      document.getElementById("g_id_signin") as HTMLDivElement,
       { theme: "outline", size: "large", locale: "en-us", shape: "pill" }
     );
   }, []);
@@ -142,7 +142,11 @@ const Login = (): JSX.Element => {
         <NavLink to="/forgotpassword" className="forgot-link">
           Forgot password?
         </NavLink>
-        <div id="google-button"></div>
+        <div
+          id="g_id_signin"
+          datatype="standard"
+          className="google-button"
+        ></div>
       </form>
     </div>
   );
