@@ -11,6 +11,7 @@ interface cardProp {
   _id: string;
   name: string;
   price: string;
+  rating: number;
   image: Array<string>;
 }
 
@@ -89,6 +90,7 @@ const AllProducts = (): JSX.Element => {
               id={item._id}
               name={item.name}
               price={item.price}
+              rating={item.rating}
               image={item.image[0]}
               admin={{ admin: isAdmin, delFunc: handleDeleteProduct }}
             />

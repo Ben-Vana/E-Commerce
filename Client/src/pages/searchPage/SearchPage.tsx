@@ -10,6 +10,7 @@ interface cardProp {
   _id: string;
   name: string;
   price: string;
+  rating: number;
   image: Array<string>;
 }
 const numberOfCardsPerPage = 10;
@@ -224,6 +225,7 @@ const SearchPage = (): JSX.Element => {
               id={item._id}
               name={item.name}
               price={item.price}
+              rating={item.rating}
               image={item.image[0]}
               admin={{
                 admin: false,

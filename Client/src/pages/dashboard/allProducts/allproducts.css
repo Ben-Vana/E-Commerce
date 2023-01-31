@@ -73,6 +73,7 @@
 .edit-button {
   cursor: pointer;
   padding: 0.5rem 1rem;
+  font-size: 0.9rem;
   color: var(--font-light);
   background-color: var(--main-background);
   border: 1px solid rgba(232, 185, 35, 0.4);

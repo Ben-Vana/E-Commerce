@@ -2,6 +2,7 @@ interface cardProp {
   _id: string;
   name: string;
   price: string;
+  rating: number;
   image: Array<string>;
 }
 
@@ -30,6 +31,9 @@ export const useSortData = (): Function => {
     }
     if (page) {
       data = data.slice((+page - 1) * numPerPage, +page * numPerPage);
+    }
+    for (let i = 0; i < data.length; i++) {
+      data[i].rating = Math.round(data[i].rating);
     }
     return data;
   };
