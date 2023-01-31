@@ -7,8 +7,8 @@
 }
 
 .dash-nav {
-  grid-column: 1;
-  width: clamp(15vw, 15vw, 30vw);
+  position: fixed;
+  width: 15vw;
   height: 100%;
   background-color: var(--container-background);
 }
