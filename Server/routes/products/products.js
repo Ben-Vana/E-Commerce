@@ -21,6 +21,7 @@ const {
   updateProduct,
   deleteProduct,
   getProductsByName,
+  findByIdAndLimit,
 } = require("../../model/products/product.model");
 
 const fileStorage = multer.diskStorage({
@@ -141,7 +142,8 @@ router.get("/:productname", async (req, res) => {
 
 router.get("/product/:id", async (req, res) => {
   try {
-    const product = await findProductById(req.params.id);
+    let skip = req.query.p;
+    const product = await findByIdAndLimit(req.params.id, skip);
     res.status(200).json(product);
   } catch (error) {
     res.status(400).json({ error });

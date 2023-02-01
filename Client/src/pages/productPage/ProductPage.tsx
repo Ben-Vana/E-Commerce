@@ -1,8 +1,11 @@
 import axios from "axios";
 import ReviewsComponent from "../../components/ReviewsComponent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./productPage.css";
 
 interface productInterface {
@@ -10,6 +13,7 @@ interface productInterface {
   description: Array<string>;
   image: Array<string>;
   price: string;
+  rating: number;
   quantity: number;
   productReviews: Array<{
     userId: string;
@@ -56,7 +60,10 @@ const ProductPage = (): JSX.Element => {
     const productId = qParams.get("pid");
     axios
       .get(`/product/product/${productId}`)
-      .then(({ data }) => setProduct(data))
+      .then(({ data }) => {
+        data.productReviews = data.productReviews.reverse();
+        setProduct(data);
+      })
       .catch((error) => console.log(error));
   }, []);
 
@@ -94,6 +101,12 @@ const ProductPage = (): JSX.Element => {
     if (imageRef.current) {
       imageRef.current.src = `http://localhost:8181/public/images/${img}`;
     }
+  };
+
+  const handleReviewsLink = (): string => {
+    const url = new URLSearchParams(location.search);
+    const pid = url.get("pid");
+    return `/productreviews?pid=${pid}&p=1`;
   };
 
   const handleDeleteReview = (
@@ -211,6 +224,50 @@ const ProductPage = (): JSX.Element => {
               <div className="product-checkout">
                 <div className="checkout-content">
                   <div>{product.price}$</div>
+                  {product.rating !== 0 && (
+                    <div style={{ margin: "-0.5rem" }}>
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        style={
+                          Math.round(product.rating) >= 1
+                            ? { color: "rgb(232, 185, 35)" }
+                            : { color: "var(--main-background)" }
+                        }
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        style={
+                          Math.round(product.rating) >= 2
+                            ? { color: "rgb(232, 185, 35)" }
+                            : { color: "var(--main-background)" }
+                        }
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        style={
+                          Math.round(product.rating) >= 3
+                            ? { color: "rgb(232, 185, 35)" }
+                            : { color: "var(--main-background)" }
+                        }
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        style={
+                          Math.round(product.rating) >= 4
+                            ? { color: "rgb(232, 185, 35)" }
+                            : { color: "var(--main-background)" }
+                        }
+                      />
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        style={
+                          Math.round(product.rating) === 5
+                            ? { color: "rgb(232, 185, 35)" }
+                            : { color: "var(--main-background)" }
+                        }
+                      />
+                    </div>
+                  )}
                   <div>
                     {product.quantity > 0 ? "In Stock" : "Out Of Stock"}
                   </div>
@@ -297,6 +354,9 @@ const ProductPage = (): JSX.Element => {
                 deleteRev={handleDeleteReview}
               />
             ))}
+          <NavLink to={handleReviewsLink()} className="see-reviews">
+            See all reviews
+          </NavLink>
         </div>
       </div>
     </div>

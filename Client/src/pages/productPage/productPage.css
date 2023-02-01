@@ -71,8 +71,8 @@
   flex-direction: column;
   gap: 0.6rem;
   background-color: var(--container-background);
-  width: 12rem;
-  height: 10rem;
+  width: 14rem;
+  height: 12rem;
   border-radius: 2rem;
   font-size: 1.3rem;
 }
@@ -163,7 +163,6 @@
 }
 
 .review-comp-wrapper {
-  margin-top: 1rem;
   background-color: var(--container-background);
   padding: 0.5rem;
   color: var(--font-light);
@@ -224,6 +223,24 @@
 
 .show-name {
   display: none;
+}
+
+.reviews {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.see-reviews {
+  color: var(--font-light);
+  font-size: 1.3rem;
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.see-reviews:hover {
+  opacity: 0.8;
 }
 
 @media screen and (max-width: 1200px) {

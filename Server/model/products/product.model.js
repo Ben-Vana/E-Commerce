@@ -50,6 +50,14 @@ const deleteReviewProduct = (pId, rId) =>
     { new: true }
   );
 
+const findByIdAndLimit = (id, revSkip) =>
+  typeof revSkip === "string"
+    ? Product.findById(id).slice(
+        "productReviews",
+        revSkip === 0 ? -2 : [-(3 * +revSkip), 3]
+      )
+    : Product.findById(id).slice("productReviews", -10);
+
 module.exports = {
   createProduct,
   findProductById,
@@ -59,4 +67,5 @@ module.exports = {
   getProductsByName,
   addReview,
   deleteReviewProduct,
+  findByIdAndLimit,
 };
