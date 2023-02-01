@@ -13,6 +13,7 @@ import DashAddProduct from "./pages/dashboard/addProduct/DashAddProduct";
 import DashStatistics from "./pages/dashboard/DashStatistics";
 import DashEditProduct from "./pages/dashboard/editProduct/EditProduct";
 import AllProducts from "./pages/dashboard/allProducts/AllProducts";
+import ReviewsPage from "./pages/reviewsPage/ReviewsPage";
 import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -53,6 +54,7 @@ const App = (): JSX.Element => {
               <Route path="/resetpassword/:token" element={<ResetPassword />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/product" element={<ProductPage />} />
+              <Route path="/productreviews" element={<ReviewsPage />} />
               <Route
                 path="/dashboard"
                 element={
