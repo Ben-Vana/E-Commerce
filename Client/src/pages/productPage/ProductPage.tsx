@@ -354,9 +354,11 @@ const ProductPage = (): JSX.Element => {
                 deleteRev={handleDeleteReview}
               />
             ))}
-          <NavLink to={handleReviewsLink()} className="see-reviews">
-            See all reviews
-          </NavLink>
+          {product && product.productReviews[0] && (
+            <NavLink to={handleReviewsLink()} className="see-reviews">
+              See all reviews
+            </NavLink>
+          )}
         </div>
       </div>
     </div>

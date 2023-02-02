@@ -21,7 +21,6 @@ const {
   updateProduct,
   deleteProduct,
   getProductsByName,
-  findByIdAndLimit,
 } = require("../../model/products/product.model");
 
 const fileStorage = multer.diskStorage({
@@ -143,8 +142,28 @@ router.get("/:productname", async (req, res) => {
 router.get("/product/:id", async (req, res) => {
   try {
     let skip = req.query.p;
-    const product = await findByIdAndLimit(req.params.id, skip);
-    res.status(200).json(product);
+    let tempArr;
+    const revPerPage = 10;
+    const product = await findProductById(req.params.id);
+    const length = product.productReviews.length;
+    const limit = Math.ceil(length / revPerPage);
+    if (skip) {
+      if (skip === "1")
+        tempArr = product.productReviews.slice(length - revPerPage * 1);
+      else if (skip === `${limit}`)
+        tempArr = product.productReviews.slice(
+          0,
+          Math.abs(revPerPage * parseInt(skip) - length - revPerPage)
+        );
+      else {
+        tempArr = product.productReviews.slice(
+          length - revPerPage * parseInt(skip),
+          revPerPage + length - revPerPage * parseInt(skip)
+        );
+      }
+      product.productReviews = tempArr;
+      res.status(200).json({ product: product, limit: limit });
+    } else res.status(200).json(product);
   } catch (error) {
     res.status(400).json({ error });
   }
