@@ -180,6 +180,7 @@
 .review-description {
   margin-top: 1rem;
   margin-right: 1.5rem;
+  word-wrap: break-word;
 }
 
 .delete-review {

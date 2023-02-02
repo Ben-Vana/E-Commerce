@@ -1,0 +1,20 @@
+.reviews-container {
+  margin: 7rem 0 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 50%;
+}
+
+@media screen and (max-width: 1300px) {
+  .reviews-container {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .reviews-container {
+    width: 90%;
+    margin-inline: auto;
+  }
+}
