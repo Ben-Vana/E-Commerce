@@ -20,6 +20,8 @@ const {
   findUserById,
   addUserReview,
   deleteReviewUser,
+  addReport,
+  addReportedReview,
 } = require("../../model/users/users.model");
 
 const { generateToken, verifyToken } = require("../../config/jwt");
@@ -55,6 +57,16 @@ router.post("/addreview", userInfo, async (req, res) => {
       rating: value.rating,
     });
     res.status(201).json({ msg: "Review added" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.post("/addreport", async (req, res) => {
+  try {
+    await addReport(req.body.uId);
+    await addReportedReview(req.body.uId, req.body.rId);
+    res.status(200).json({ msg: "Added" });
   } catch (error) {
     res.status(400).json({ error });
   }

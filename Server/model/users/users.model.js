@@ -17,6 +17,8 @@ const userSchema = new Schema({
       createdAt: { type: Date, default: Date.now },
     },
   ],
+  reports: { type: Number, default: 0 },
+  reportedReviews: [{ type: Schema.Types.ObjectId, ref: "products" }],
 });
 
 const Users = mongoose.model("user", userSchema, "users");
@@ -44,6 +46,25 @@ const addUserReview = (id, review) =>
 const deleteReviewUser = (uId, rId) =>
   Users.findByIdAndUpdate(uId, { $pull: { userReviews: { reviewId: rId } } });
 
+const addReport = (uId) =>
+  Users.findByIdAndUpdate(uId, { $inc: { reports: 1 } });
+
+const addReportedReview = async (uId, rId) => {
+  const user = await Users.findById(uId);
+  let check = false;
+  for (let i = 0; i < user.reportedReviews.length; i++) {
+    if (user.reportedReviews[i].toString() === rId) {
+      check = true;
+      break;
+    }
+  }
+  if (check) {
+    return;
+  } else {
+    return Users.findByIdAndUpdate(uId, { $push: { reportedReviews: rId } });
+  }
+};
+
 module.exports = {
   createUser,
   findByEmail,
@@ -53,4 +74,6 @@ module.exports = {
   getCart,
   addUserReview,
   deleteReviewUser,
+  addReport,
+  addReportedReview,
 };

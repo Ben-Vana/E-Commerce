@@ -109,6 +109,13 @@ const ProductPage = (): JSX.Element => {
     return `/productreviews?pid=${pid}&p=1`;
   };
 
+  const handleReportReview = (uId: string) => {
+    axios
+      .post("/review/addreport", { uId })
+      .then(() => {})
+      .catch((err) => console.log(err));
+  };
+
   const handleDeleteReview = (
     reviewId: string,
     userId: string,
@@ -352,6 +359,7 @@ const ProductPage = (): JSX.Element => {
                 revRate={item.rating}
                 admin={isAdmin}
                 deleteRev={handleDeleteReview}
+                report={handleReportReview}
               />
             ))}
           {product && product.productReviews[0] && (

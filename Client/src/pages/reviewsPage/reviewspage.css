@@ -6,6 +6,22 @@
   width: 50%;
 }
 
+.rev-btns-container {
+  width: calc(100vw - 4rem);
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rev-btn {
+  text-decoration: none !important;
+  color: var(--font-light);
+  border: 1px solid rgba(232, 185, 35, 0.4);
+  padding: 0.8rem 1.5rem;
+  background-color: var(--container-background);
+  border-radius: 0.4rem;
+}
+
 @media screen and (max-width: 1300px) {
   .reviews-container {
     width: 70%;
