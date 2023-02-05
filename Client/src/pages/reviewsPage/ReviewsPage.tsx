@@ -26,6 +26,7 @@ const ReviewsPage = (): JSX.Element => {
   const [reviews, setReviews] = useState<productInterface>();
   const [limit, setLimit] = useState<number | null>();
   const location = useLocation();
+
   useEffect((): void => {
     const params = new URLSearchParams(location.search);
     const productId = params.get("pid");
@@ -33,47 +34,52 @@ const ReviewsPage = (): JSX.Element => {
     axios
       .get(`/product/product/${productId}?p=${page}`)
       .then(({ data }) => {
-        console.log(data);
         data.product.productReviews = data.product.productReviews.reverse();
         setReviews(data.product);
         setLimit(data.limit);
       })
       .catch((err) => console.log(err));
   }, [location]);
+
   const renderButtons = (): Array<JSX.Element> => {
     const param = new URLSearchParams(location.search);
     const page = param.get("p");
     const pid = param.get("pid");
     let btnArr: Array<JSX.Element> = [];
     if (page) {
-      if (page === "1") {
+      if (page === "1" && parseInt(page) !== limit) {
         btnArr.push(
+          <div key="none"></div>,
           <NavLink
             key="next"
+            className="rev-btn"
             to={`/productreviews?pid=${pid}&p=${parseInt(page) + 1}`}
           >
             Next
           </NavLink>
         );
-      } else if (parseInt(page) === limit) {
+      } else if (parseInt(page) === limit && parseInt(page) !== 1) {
         btnArr.push(
           <NavLink
             key="prev"
+            className="rev-btn"
             to={`/productreviews?pid=${pid}&p=${parseInt(page) - 1}`}
           >
             Previous
           </NavLink>
         );
-      } else {
+      } else if (parseInt(page) !== limit) {
         btnArr.push(
           <NavLink
             key="prev"
+            className="rev-btn"
             to={`/productreviews?pid=${pid}&p=${parseInt(page) - 1}`}
           >
             Previous
           </NavLink>,
           <NavLink
             key="next"
+            className="rev-btn"
             to={`/productreviews?pid=${pid}&p=${parseInt(page) + 1}`}
           >
             Next
@@ -83,6 +89,14 @@ const ReviewsPage = (): JSX.Element => {
     }
     return btnArr;
   };
+
+  const handleReportReview = (uId: string, rId: string) => {
+    axios
+      .post("/review/addreport", { uId, rId })
+      .then(() => {})
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className="reviews-container">
       {reviews &&
@@ -98,9 +112,12 @@ const ReviewsPage = (): JSX.Element => {
             deleteRev={(): void => {
               return;
             }}
+            report={handleReportReview}
           />
         ))}
-      {limit && <div>{renderButtons()}</div>}
+      {limit !== 0 && (
+        <div className="rev-btns-container">{renderButtons()}</div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faTrash, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 interface reviewInterface {
   userId: string;
@@ -9,6 +10,7 @@ interface reviewInterface {
   revRate: number;
   admin: boolean;
   deleteRev: Function;
+  report: Function;
 }
 
 const ReviewsComponent = ({
@@ -19,7 +21,9 @@ const ReviewsComponent = ({
   revRate,
   admin,
   deleteRev,
+  report,
 }: reviewInterface): JSX.Element => {
+  const [reported, setReported] = useState(false);
   return (
     <div className="review-comp-wrapper">
       <h4 className="review-username">{user}</h4>
@@ -74,7 +78,16 @@ const ReviewsComponent = ({
           <FontAwesomeIcon icon={faTrash} />
         </button>
       ) : (
-        <button title="Report" className="delete-review">
+        <button
+          title="Report as Inappropriate"
+          className="delete-review"
+          style={reported ? { color: "rgba(255,0,0,0.25)" } : {}}
+          onClick={(): void => {
+            report(userId, revId);
+            setReported(true);
+          }}
+          disabled={reported ? true : false}
+        >
           <FontAwesomeIcon icon={faFlag} />
         </button>
       )}

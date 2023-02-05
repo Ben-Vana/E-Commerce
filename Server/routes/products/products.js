@@ -149,13 +149,15 @@ router.get("/product/:id", async (req, res) => {
     const limit = Math.ceil(length / revPerPage);
     if (skip) {
       if (skip === "1")
-        tempArr = product.productReviews.slice(length - revPerPage * 1);
+        tempArr = product.productReviews.slice(
+          length > revPerPage ? length - revPerPage * 1 : 0
+        );
       else if (skip === `${limit}`)
         tempArr = product.productReviews.slice(
           0,
           Math.abs(revPerPage * parseInt(skip) - length - revPerPage)
         );
-      else {
+      else if (parseInt(skip) < limit) {
         tempArr = product.productReviews.slice(
           length - revPerPage * parseInt(skip),
           revPerPage + length - revPerPage * parseInt(skip)
