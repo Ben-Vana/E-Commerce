@@ -65,7 +65,16 @@ const Dashboard = (): JSX.Element => {
               <span className="dash-nav-link active-dash">Edit Product</span>
             </li>
           )}
-          <li className="dash-list-item">Users</li>
+          <li className="dash-list-item">
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "dash-nav-link active-dash" : "dash-nav-link"
+              }
+              to="/dashboard/users"
+            >
+              Users
+            </NavLink>
+          </li>
         </ul>
       </div>
       <Outlet />

@@ -14,11 +14,11 @@ const userSchema = new Schema({
       reviewId: { type: Schema.Types.ObjectId, ref: "products" },
       description: { type: Array },
       rating: { type: Number },
+      reported: { type: Boolean, default: false },
       createdAt: { type: Date, default: Date.now },
     },
   ],
   reports: { type: Number, default: 0 },
-  reportedReviews: [{ type: Schema.Types.ObjectId, ref: "products" }],
 });
 
 const Users = mongoose.model("user", userSchema, "users");
@@ -50,20 +50,20 @@ const addReport = (uId) =>
   Users.findByIdAndUpdate(uId, { $inc: { reports: 1 } });
 
 const addReportedReview = async (uId, rId) => {
-  const user = await Users.findById(uId);
-  let check = false;
-  for (let i = 0; i < user.reportedReviews.length; i++) {
-    if (user.reportedReviews[i].toString() === rId) {
-      check = true;
+  const temp = await Users.findById(uId);
+  for (let i = 0; i < temp.userReviews.length; i++) {
+    if (temp.userReviews[i].reviewId.toString() === rId) {
+      temp.userReviews[i].reported = true;
       break;
     }
   }
-  if (check) {
-    return;
-  } else {
-    return Users.findByIdAndUpdate(uId, { $push: { reportedReviews: rId } });
-  }
+  return Users.findByIdAndUpdate(uId, { userReviews: temp.userReviews });
 };
+
+const getUsers = () => Users.find({});
+
+const getUsersByName = (name) =>
+  Users.find({ name: { $regex: name, $options: "i" } });
 
 module.exports = {
   createUser,
@@ -76,4 +76,6 @@ module.exports = {
   deleteReviewUser,
   addReport,
   addReportedReview,
+  getUsers,
+  getUsersByName,
 };

@@ -1,0 +1,29 @@
+.users-container {
+  grid-column: 2;
+}
+
+.user-card {
+  color: var(--font-light);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.8rem 0.5rem;
+  background-color: var(--container-background);
+  border-radius: 0.5rem;
+}
+
+.user-name {
+  font-size: 1.4rem;
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.user-name:hover {
+  color: rgba(232, 185, 35, 0.6);
+}
+
+.user-card-props {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
