@@ -8,14 +8,17 @@ const googleUserSchema = new Schema({
   admin: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   shoppingCart: [{ type: mongoose.Schema.Types.ObjectId, ref: "products" }],
-  reviews: [
+  userReviews: [
     {
       productId: { type: Schema.Types.ObjectId, ref: "products" },
+      reviewId: { type: Schema.Types.ObjectId, ref: "products" },
       description: { type: Array },
       rating: { type: Number },
+      reported: { type: Boolean, default: false },
       createdAt: { type: Date, default: Date.now },
     },
   ],
+  reports: { type: Number, default: 0 },
 });
 
 const GoogleUsers = mongoose.model("googleusers", googleUserSchema, "users");

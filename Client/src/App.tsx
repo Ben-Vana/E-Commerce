@@ -14,6 +14,7 @@ import DashStatistics from "./pages/dashboard/DashStatistics";
 import DashEditProduct from "./pages/dashboard/editProduct/EditProduct";
 import AllProducts from "./pages/dashboard/allProducts/AllProducts";
 import ReviewsPage from "./pages/reviewsPage/ReviewsPage";
+import Users from "./pages/dashboard/users/Users";
 import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -79,6 +80,7 @@ const App = (): JSX.Element => {
                   path="/dashboard/editproduct/:pid"
                   element={<DashEditProduct />}
                 />
+                <Route path="/dashboard/users" element={<Users />} />
               </Route>
             </Routes>
           </div>
