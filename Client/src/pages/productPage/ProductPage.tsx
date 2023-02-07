@@ -50,10 +50,6 @@ const ProductPage = (): JSX.Element => {
     (state: { authReducer: { login: boolean } }): boolean =>
       state.authReducer.login
   );
-  const isAdmin = useSelector(
-    (state: { authReducer: { userData: { admin: boolean } } }) =>
-      state.authReducer.userData.admin
-  );
 
   useEffect((): void => {
     const qParams = new URLSearchParams(location.search);
@@ -116,33 +112,6 @@ const ProductPage = (): JSX.Element => {
       .catch((err) => console.log(err));
   };
 
-  const handleDeleteReview = (
-    reviewId: string,
-    userId: string,
-    revRate: number
-  ): void => {
-    const qParams = new URLSearchParams(location.search);
-    const productId = qParams.get("pid");
-    axios
-      .post("/review/revtoken", {
-        pid: productId,
-        rid: reviewId,
-        uid: userId,
-        revRate,
-      })
-      .then(({ data }) => {
-        axios
-          .delete(`/review/deletereview/${data}`)
-          .then(({ data }) => {
-            const tempProduct = JSON.parse(JSON.stringify(product));
-            tempProduct.productReviews = data.productReviews;
-            setProduct(tempProduct);
-          })
-          .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
-  };
-
   const handleSubmitReview = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     if (!isLoggedIn) {
@@ -152,6 +121,7 @@ const ProductPage = (): JSX.Element => {
     axios
       .get("/users/userreviewinfo")
       .then(({ data }) => {
+        console.log(data);
         const dbDate =
           data.userReviews.length > 0
             ? data.userReviews[data.userReviews.length - 1].createdAt
@@ -357,8 +327,6 @@ const ProductPage = (): JSX.Element => {
                 user={item.userName}
                 revBody={item.description}
                 revRate={item.rating}
-                admin={isAdmin}
-                deleteRev={handleDeleteReview}
                 report={handleReportReview}
               />
             ))}

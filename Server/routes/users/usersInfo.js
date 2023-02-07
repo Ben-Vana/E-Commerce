@@ -17,10 +17,19 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:name", async (req, res) => {
+router.get("/username/:name", async (req, res) => {
   try {
     const users = await getUsersByName(req.params.name);
     res.status(200).json(users);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.get("/user/:uid", async (req, res) => {
+  try {
+    const user = await findUserById(req.params.uid);
+    res.status(200).json(user);
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -38,6 +47,7 @@ router.get("/userinfo", userInfo, async (req, res) => {
 
 router.get("/userreviewinfo", userInfo, async (req, res) => {
   try {
+    console.log("hi");
     const user = req.userData;
     const value = await findUserById(user.id);
     res.status(201).json({

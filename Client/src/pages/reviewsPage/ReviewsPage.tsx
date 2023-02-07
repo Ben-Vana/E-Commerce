@@ -108,10 +108,6 @@ const ReviewsPage = (): JSX.Element => {
             user={item.userName}
             revBody={item.description}
             revRate={item.rating}
-            admin={false}
-            deleteRev={(): void => {
-              return;
-            }}
             report={handleReportReview}
           />
         ))}
