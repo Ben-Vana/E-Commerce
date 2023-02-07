@@ -25,7 +25,7 @@ const Users = (): JSX.Element => {
     const query = param.get("mq");
     if (query) {
       axios
-        .get(`/users/${query}`)
+        .get(`/users/username/${query}`)
         .then(({ data }) => {
           console.log(data);
           setUsers(data);
@@ -77,7 +77,10 @@ const Users = (): JSX.Element => {
         {usersArr &&
           usersArr.map((item: userProps, index) => (
             <div key={item.name + index} className="user-card">
-              <NavLink to={`/user/${item._id}`} className="user-name">
+              <NavLink
+                to={`/dashboard/users/user?uid=${item._id}`}
+                className="user-name"
+              >
                 {item.name}
               </NavLink>
               <div className="user-card-props">

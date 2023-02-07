@@ -1,0 +1,32 @@
+.user-page-container {
+  grid-column: 2;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+  color: var(--font-light);
+  font-size: 1.5rem;
+}
+
+.up-rev-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.up-rev {
+  width: 80%;
+  padding: 0.4rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background-color: var(--container-background);
+  border-radius: 0.4rem;
+}
+
+.under-l {
+  text-decoration: underline;
+}

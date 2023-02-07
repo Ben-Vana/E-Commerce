@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faTrash, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
 interface reviewInterface {
@@ -8,8 +8,6 @@ interface reviewInterface {
   user: string;
   revBody: Array<string>;
   revRate: number;
-  admin: boolean;
-  deleteRev: Function;
   report: Function;
 }
 
@@ -19,8 +17,6 @@ const ReviewsComponent = ({
   user,
   revBody,
   revRate,
-  admin,
-  deleteRev,
   report,
 }: reviewInterface): JSX.Element => {
   const [reported, setReported] = useState(false);
@@ -70,27 +66,18 @@ const ReviewsComponent = ({
         />
       </div>
       <div className="review-description">{revBody.join(" ")}</div>
-      {admin ? (
-        <button
-          onClick={() => deleteRev(revId, userId, revRate)}
-          className="delete-review"
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </button>
-      ) : (
-        <button
-          title="Report as Inappropriate"
-          className="delete-review"
-          style={reported ? { color: "rgba(255,0,0,0.25)" } : {}}
-          onClick={(): void => {
-            report(userId, revId);
-            setReported(true);
-          }}
-          disabled={reported ? true : false}
-        >
-          <FontAwesomeIcon icon={faFlag} />
-        </button>
-      )}
+      <button
+        title="Report as Inappropriate"
+        className="delete-review"
+        style={reported ? { color: "rgba(255,0,0,0.25)" } : {}}
+        onClick={(): void => {
+          report(userId, revId);
+          setReported(true);
+        }}
+        disabled={reported ? true : false}
+      >
+        <FontAwesomeIcon icon={faFlag} />
+      </button>
     </div>
   );
 };
