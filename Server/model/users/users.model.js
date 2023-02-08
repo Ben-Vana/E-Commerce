@@ -44,7 +44,11 @@ const addUserReview = (id, review) =>
   Users.findByIdAndUpdate(id, { $push: { userReviews: review } });
 
 const deleteReviewUser = (uId, rId) =>
-  Users.findByIdAndUpdate(uId, { $pull: { userReviews: { reviewId: rId } } });
+  Users.findByIdAndUpdate(
+    uId,
+    { $pull: { userReviews: { reviewId: rId } } },
+    { new: true }
+  );
 
 const addReport = (uId) =>
   Users.findByIdAndUpdate(uId, { $inc: { reports: 1 } });

@@ -25,8 +25,81 @@
   gap: 0.7rem;
   background-color: var(--container-background);
   border-radius: 0.4rem;
+  position: relative;
 }
 
 .under-l {
   text-decoration: underline;
+}
+
+.rev-sort {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rev-sort-options-wrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.rev-sort-options {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 2rem;
+  font-size: 1.1rem;
+  width: 10rem;
+  background-color: rgba(60, 62, 73, 0.6);
+  border: 1px solid var(--font-light);
+}
+
+.d-flex {
+  display: flex;
+}
+
+.rev-sort-option {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.rev-sort-option:hover {
+  color: rgba(232, 185, 35, 0.8);
+  background-color: var(--main-background);
+}
+
+.rev-trash {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  color: #f00;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.rev-trash:hover {
+  opacity: 0.5;
+}
+
+.up-confirm {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  color: var(--font-light);
+  background-color: var(--main-background);
+  font-size: 1rem;
+  padding: 0.4rem;
+  border-radius: 0.3rem;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  cursor: pointer;
+  z-index: -1;
+}
+
+.up-confirm:hover {
+  border-color: #f00;
+}
+
+.z-1 {
+  z-index: 1;
 }

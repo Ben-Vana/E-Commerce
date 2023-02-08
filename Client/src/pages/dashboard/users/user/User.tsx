@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -28,14 +28,16 @@ const User = (): JSX.Element => {
   const [user, setUser] = useState<userInterface>();
   const location = useLocation();
 
+  const sortRef = useRef() as React.RefObject<HTMLDivElement>;
+
   useEffect((): void => {
     const param = new URLSearchParams(location.search);
     const uId = param.get("uid");
     axios
       .get(`/users/user/${uId}`)
       .then(({ data }) => {
-        const a = new Date(data.createdAt);
-        data.createdAt = a;
+        const date = new Date(data.createdAt);
+        data.createdAt = date;
         setUser(data);
       })
       .catch((err) => console.log(err));
@@ -59,14 +61,41 @@ const User = (): JSX.Element => {
         axios
           .delete(`/review/deletereview/${data}`)
           .then(({ data }) => {
-            const tempUser = JSON.parse(JSON.stringify(user));
-            tempUser.userReviews = data.userReviews;
-            tempUser.createdAt = new Date(tempUser.createdAt);
-            setUser(tempUser);
+            data.createdAt = new Date(data.createdAt);
+            setUser(data);
           })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleOpenSort = () => {
+    if (sortRef && sortRef.current) {
+      if (sortRef.current.classList.contains("d-flex")) {
+        sortRef.current.classList.remove("d-flex");
+      } else {
+        sortRef.current.classList.add("d-flex");
+      }
+    }
+  };
+
+  const handleSort = (sort: string) => {
+    const tempRev = JSON.parse(JSON.stringify(user));
+    const date = new Date(tempRev.createdAt);
+    tempRev.createdAt = date;
+    if (tempRev.userReviews[0] && sort === "report") {
+      tempRev.userReviews.sort(
+        (a: userReviews, b: userReviews) => a.reported < b.reported
+      );
+      setUser(tempRev);
+    } else if (tempRev.userReviews[0] && sort === "oldest") {
+      tempRev.userReviews.sort(
+        (a: userReviews, b: userReviews) =>
+          new Date(a.createdAt) > new Date(b.createdAt)
+      );
+      setUser(tempRev);
+    }
+    if (sortRef && sortRef.current) sortRef.current.classList.remove("d-flex");
   };
 
   return (
@@ -84,6 +113,25 @@ const User = (): JSX.Element => {
           <div>Reports: {user.reports}</div>
           <div className="rev-sort">
             <div className="under-l">Reviews:</div>
+            <div className="rev-sort-options-wrapper">
+              <span style={{ cursor: "pointer" }} onClick={handleOpenSort}>
+                Sort &#709;
+              </span>
+              <div className="rev-sort-options" ref={sortRef}>
+                <span
+                  className="rev-sort-option"
+                  onClick={() => handleSort("report")}
+                >
+                  Reported
+                </span>
+                <span
+                  className="rev-sort-option"
+                  onClick={() => handleSort("oldest")}
+                >
+                  Oldest
+                </span>
+              </div>
+            </div>
           </div>
           <div className="up-rev-container">
             {user.userReviews &&
@@ -95,18 +143,29 @@ const User = (): JSX.Element => {
                 >
                   <div>{item.createdAt.split("T")[0]}</div>
                   <div>{item.description}</div>
-                  <div>
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      onClick={() =>
-                        handleDeleteReview(
-                          item.productId,
-                          item.reviewId,
-                          item.rating
-                        )
-                      }
-                    />
-                  </div>
+
+                  <button
+                    className="up-confirm"
+                    onClick={() =>
+                      handleDeleteReview(
+                        item.productId,
+                        item.reviewId,
+                        item.rating
+                      )
+                    }
+                  >
+                    Delete
+                  </button>
+                  <FontAwesomeIcon
+                    className="rev-trash"
+                    icon={faTrash}
+                    onClick={(ev) =>
+                      ev.currentTarget.previousElementSibling &&
+                      ev.currentTarget.previousElementSibling.classList.add(
+                        "z-1"
+                      )
+                    }
+                  />
                 </div>
               ))}
           </div>
