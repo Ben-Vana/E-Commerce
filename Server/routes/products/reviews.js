@@ -98,16 +98,16 @@ router.delete(
       const payload = await verifyToken(req.params.token);
       const product = await findProductById(payload.pid);
       if (!product) throw "Product does not exist.";
-      const value = await deleteReviewProduct(payload.pid, payload.rid);
-      await deleteReviewUser(payload.uid, payload.rid);
-      const reviewLength = value.productReviews.length;
+      const pValue = await deleteReviewProduct(payload.pid, payload.rid);
+      const uValue = await deleteReviewUser(payload.uid, payload.rid);
+      const reviewLength = pValue.productReviews.length;
       if (reviewLength === 0) await updateRating(payload.pid, 0);
       else {
         const averageRating =
           (product.rating * (reviewLength + 1) - payload.rating) / reviewLength;
         await updateRating(payload.pid, averageRating);
       }
-      res.status(200).json(value);
+      res.status(200).json(uValue);
     } catch (error) {
       res.status(400).json({ error });
     }

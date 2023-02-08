@@ -105,9 +105,9 @@ const ProductPage = (): JSX.Element => {
     return `/productreviews?pid=${pid}&p=1`;
   };
 
-  const handleReportReview = (uId: string) => {
+  const handleReportReview = (uId: string, rId: string) => {
     axios
-      .post("/review/addreport", { uId })
+      .post("/review/addreport", { uId, rId })
       .then(() => {})
       .catch((err) => console.log(err));
   };
