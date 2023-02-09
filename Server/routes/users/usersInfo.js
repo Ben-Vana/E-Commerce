@@ -2,11 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const userInfo = require("../../middleware/userInfo.middleware");
+const checkAdmin = require("../../middleware/admin.middleware");
+
 const {
   findUserById,
   getUsers,
   getUsersByName,
 } = require("../../model/users/users.model");
+
+const { validateId } = require("../../validation/product/product.validation");
 
 router.get("/", async (req, res) => {
   try {
@@ -56,6 +60,15 @@ router.get("/userreviewinfo", userInfo, async (req, res) => {
       email: value.email,
       userReviews: value.userReviews,
     });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.patch("/addadmin", userInfo, checkAdmin, async (req, res) => {
+  try {
+    const value = await validateId({ id: req.body.id });
+    console.log(value);
   } catch (error) {
     res.status(400).json({ error });
   }

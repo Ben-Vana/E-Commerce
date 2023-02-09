@@ -24,8 +24,19 @@ interface userInterface {
   reports: number;
 }
 
+interface confirm {
+  del: boolean;
+  reset: boolean;
+  admin: boolean;
+}
+
 const User = (): JSX.Element => {
   const [user, setUser] = useState<userInterface>();
+  const [confirm, setConfirm] = useState<confirm>({
+    del: false,
+    reset: false,
+    admin: false,
+  });
   const location = useLocation();
 
   const sortRef = useRef() as React.RefObject<HTMLDivElement>;
@@ -98,6 +109,31 @@ const User = (): JSX.Element => {
     if (sortRef && sortRef.current) sortRef.current.classList.remove("d-flex");
   };
 
+  const handleDeleteUser = () => {
+    console.log("hi");
+    const tempConfirm: confirm = JSON.parse(JSON.stringify(confirm));
+    tempConfirm.del = true;
+    setConfirm(tempConfirm);
+  };
+
+  const handleReset = () => {
+    console.log("hi");
+    const tempConfirm: confirm = JSON.parse(JSON.stringify(confirm));
+    tempConfirm.reset = true;
+    setConfirm(tempConfirm);
+  };
+
+  const handleAdmin = () => {
+    const tempConfirm: confirm = JSON.parse(JSON.stringify(confirm));
+    tempConfirm.admin = true;
+    setConfirm(tempConfirm);
+    const param = new URLSearchParams(location.search);
+    const id = param.get("uid");
+    if (user && id) {
+      axios.patch("/users/addadmin", { id });
+    }
+  };
+
   return (
     <div className="user-page-container">
       {user ? (
@@ -111,6 +147,33 @@ const User = (): JSX.Element => {
             }/${user.createdAt.getFullYear()}`}
           </div>
           <div>Reports: {user.reports}</div>
+          <div className="manage">
+            <div className="up-btn-container">
+              <button
+                disabled={confirm.reset === true}
+                className="manage-btn"
+                onClick={handleReset}
+              >
+                Reset Reports
+              </button>
+              <button
+                disabled={confirm.admin === true}
+                className="manage-btn"
+                onClick={handleAdmin}
+              >
+                {user.admin ? "Remove Admin" : "Add Admin"}
+              </button>
+            </div>
+            <div>
+              <button
+                disabled={confirm.del === true}
+                className="manage-btn up-del"
+                onClick={handleDeleteUser}
+              >
+                Delete User
+              </button>
+            </div>
+          </div>
           <div className="rev-sort">
             <div className="under-l">Reviews:</div>
             <div className="rev-sort-options-wrapper">
@@ -141,9 +204,8 @@ const User = (): JSX.Element => {
                   className="up-rev"
                   style={item.reported ? { border: "1px solid #f00" } : {}}
                 >
-                  <div>{item.createdAt.split("T")[0]}</div>
+                  <div>{item.createdAt.split("T")[0].replace(/-/g, "/")}</div>
                   <div>{item.description}</div>
-
                   <button
                     className="up-confirm"
                     onClick={() =>

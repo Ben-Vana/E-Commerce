@@ -42,13 +42,17 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  border-bottom: 1px solid rgba(232, 185, 35, 0.4);
+  padding: 0.1rem 0.5rem;
 }
 
 .rev-sort-options {
   display: none;
   flex-direction: column;
   position: absolute;
+  z-index: 10;
   top: 2rem;
+  left: 0;
   font-size: 1.1rem;
   width: 10rem;
   background-color: rgba(60, 62, 73, 0.6);
@@ -102,4 +106,37 @@
 
 .z-1 {
   z-index: 1;
+}
+
+.manage {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.manage-btn {
+  color: var(--font-light);
+  background-color: var(--container-background);
+  border: 1px solid rgba(232, 185, 35, 0.4);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 0.1rem;
+}
+
+.manage-btn:disabled {
+  opacity: 0.3;
+}
+
+.manage-btn:hover {
+  background-color: rgba(60, 62, 73, 0.6);
+}
+
+.up-del {
+  color: rgba(255, 0, 0, 0.9);
+}
+
+.up-btn-container {
+  display: flex;
+  gap: 0.2rem;
 }

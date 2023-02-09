@@ -69,6 +69,8 @@ const getUsers = () => Users.find({});
 const getUsersByName = (name) =>
   Users.find({ name: { $regex: name, $options: "i" } });
 
+const addAdmin = (id) => Users.findByIdAndUpdate(id, { admin: true });
+
 module.exports = {
   createUser,
   findByEmail,
@@ -82,4 +84,5 @@ module.exports = {
   addReportedReview,
   getUsers,
   getUsersByName,
+  addAdmin,
 };
