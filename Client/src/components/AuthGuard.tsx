@@ -7,7 +7,7 @@ const AuthGuard = ({ children }: { children: JSX.Element }): JSX.Element => {
       state.authReducer.userData.admin
   );
 
-  return isAdmin ? children : <Navigate to="/" replace />;
+  return isAdmin === true ? children : <Navigate to="/" replace />;
 };
 
 export default AuthGuard;

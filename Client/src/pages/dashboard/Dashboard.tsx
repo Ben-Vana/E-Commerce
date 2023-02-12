@@ -1,12 +1,22 @@
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import "./dashboard.css";
 
 const Dashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    axios
+      .get("/users/userinfo")
+      .then(({ data }) => {
+        if (data.admin === false) document.location.reload();
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleDashHam = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (isOpen === false && ev.currentTarget.parentElement) {

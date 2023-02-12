@@ -5,11 +5,15 @@ import { authActions } from "../store/auth";
 
 const checkUser = (token: string | null): Promise<info> | info => {
   if (token) return axios.get("/users/userinfo");
-  else return { data: "" };
+  else return { data: {} };
 };
 
+interface token {
+  admin: boolean;
+}
+
 interface info {
-  data: object | string;
+  data: { admin?: boolean };
 }
 
 const useAutoLogin = (): Function => {
@@ -18,10 +22,12 @@ const useAutoLogin = (): Function => {
     try {
       let token: string | null = localStorage.getItem("token");
       let data: info = await checkUser(token);
-      if (data.data && token) {
-        let tokenData = jwt_decode(token);
-        dispatch(authActions.login(tokenData));
-        return true;
+      if (token) {
+        let tokenData: token = jwt_decode(token);
+        if (data.data && tokenData.admin === data.data.admin) {
+          dispatch(authActions.login(tokenData));
+          return true;
+        } else return false;
       } else return false;
     } catch (error) {
       return false;
