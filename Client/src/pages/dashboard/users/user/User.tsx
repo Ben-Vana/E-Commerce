@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "./user.css";
 
@@ -24,21 +27,12 @@ interface userInterface {
   reports: number;
 }
 
-interface confirm {
-  del: boolean;
-  reset: boolean;
-  admin: boolean;
-}
-
 const User = (): JSX.Element => {
   const [user, setUser] = useState<userInterface>();
-  const [confirm, setConfirm] = useState<confirm>({
-    del: false,
-    reset: false,
-    admin: false,
-  });
-  const location = useLocation();
+  const [confirm, setConfirm] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
   const sortRef = useRef() as React.RefObject<HTMLDivElement>;
 
   useEffect((): void => {
@@ -90,7 +84,7 @@ const User = (): JSX.Element => {
     }
   };
 
-  const handleSort = (sort: string) => {
+  const handleSort = (sort: string): void => {
     const tempRev = JSON.parse(JSON.stringify(user));
     const date = new Date(tempRev.createdAt);
     tempRev.createdAt = date;
@@ -109,28 +103,44 @@ const User = (): JSX.Element => {
     if (sortRef && sortRef.current) sortRef.current.classList.remove("d-flex");
   };
 
-  const handleDeleteUser = () => {
-    console.log("hi");
-    const tempConfirm: confirm = JSON.parse(JSON.stringify(confirm));
-    tempConfirm.del = true;
-    setConfirm(tempConfirm);
-  };
-
-  const handleReset = () => {
-    console.log("hi");
-    const tempConfirm: confirm = JSON.parse(JSON.stringify(confirm));
-    tempConfirm.reset = true;
-    setConfirm(tempConfirm);
-  };
-
-  const handleAdmin = () => {
-    const tempConfirm: confirm = JSON.parse(JSON.stringify(confirm));
-    tempConfirm.admin = true;
-    setConfirm(tempConfirm);
+  const handleDeleteUser = (): void => {
     const param = new URLSearchParams(location.search);
     const id = param.get("uid");
     if (user && id) {
-      axios.patch("/users/addadmin", { id });
+      axios
+        .delete(`/users/deleteuser/${id}`)
+        .then(() => navigate("/dashboard/users"))
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleReset = (): void => {
+    const param = new URLSearchParams(location.search);
+    const id = param.get("uid");
+    if (user && id) {
+      axios
+        .patch("/users/resetreports", { id })
+        .then(() => window.location.reload())
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleAdmin = (): void => {
+    const param = new URLSearchParams(location.search);
+    const id = param.get("uid");
+    if (user && id) {
+      axios
+        .patch("/users/switchadmin", { id })
+        .then(() => window.location.reload())
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleUnreport = (rId: string): void => {
+    const param = new URLSearchParams(location.search);
+    const id = param.get("uid");
+    if (user && id) {
+      axios.patch("/review/removereport", { uId: id, rId });
     }
   };
 
@@ -140,6 +150,7 @@ const User = (): JSX.Element => {
         <div className="user-info">
           <div>Name: {user.name}</div>
           <div>Email: {user.email}</div>
+          <div>{user.admin ? "Admin" : "User"}</div>
           <div>
             CreatedAt:{" "}
             {`${user.createdAt.getDate()}/${
@@ -149,29 +160,30 @@ const User = (): JSX.Element => {
           <div>Reports: {user.reports}</div>
           <div className="manage">
             <div className="up-btn-container">
-              <button
-                disabled={confirm.reset === true}
-                className="manage-btn"
-                onClick={handleReset}
-              >
+              <button className="manage-btn" onClick={handleReset}>
                 Reset Reports
               </button>
-              <button
-                disabled={confirm.admin === true}
-                className="manage-btn"
-                onClick={handleAdmin}
-              >
+              <button className="manage-btn" onClick={handleAdmin}>
                 {user.admin ? "Remove Admin" : "Add Admin"}
               </button>
             </div>
             <div>
-              <button
-                disabled={confirm.del === true}
-                className="manage-btn up-del"
-                onClick={handleDeleteUser}
-              >
-                Delete User
-              </button>
+              {confirm ? (
+                <button
+                  className="manage-btn up-del"
+                  onClick={handleDeleteUser}
+                >
+                  <FontAwesomeIcon icon={faTriangleExclamation} />
+                  Confirm delete
+                </button>
+              ) : (
+                <button
+                  className="manage-btn up-del"
+                  onClick={(): void => setConfirm(true)}
+                >
+                  Delete User
+                </button>
+              )}
             </div>
           </div>
           <div className="rev-sort">
@@ -206,28 +218,38 @@ const User = (): JSX.Element => {
                 >
                   <div>{item.createdAt.split("T")[0].replace(/-/g, "/")}</div>
                   <div>{item.description}</div>
-                  <button
-                    className="up-confirm"
-                    onClick={() =>
-                      handleDeleteReview(
-                        item.productId,
-                        item.reviewId,
-                        item.rating
-                      )
-                    }
-                  >
-                    Delete
-                  </button>
-                  <FontAwesomeIcon
-                    className="rev-trash"
-                    icon={faTrash}
-                    onClick={(ev) =>
-                      ev.currentTarget.previousElementSibling &&
-                      ev.currentTarget.previousElementSibling.classList.add(
-                        "z-1"
-                      )
-                    }
-                  />
+                  {item.reported && (
+                    <button
+                      className="manage-btn up-unreport"
+                      onClick={() => handleUnreport(item.reviewId)}
+                    >
+                      Unreport
+                    </button>
+                  )}
+                  <div>
+                    <button
+                      className="up-confirm"
+                      onClick={() =>
+                        handleDeleteReview(
+                          item.productId,
+                          item.reviewId,
+                          item.rating
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
+                    <FontAwesomeIcon
+                      className="rev-trash"
+                      icon={faTrash}
+                      onClick={(ev): void | null =>
+                        ev.currentTarget.previousElementSibling &&
+                        ev.currentTarget.previousElementSibling.classList.add(
+                          "z-1"
+                        )
+                      }
+                    />
+                  </div>
                 </div>
               ))}
           </div>

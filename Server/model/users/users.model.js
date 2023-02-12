@@ -69,7 +69,23 @@ const getUsers = () => Users.find({});
 const getUsersByName = (name) =>
   Users.find({ name: { $regex: name, $options: "i" } });
 
-const addAdmin = (id) => Users.findByIdAndUpdate(id, { admin: true });
+const switchAdmin = (id, setAdmin) =>
+  Users.findByIdAndUpdate(id, { admin: setAdmin });
+
+const resetReports = (id) => Users.findByIdAndUpdate(id, { reports: 0 });
+
+const removeReport = async (uId, rId) => {
+  const temp = await Users.findById(uId);
+  for (let i = 0; i < temp.userReviews.length; i++) {
+    if (temp.userReviews[i].reviewId.toString() === rId) {
+      temp.userReviews[i].reported = false;
+      break;
+    }
+  }
+  return Users.findByIdAndUpdate(uId, { userReviews: temp.userReviews });
+};
+
+const deleteUser = (id) => Users.findByIdAndDelete(id);
 
 module.exports = {
   createUser,
@@ -84,5 +100,8 @@ module.exports = {
   addReportedReview,
   getUsers,
   getUsersByName,
-  addAdmin,
+  switchAdmin,
+  resetReports,
+  removeReport,
+  deleteUser,
 };

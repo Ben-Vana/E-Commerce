@@ -107,7 +107,7 @@ const ProductPage = (): JSX.Element => {
 
   const handleReportReview = (uId: string, rId: string) => {
     axios
-      .post("/review/addreport", { uId, rId })
+      .patch("/review/addreport", { uId, rId })
       .then(() => {})
       .catch((err) => console.log(err));
   };

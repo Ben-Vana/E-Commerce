@@ -27,7 +27,6 @@ const Users = (): JSX.Element => {
       axios
         .get(`/users/username/${query}`)
         .then(({ data }) => {
-          console.log(data);
           setUsers(data);
         })
         .catch((err) => console.log(err));

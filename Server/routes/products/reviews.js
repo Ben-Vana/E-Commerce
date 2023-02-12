@@ -22,6 +22,7 @@ const {
   deleteReviewUser,
   addReport,
   addReportedReview,
+  removeReport,
 } = require("../../model/users/users.model");
 
 const { generateToken, verifyToken } = require("../../config/jwt");
@@ -62,11 +63,20 @@ router.post("/addreview", userInfo, async (req, res) => {
   }
 });
 
-router.post("/addreport", async (req, res) => {
+router.patch("/addreport", async (req, res) => {
   try {
     await addReport(req.body.uId);
     await addReportedReview(req.body.uId, req.body.rId);
     res.status(200).json({ msg: "Added" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.patch("/removereport", async (req, res) => {
+  try {
+    await removeReport(req.body.uId, req.body.rId);
+    res.status(200).json({ msg: "Done" });
   } catch (error) {
     res.status(400).json({ error });
   }

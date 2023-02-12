@@ -8,6 +8,9 @@ const {
   findUserById,
   getUsers,
   getUsersByName,
+  switchAdmin,
+  resetReports,
+  deleteUser,
 } = require("../../model/users/users.model");
 
 const { validateId } = require("../../validation/product/product.validation");
@@ -43,7 +46,9 @@ router.get("/userinfo", userInfo, async (req, res) => {
   try {
     const user = req.userData;
     const value = await findUserById(user.id);
-    res.status(201).json({ id: value._id, email: value.email });
+    res
+      .status(201)
+      .json({ id: value._id, email: value.email, admin: value.admin });
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -51,7 +56,6 @@ router.get("/userinfo", userInfo, async (req, res) => {
 
 router.get("/userreviewinfo", userInfo, async (req, res) => {
   try {
-    console.log("hi");
     const user = req.userData;
     const value = await findUserById(user.id);
     res.status(201).json({
@@ -65,10 +69,37 @@ router.get("/userreviewinfo", userInfo, async (req, res) => {
   }
 });
 
-router.patch("/addadmin", userInfo, checkAdmin, async (req, res) => {
+router.patch("/switchadmin", userInfo, checkAdmin, async (req, res) => {
   try {
     const value = await validateId({ id: req.body.id });
-    console.log(value);
+    const user = await findUserById(value.id);
+    if (!user) throw "User does not exist.";
+    await switchAdmin(user._id, !user.admin);
+    res.status(200).json({ msg: "good" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.patch("/resetreports", userInfo, checkAdmin, async (req, res) => {
+  try {
+    const value = await validateId({ id: req.body.id });
+    const user = await findUserById(value.id);
+    if (!user) throw "User does not exist.";
+    await resetReports(user._id);
+    res.status(200).json({ msg: "good" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.delete("/deleteuser/:id", userInfo, checkAdmin, async (req, res) => {
+  try {
+    const value = await validateId({ id: req.params.id });
+    const user = await findUserById(value.id);
+    if (!user) throw "User does not exist.";
+    await deleteUser(user._id);
+    res.status(200).json({ msg: "good" });
   } catch (error) {
     res.status(400).json({ error });
   }

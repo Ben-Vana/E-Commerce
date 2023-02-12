@@ -140,3 +140,14 @@
   display: flex;
   gap: 0.2rem;
 }
+
+.up-unreport {
+  border-color: rgba(232, 185, 35, 0.6);
+  padding: 0.4rem;
+  margin-bottom: -0.7rem;
+  width: 5rem;
+}
+
+.up-unreport:hover {
+  border-color: rgba(232, 185, 35, 1);
+}
