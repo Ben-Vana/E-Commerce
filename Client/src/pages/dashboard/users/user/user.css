@@ -151,3 +151,18 @@
 .up-unreport:hover {
   border-color: rgba(232, 185, 35, 1);
 }
+
+.up-rev-desc {
+  word-wrap: break-word;
+  padding-right: 1.5rem;
+}
+
+@media screen and (max-width: 1100px) {
+  .user-info {
+    align-items: center;
+  }
+  .up-rev-container {
+    width: 100%;
+    align-items: center;
+  }
+}

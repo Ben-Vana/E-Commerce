@@ -99,6 +99,12 @@ const User = (): JSX.Element => {
           new Date(a.createdAt) > new Date(b.createdAt)
       );
       setUser(tempRev);
+    } else if (tempRev.userReviews[0] && sort === "recent") {
+      tempRev.userReviews.sort(
+        (a: userReviews, b: userReviews) =>
+          new Date(a.createdAt) < new Date(b.createdAt)
+      );
+      setUser(tempRev);
     }
     if (sortRef && sortRef.current) sortRef.current.classList.remove("d-flex");
   };
@@ -136,11 +142,23 @@ const User = (): JSX.Element => {
     }
   };
 
-  const handleUnreport = (rId: string): void => {
+  const handleUnreport = (
+    ev: React.MouseEvent<HTMLButtonElement>,
+    rId: string
+  ): void => {
+    const parent = (ev.target as HTMLButtonElement).parentElement;
     const param = new URLSearchParams(location.search);
     const id = param.get("uid");
     if (user && id) {
-      axios.patch("/review/removereport", { uId: id, rId });
+      axios.patch("/review/removereport", { uId: id, rId }).then(() => {
+        if (ev.target && parent) {
+          parent.style.border = "none";
+          console.log(ev);
+          (ev.target as HTMLButtonElement).disabled = true;
+          (ev.target as HTMLButtonElement).style.width = "10rem";
+          (ev.target as HTMLButtonElement).innerText = "Refresh to see changes";
+        }
+      });
     }
   };
 
@@ -201,6 +219,12 @@ const User = (): JSX.Element => {
                 </span>
                 <span
                   className="rev-sort-option"
+                  onClick={() => handleSort("recent")}
+                >
+                  Most Recent
+                </span>
+                <span
+                  className="rev-sort-option"
                   onClick={() => handleSort("oldest")}
                 >
                   Oldest
@@ -217,11 +241,11 @@ const User = (): JSX.Element => {
                   style={item.reported ? { border: "1px solid #f00" } : {}}
                 >
                   <div>{item.createdAt.split("T")[0].replace(/-/g, "/")}</div>
-                  <div>{item.description}</div>
+                  <div className="up-rev-desc">{item.description}</div>
                   {item.reported && (
                     <button
                       className="manage-btn up-unreport"
-                      onClick={() => handleUnreport(item.reviewId)}
+                      onClick={(ev) => handleUnreport(ev, item.reviewId)}
                     >
                       Unreport
                     </button>
