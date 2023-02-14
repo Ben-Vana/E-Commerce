@@ -31,7 +31,9 @@ const fileStorage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: fileStorage });
+const upload = multer({
+  storage: fileStorage,
+});
 
 router.post(
   "/",
@@ -42,8 +44,12 @@ router.post(
   async (req, res) => {
     try {
       let imageArr = [];
-      for (let i = 0; i < req.files.length; i++)
+      let overSized = false;
+      for (let i = 0; i < req.files.length; i++) {
         imageArr.push(`${req.folderTime}/${req.files[i].filename}`);
+        if (req.files[i].size > 1048576) overSized = true;
+      }
+      if (overSized) throw "File_Size_Limit";
       const descArr = req.body.description.split(",");
       for (let j = 0; j < descArr.length; j++)
         descArr[j] = descArr[j].replace(/{commaREPLACE}/gi, ",");
@@ -61,6 +67,12 @@ router.post(
       });
       res.status(201).json(product);
     } catch (error) {
+      if (error === "File_Size_Limit") {
+        const dirPath = path.join(
+          process.cwd() + `/public/images/${req.folderTime}`
+        );
+        fs.rmSync(dirPath, { recursive: true, force: true });
+      }
       res.status(400).json({ error });
     }
   }
@@ -118,11 +130,12 @@ router.delete("/:pid", userInfo, checkAdmin, async (req, res) => {
     const value = await validateId({ id: req.params.pid });
     const data = await findProductById(value.id);
     if (!data) throw "Product does not exist";
-    const dir = data.image[0].split("/")[0];
-    if (!dir) throw "Directory does not exist.";
+    let dir = data.image[0].split("/")[0];
+    if (!dir) dir = "NON_EXIST";
     const dirPath = path.join(process.cwd() + `/public/images/${dir}`);
-    if (!fs.existsSync(dirPath)) throw "Directory does not exist.";
-    fs.rmdirSync(dirPath, { recursive: true, force: true });
+    if (fs.existsSync(dirPath)) {
+      fs.rmSync(dirPath, { recursive: true, force: true });
+    }
     await deleteProduct(data._id);
     res.status(200).json({ msg: "Product has been deleted" });
   } catch (error) {

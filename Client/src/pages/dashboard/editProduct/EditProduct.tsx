@@ -28,6 +28,7 @@ const DashEditProduct = (): JSX.Element => {
   const [productImages, setImages] = useState<FileList | null>(null);
   const [oldProductImages, setOldImages] = useState<Array<string> | null>(null);
   const [delProductImages, setDelImages] = useState<Array<string>>([]);
+  const [sizeErr, setSizeErr] = useState(false);
 
   const navigate = useNavigate();
   const param = useParams();
@@ -84,7 +85,22 @@ const DashEditProduct = (): JSX.Element => {
   };
 
   const handleFileChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    setImages(ev.target.files);
+    if (ev.target.files) {
+      let oversize = false;
+      for (let i = 0; i < ev.target.files.length; i++) {
+        if (ev.target.files[i].size > 1048576) {
+          oversize = true;
+          break;
+        }
+      }
+      if (oversize) {
+        setSizeErr(true);
+        setImages(null);
+      } else {
+        setImages(ev.target.files);
+        setSizeErr(false);
+      }
+    }
   };
 
   const handleDeleteImage = (id: string): void => {
@@ -104,20 +120,22 @@ const DashEditProduct = (): JSX.Element => {
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     const formData = new FormData();
-    if (productImages) {
-      for (let i = 0; i < productImages.length; i++)
-        formData.append("images", productImages[i]);
+    if (!sizeErr) {
+      if (productImages) {
+        for (let i = 0; i < productImages.length; i++)
+          formData.append("images", productImages[i]);
+      }
+      const tempProduct = JSON.parse(JSON.stringify(productInfo));
+      tempProduct.description = productInfo.description.split(/\n+/);
+      tempProduct.image = oldProductImages;
+      tempProduct.delImages = delProductImages;
+      const fileds = Object.keys(tempProduct);
+      for (const field of fileds) formData.append(field, tempProduct[field]);
+      axios
+        .patch(`/product/${param.pid}`, formData)
+        .then(() => navigate(`/product?pid=${param.pid}`))
+        .catch(() => setError(true));
     }
-    const tempProduct = JSON.parse(JSON.stringify(productInfo));
-    tempProduct.description = productInfo.description.split(/\n+/);
-    tempProduct.image = oldProductImages;
-    tempProduct.delImages = delProductImages;
-    const fileds = Object.keys(tempProduct);
-    for (const field of fileds) formData.append(field, tempProduct[field]);
-    axios
-      .patch(`/product/${param.pid}`, formData)
-      .then(() => navigate(`/product?pid=${param.pid}`))
-      .catch(() => setError(true));
   };
 
   return (
@@ -157,6 +175,9 @@ const DashEditProduct = (): JSX.Element => {
             <div className="submit-error">
               *Error has occured, Please try again later.
             </div>
+          )}
+          {sizeErr && (
+            <div className="submit-error">*File size is too big.</div>
           )}
           <button className="product-submit hide">Update Product Info</button>
         </div>
