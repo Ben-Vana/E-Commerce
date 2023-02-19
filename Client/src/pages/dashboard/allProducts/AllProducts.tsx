@@ -93,7 +93,7 @@ const AllProducts = (): JSX.Element => {
               price={item.price}
               rating={item.rating}
               image={item.image[0]}
-              admin={{ admin: isAdmin, delFunc: handleDeleteProduct }}
+              adminEdit={handleDeleteProduct}
             />
           ))}
       </div>

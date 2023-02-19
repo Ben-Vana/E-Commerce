@@ -15,7 +15,11 @@ router.post("/addproduct", userInfo, async (req, res) => {
     if (!product) throw "Product does not exist.";
     const user = await findUserById(req.userData.id);
     if (!user) throw "Please login.";
-    await addToCart(user.id, product);
+    let checkProduct = false;
+    for (let i = 0; i < user.shoppingCart.length; i++)
+      if (user.shoppingCart[i]._id.toString() === product._id.toString())
+        checkProduct = true;
+    if (!checkProduct) await addToCart(user.id, product);
     res.status(200).json({ msg: "item added" });
   } catch (error) {
     res.status(400).json({ error });
