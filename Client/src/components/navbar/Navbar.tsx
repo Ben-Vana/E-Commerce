@@ -40,7 +40,7 @@ const authLinks: {
   loggedIn: [
     {
       label: "cart",
-      link: "",
+      link: "/usercart",
     },
     {
       label: "Logout",

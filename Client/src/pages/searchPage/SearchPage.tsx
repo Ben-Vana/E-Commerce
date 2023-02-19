@@ -227,12 +227,6 @@ const SearchPage = (): JSX.Element => {
               price={item.price}
               rating={item.rating}
               image={item.image[0]}
-              admin={{
-                admin: false,
-                delFunc: () => {
-                  return;
-                },
-              }}
             />
           ))
         ) : (

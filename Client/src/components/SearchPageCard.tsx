@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import "../pages/searchPage/search.css";
@@ -8,9 +8,11 @@ interface cardProp {
   id: string;
   name: string;
   price: string;
-  rating: number;
+  rating?: number;
   image: string;
-  admin: { admin: boolean; delFunc: Function };
+  quantity?: number;
+  adminEdit?: Function;
+  user?: Function;
 }
 
 const SearchPageCard = ({
@@ -19,9 +21,27 @@ const SearchPageCard = ({
   price,
   rating,
   image,
-  admin,
+  quantity,
+  adminEdit,
+  user,
 }: cardProp): JSX.Element => {
   const [confirmDelete, setDelete] = useState(false);
+
+  const handleQuantityOptions = (): JSX.Element[] => {
+    let optionsArr = [];
+    if (quantity !== undefined) {
+      const length = quantity > 10 ? 10 : quantity;
+      for (let i = 1; i <= length; i++) {
+        optionsArr.push(
+          <option key={"option" + i} value={i}>
+            {i}
+          </option>
+        );
+      }
+    }
+    return optionsArr;
+  };
+
   return (
     <div className="row-card">
       <div className="image-container">
@@ -42,8 +62,26 @@ const SearchPageCard = ({
         </NavLink>
         <div className="content-props">
           <div className="card-price">{price}$</div>
-          {admin.admin && (
-            <div className="admin-btn">
+          {quantity !== undefined && (
+            <div>
+              {quantity < 1 ? (
+                <div style={{ color: "rgba(255,0,0,0.6)" }}>Out of stock!</div>
+              ) : (
+                <div className="user-quantity">
+                  <label htmlFor="quantity">Quantity:</label>
+                  <select
+                    className="quantity-select"
+                    name="quantity"
+                    id="quantity"
+                  >
+                    {handleQuantityOptions()}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+          {adminEdit && (
+            <div className="edit-btns">
               <NavLink
                 className="edit-button"
                 style={{ textDecoration: "none" }}
@@ -54,7 +92,7 @@ const SearchPageCard = ({
               {confirmDelete ? (
                 <button
                   className="edit-button btn-confirm"
-                  onClick={(): void => admin.delFunc(id)}
+                  onClick={(): void => adminEdit(id)}
                 >
                   Confirm Delete
                 </button>
@@ -68,7 +106,16 @@ const SearchPageCard = ({
               )}
             </div>
           )}
-          {rating !== 0 && (
+          {user && (
+            <div className="edit-btns">
+              <FontAwesomeIcon
+                className="remove-cart-item"
+                icon={faTrash}
+                onClick={(): void => user(id)}
+              />
+            </div>
+          )}
+          {rating && rating !== 0 && (
             <div>
               <FontAwesomeIcon
                 icon={faStar}

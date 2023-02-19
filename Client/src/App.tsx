@@ -16,6 +16,7 @@ import ReviewsPage from "./pages/reviewsPage/ReviewsPage";
 import Users from "./pages/dashboard/users/Users";
 import User from "./pages/dashboard/users/user/User";
 import Statistics from "./pages/dashboard/statistics/Statistics";
+import ShoppingCart from "./pages/shoppingCart/ShoppingCart";
 import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -57,6 +58,7 @@ const App = (): JSX.Element => {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/product" element={<ProductPage />} />
               <Route path="/productreviews" element={<ReviewsPage />} />
+              <Route path="/usercart" element={<ShoppingCart />} />
               <Route
                 path="/dashboard"
                 element={
