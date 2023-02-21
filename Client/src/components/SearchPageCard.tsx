@@ -62,7 +62,7 @@ const SearchPageCard = ({
         </NavLink>
         <div className="content-props">
           <div className="card-price">{price}$</div>
-          {quantity !== undefined && (
+          {quantity !== undefined && adminEdit === undefined && (
             <div>
               {quantity < 1 ? (
                 <div style={{ color: "rgba(255,0,0,0.6)" }}>Out of stock!</div>
@@ -79,6 +79,9 @@ const SearchPageCard = ({
                 </div>
               )}
             </div>
+          )}
+          {adminEdit && quantity !== undefined && quantity < 1 && (
+            <div style={{ color: "rgba(255,0,0,0.6)" }}>Out of stock!</div>
           )}
           {adminEdit && (
             <div className="edit-btns">
@@ -115,7 +118,7 @@ const SearchPageCard = ({
               />
             </div>
           )}
-          {rating && rating !== 0 && (
+          {rating !== undefined && rating !== 0 && (
             <div>
               <FontAwesomeIcon
                 icon={faStar}

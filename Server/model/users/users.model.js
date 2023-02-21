@@ -87,6 +87,9 @@ const removeReport = async (uId, rId) => {
 
 const deleteUser = (id) => Users.findByIdAndDelete(id);
 
+const editCart = (uId, pId) =>
+  Users.findByIdAndUpdate(uId, { $pull: { shoppingCart: pId } }, { new: true });
+
 module.exports = {
   createUser,
   findByEmail,
@@ -104,4 +107,5 @@ module.exports = {
   resetReports,
   removeReport,
   deleteUser,
+  editCart,
 };
