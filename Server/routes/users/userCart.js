@@ -7,6 +7,7 @@ const {
   findUserById,
   addToCart,
   getCart,
+  editCart,
 } = require("../../model/users/users.model");
 
 router.post("/addproduct", userInfo, async (req, res) => {
@@ -21,6 +22,19 @@ router.post("/addproduct", userInfo, async (req, res) => {
         checkProduct = true;
     if (!checkProduct) await addToCart(user.id, product);
     res.status(200).json({ msg: "item added" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.patch("/editcart", userInfo, async (req, res) => {
+  try {
+    const product = await findProductById(req.body.pid);
+    if (!product) throw "Product does not exist.";
+    const user = await findUserById(req.userData.id);
+    if (!user) throw "Please login.";
+    const shoppingCart = await editCart(user._id, product._id);
+    res.status(200).json(shoppingCart);
   } catch (error) {
     res.status(400).json({ error });
   }

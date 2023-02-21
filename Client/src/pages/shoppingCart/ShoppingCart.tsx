@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import SearchPageCard from "../../components/SearchPageCard";
 import "./shoppingcart.css";
+import "../productPage/productPage.css";
 
 interface cartItems {
   _id: string;
@@ -12,20 +13,30 @@ interface cartItems {
 }
 
 const ShoppingCart = (): JSX.Element => {
-  const [cart, setCart] = useState<cartItems[]>();
+  const [cart, setCart] = useState<cartItems[]>([]);
+  const [price, setPrice] = useState(0);
 
   useEffect((): void => {
     axios
       .get("/usercart/getcart")
       .then(({ data }) => {
-        const arr: any = [];
         const cartLength = data.shoppingCart.length;
         for (let i = 0; i < cartLength; i++) {
+          if (i === 0) {
+            setCart([]);
+            setPrice(0);
+          }
           axios
             .get(`/product/product/${data.shoppingCart[i]}`)
             .then(({ data }) => {
-              arr.push(data);
-              if (i === cartLength - 1) setCart(arr);
+              setCart((state: cartItems[]): cartItems[] => {
+                if (state) {
+                  const tempCart = JSON.parse(JSON.stringify(state));
+                  tempCart.push(data);
+                  return tempCart;
+                } else return [data];
+              });
+              setPrice((state) => state + parseInt(data.price));
             })
             .catch((err) => console.log(err));
         }
@@ -34,13 +45,21 @@ const ShoppingCart = (): JSX.Element => {
   }, []);
 
   const handleRemoveProduct = (id: string): void => {
-    console.log(id);
+    axios
+      .patch("/usercart/editcart", { pid: id })
+      .then(() => {
+        let tempCart = JSON.parse(JSON.stringify(cart));
+        tempCart = tempCart.filter((item: cartItems) => item._id !== id);
+        setCart(tempCart);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <div className="cartpage-container">
-      {cart
-        ? cart?.map((item, index) => (
+      {cart ? (
+        <div className="cart-items-container">
+          {cart.map((item, index) => (
             <SearchPageCard
               key={item.name + index}
               id={item._id}
@@ -50,9 +69,14 @@ const ShoppingCart = (): JSX.Element => {
               quantity={item.quantity}
               user={handleRemoveProduct}
             />
-          ))
-        : ""}
-      <button onClick={() => console.log(cart)}>click</button>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
+      <div className="cart-price-wrapper">
+        <div className="cart-price">{price}$</div>
+      </div>
     </div>
   );
 };

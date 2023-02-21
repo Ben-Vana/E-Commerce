@@ -2,7 +2,6 @@ import axios from "axios";
 import SearchPageCard from "../../../components/SearchPageCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../searchPage/search.css";
@@ -13,6 +12,7 @@ interface cardProp {
   name: string;
   price: string;
   rating: number;
+  quantity: number;
   image: Array<string>;
 }
 
@@ -21,11 +21,6 @@ const AllProducts = (): JSX.Element => {
   const [productsArr, setProductsArr] = useState<Array<cardProp>>();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const isAdmin = useSelector(
-    (state: { authReducer: { userData: { admin: boolean } } }) =>
-      state.authReducer.userData.admin
-  );
 
   useEffect((): void => {
     const param = new URLSearchParams(location.search);
@@ -93,6 +88,7 @@ const AllProducts = (): JSX.Element => {
               price={item.price}
               rating={item.rating}
               image={item.image[0]}
+              quantity={item.quantity}
               adminEdit={handleDeleteProduct}
             />
           ))}
