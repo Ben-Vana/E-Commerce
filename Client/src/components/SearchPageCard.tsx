@@ -13,6 +13,7 @@ interface cardProp {
   quantity?: number;
   adminEdit?: Function;
   user?: Function;
+  handleQuantity?: Function;
 }
 
 const SearchPageCard = ({
@@ -24,6 +25,7 @@ const SearchPageCard = ({
   quantity,
   adminEdit,
   user,
+  handleQuantity,
 }: cardProp): JSX.Element => {
   const [confirmDelete, setDelete] = useState(false);
 
@@ -60,10 +62,11 @@ const SearchPageCard = ({
             {name}
           </h4>
         </NavLink>
-        <div className="content-props">
-          <div className="card-price">{price}$</div>
-          {quantity !== undefined && adminEdit === undefined && (
-            <div>
+        {quantity !== undefined &&
+          handleQuantity &&
+          adminEdit === undefined && (
+            <div className="checkout-props">
+              <div className="card-price">{price}$</div>
               {quantity < 1 ? (
                 <div style={{ color: "rgba(255,0,0,0.6)" }}>Out of stock!</div>
               ) : (
@@ -73,6 +76,9 @@ const SearchPageCard = ({
                     className="quantity-select"
                     name="quantity"
                     id="quantity"
+                    onChange={(ev: React.ChangeEvent<HTMLSelectElement>) =>
+                      handleQuantity(ev, id)
+                    }
                   >
                     {handleQuantityOptions()}
                   </select>
@@ -80,6 +86,8 @@ const SearchPageCard = ({
               )}
             </div>
           )}
+        <div className="content-props">
+          {quantity === undefined && <div className="card-price">{price}$</div>}
           {adminEdit && quantity !== undefined && quantity < 1 && (
             <div style={{ color: "rgba(255,0,0,0.6)" }}>Out of stock!</div>
           )}

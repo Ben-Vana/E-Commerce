@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import SearchPageCard from "../../components/SearchPageCard";
+import { useEffect, useState } from "react";
 import "./shoppingcart.css";
 import "../productPage/productPage.css";
 
@@ -10,6 +10,7 @@ interface cartItems {
   name: string;
   price: string;
   quantity: number;
+  userQuantity: number;
 }
 
 const ShoppingCart = (): JSX.Element => {
@@ -32,6 +33,7 @@ const ShoppingCart = (): JSX.Element => {
               setCart((state: cartItems[]): cartItems[] => {
                 if (state) {
                   const tempCart = JSON.parse(JSON.stringify(state));
+                  data.userQuantity = 1;
                   tempCart.push(data);
                   return tempCart;
                 } else return [data];
@@ -45,6 +47,12 @@ const ShoppingCart = (): JSX.Element => {
   }, []);
 
   const handleRemoveProduct = (id: string): void => {
+    const delItem: cartItems[] = cart.filter(
+      (item: cartItems) => item._id === id
+    );
+    setPrice(
+      (state) => state - delItem[0].userQuantity * parseInt(delItem[0].price)
+    );
     axios
       .patch("/usercart/editcart", { pid: id })
       .then(() => {
@@ -53,6 +61,21 @@ const ShoppingCart = (): JSX.Element => {
         setCart(tempCart);
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleSumPrice = (
+    ev: React.ChangeEvent<HTMLSelectElement>,
+    id: string
+  ) => {
+    let sum = 0;
+    const tempCart = JSON.parse(JSON.stringify(cart));
+    for (let i = 0; i < tempCart.length; i++) {
+      if (id === tempCart[i]._id)
+        tempCart[i].userQuantity = parseInt(ev.target.value);
+      sum += parseInt(tempCart[i].price) * tempCart[i].userQuantity;
+    }
+    setCart(tempCart);
+    setPrice(sum);
   };
 
   return (
@@ -68,6 +91,7 @@ const ShoppingCart = (): JSX.Element => {
               image={item.image[0]}
               quantity={item.quantity}
               user={handleRemoveProduct}
+              handleQuantity={handleSumPrice}
             />
           ))}
         </div>
@@ -75,7 +99,10 @@ const ShoppingCart = (): JSX.Element => {
         ""
       )}
       <div className="cart-price-wrapper">
-        <div className="cart-price">{price}$</div>
+        <div className="cart-price">
+          <div>{price}$</div>
+          <button className="add-cart-btn checkout-btn">CheckOut</button>
+        </div>
       </div>
     </div>
   );
