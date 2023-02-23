@@ -14,6 +14,7 @@ interface cardProp {
   adminEdit?: Function;
   user?: Function;
   handleQuantity?: Function;
+  addView?: Function;
 }
 
 const SearchPageCard = ({
@@ -26,6 +27,7 @@ const SearchPageCard = ({
   adminEdit,
   user,
   handleQuantity,
+  addView,
 }: cardProp): JSX.Element => {
   const [confirmDelete, setDelete] = useState(false);
 
@@ -57,11 +59,23 @@ const SearchPageCard = ({
         </NavLink>
       </div>
       <div className="card-content">
-        <NavLink style={{ textDecoration: "none" }} to={`/product?pid=${id}`}>
+        <NavLink
+          style={{ textDecoration: "none" }}
+          to={`/product?pid=${id}`}
+          onClick={(): void => (addView ? addView(id) : "")}
+        >
           <h4 className="card-header" title={name}>
             {name}
           </h4>
         </NavLink>
+        {adminEdit && quantity !== undefined && quantity < 1 && (
+          <div
+            className="out-stock none"
+            style={{ color: "rgba(255,0,0,0.6)" }}
+          >
+            Out of stock!
+          </div>
+        )}
         {quantity !== undefined &&
           handleQuantity &&
           adminEdit === undefined && (
@@ -88,14 +102,18 @@ const SearchPageCard = ({
           )}
         <div className="content-props">
           {quantity === undefined && <div className="card-price">{price}$</div>}
+          {adminEdit && <div className="card-price">{price}$</div>}
           {adminEdit && quantity !== undefined && quantity < 1 && (
-            <div style={{ color: "rgba(255,0,0,0.6)" }}>Out of stock!</div>
+            <div className="out-stock" style={{ color: "rgba(255,0,0,0.6)" }}>
+              Out of stock!
+            </div>
           )}
           {adminEdit && (
             <div className="edit-btns">
               <NavLink
                 className="edit-button"
                 style={{ textDecoration: "none" }}
+                onClick={() => (addView ? addView(id) : "")}
                 to={`/dashboard/editproduct/${id}`}
               >
                 Edit
@@ -127,7 +145,7 @@ const SearchPageCard = ({
             </div>
           )}
           {rating !== undefined && rating !== 0 && (
-            <div>
+            <div className="rating-container">
               <FontAwesomeIcon
                 icon={faStar}
                 style={

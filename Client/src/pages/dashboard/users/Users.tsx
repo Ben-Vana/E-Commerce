@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import "./users.css";
 import "../allProducts/allproducts.css";
+import "./user/user.css";
 
 interface userProps {
   _id: string;
@@ -30,23 +31,26 @@ const Users = (): JSX.Element => {
           setUsers(data);
         })
         .catch((err) => console.log(err));
-    } else {
-      axios
-        .get(`/users`)
-        .then(({ data }) => {
-          console.log(data);
-          setUsers(data);
-        })
-        .catch((err) => console.log(err));
-    }
+    } else setUsers([]);
   }, [location]);
 
   const handleKey = (ev: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (ev.code === "Enter") handleGetProduct();
+    if (ev.code === "Enter") handleGetUser();
     else return;
   };
 
-  const handleGetProduct = () => navigate(`/dashboard/users?mq=${userInput}`);
+  const handleGetUser = () => navigate(`/dashboard/users?mq=${userInput}`);
+
+  const handleSortByReport = () => {
+    axios
+      .get("/users")
+      .then(({ data }) =>
+        setUsers(
+          data.sort((a: userProps, b: userProps) => a.reports < b.reports)
+        )
+      )
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="users-container">
@@ -54,8 +58,8 @@ const Users = (): JSX.Element => {
         <div className="ap-input-container">
           <input
             type="text"
-            name="product"
-            id="product"
+            name="user"
+            id="user"
             placeholder="Seach User"
             className="ap-input"
             value={userInput}
@@ -64,13 +68,18 @@ const Users = (): JSX.Element => {
             }
             onKeyDown={handleKey}
           />
-          <div className="ap-icon-container" onClick={handleGetProduct}>
+          <div className="ap-icon-container" onClick={handleGetUser}>
             <FontAwesomeIcon
               className="ap-search-icon"
               icon={faMagnifyingGlass}
             />
           </div>
         </div>
+      </div>
+      <div className="up-sort-btn-container">
+        <button className="manage-btn" onClick={handleSortByReport}>
+          Sort By Reports
+        </button>
       </div>
       <div className="search-page-container ap-res">
         {usersArr &&
