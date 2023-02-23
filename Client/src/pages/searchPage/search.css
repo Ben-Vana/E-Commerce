@@ -124,7 +124,7 @@
 .sort-options {
   position: absolute;
   display: none;
-  width: 10%;
+  width: 10rem;
   flex-direction: column;
   color: var(--font-light);
   z-index: 999;

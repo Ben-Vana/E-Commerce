@@ -182,6 +182,10 @@ const SearchPage = (): JSX.Element => {
     return buttonArr;
   };
 
+  const handleAddView = (id: string) => {
+    axios.patch("/product/product/addview", { id });
+  };
+
   return (
     <div>
       <h3 className="search-result">Search result for "{userSearch}":</h3>
@@ -227,6 +231,7 @@ const SearchPage = (): JSX.Element => {
               price={item.price}
               rating={item.rating}
               image={item.image[0]}
+              addView={handleAddView}
             />
           ))
         ) : (

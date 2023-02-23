@@ -19,6 +19,7 @@ const productSchema = new Schema({
       createdAt: { type: Date, default: Date.now },
     },
   ],
+  views: { type: Number, dafault: 0 },
 });
 
 const Product = mongoose.model("products", productSchema);
@@ -50,6 +51,8 @@ const deleteReviewProduct = (pId, rId) =>
     { new: true }
   );
 
+const addView = (id) => Product.findByIdAndUpdate(id, { $inc: { views: 1 } });
+
 module.exports = {
   createProduct,
   findProductById,
@@ -59,4 +62,5 @@ module.exports = {
   getProductsByName,
   addReview,
   deleteReviewProduct,
+  addView,
 };

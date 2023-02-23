@@ -88,6 +88,10 @@
   border: 1px solid #f00;
 }
 
+.none {
+  display: none;
+}
+
 @media screen and (max-width: 1100px) {
   .ap-res {
     margin-right: auto;
@@ -102,5 +106,20 @@
   }
   .admin-btn {
     margin: 0.1rem 0.5rem;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .ap-res > .row-card > .card-content > .content-props > .rating-container,
+  .ap-res > .row-card > .card-content > .content-props > .out-stock {
+    display: none;
+  }
+  .ap-res > .row-card > .card-content > .content-props > .edit-btns {
+    position: static;
+    margin: 0;
+  }
+  .ap-res > .row-card > .card-content > .out-stock {
+    display: block;
+    margin-left: 1rem;
   }
 }

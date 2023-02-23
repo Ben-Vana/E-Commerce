@@ -27,3 +27,16 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+
+.up-sort-btn-container {
+  display: flex;
+  gap: 0.3rem;
+  width: 60%;
+  margin-inline: auto;
+  margin-right: 25%;
+  margin-top: 1rem;
+}
+
+.users-container > .ap-res {
+  margin-top: 1rem;
+}

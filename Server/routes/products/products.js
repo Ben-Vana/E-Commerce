@@ -21,6 +21,7 @@ const {
   updateProduct,
   deleteProduct,
   getProductsByName,
+  addView,
 } = require("../../model/products/product.model");
 
 const fileStorage = multer.diskStorage({
@@ -179,6 +180,18 @@ router.get("/product/:id", async (req, res) => {
       product.productReviews = tempArr;
       res.status(200).json({ product: product, limit: limit });
     } else res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.patch("/product/addview", async (req, res) => {
+  try {
+    console.log(req.body.id);
+    const product = await findProductById(req.body.id);
+    if (!product) throw "Product does not exist";
+    await addView(product._id);
+    res.status(200).json({ msg: "good" });
   } catch (error) {
     res.status(400).json({ error });
   }
