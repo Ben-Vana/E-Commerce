@@ -29,7 +29,7 @@ const AllProducts = (): JSX.Element => {
       setProductsArr([]);
     } else {
       axios
-        .get(`/product/${query}`)
+        .get(`/product/search/${query}`)
         .then(({ data }) => setProductsArr(data))
         .catch((err) => console.log(err));
     }
