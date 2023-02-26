@@ -53,6 +53,10 @@ const deleteReviewProduct = (pId, rId) =>
 
 const addView = (id) => Product.findByIdAndUpdate(id, { $inc: { views: 1 } });
 
+const mostViewed = () => Product.find({}).sort({ views: -1 }).limit(1);
+
+const highRate = () => Product.find({}).sort({ rating: -1 }).limit(1);
+
 module.exports = {
   createProduct,
   findProductById,
@@ -63,4 +67,6 @@ module.exports = {
   addReview,
   deleteReviewProduct,
   addView,
+  mostViewed,
+  highRate,
 };

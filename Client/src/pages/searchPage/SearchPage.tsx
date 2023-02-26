@@ -34,7 +34,7 @@ const SearchPage = (): JSX.Element => {
     const page = qParams.get("p");
     setUserSearch(search);
     axios
-      .get(`/product/${search}`)
+      .get(`/product/search/${search}`)
       .then(({ data }): void | null => {
         resultArrLength = data.length;
         setProductsArr(sortData(data, sort, page, numberOfCardsPerPage));

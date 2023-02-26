@@ -22,6 +22,8 @@ const {
   deleteProduct,
   getProductsByName,
   addView,
+  mostViewed,
+  highRate,
 } = require("../../model/products/product.model");
 
 const fileStorage = multer.diskStorage({
@@ -144,7 +146,7 @@ router.delete("/:pid", userInfo, checkAdmin, async (req, res) => {
   }
 });
 
-router.get("/:productname", async (req, res) => {
+router.get("/search/:productname", async (req, res) => {
   try {
     const products = await getProductsByName(req.params.productname);
     res.status(200).json(products);
@@ -187,11 +189,28 @@ router.get("/product/:id", async (req, res) => {
 
 router.patch("/product/addview", async (req, res) => {
   try {
-    console.log(req.body.id);
     const product = await findProductById(req.body.id);
     if (!product) throw "Product does not exist";
     await addView(product._id);
     res.status(200).json({ msg: "good" });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.get("/mostview", userInfo, checkAdmin, async (req, res) => {
+  try {
+    const product = await mostViewed();
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.get("/highrate", userInfo, checkAdmin, async (req, res) => {
+  try {
+    const product = await highRate();
+    res.status(200).json(product);
   } catch (error) {
     res.status(400).json({ error });
   }
