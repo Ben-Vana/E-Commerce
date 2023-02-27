@@ -28,6 +28,7 @@ const AllProducts = (): JSX.Element => {
     if (!query) {
       setProductsArr([]);
     } else {
+      setInput(query);
       axios
         .get(`/product/search/${query}`)
         .then(({ data }) => setProductsArr(data))

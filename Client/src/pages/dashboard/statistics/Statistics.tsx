@@ -13,10 +13,12 @@ interface item {
 const Statistics = (): JSX.Element => {
   const [mostViewed, setMostViewed] = useState<item | null>(null);
   const [highRate, setHighRate] = useState<item | null>(null);
+  const [users, setUsers] = useState<number | null>(null);
 
   useEffect((): void => {
     axios.get("/product/mostview").then(({ data }) => setMostViewed(data[0]));
     axios.get("/product/highrate").then(({ data }) => setHighRate(data[0]));
+    axios.get("/users/userslength").then(({ data }) => setUsers(data));
   }, []);
 
   return (
@@ -54,6 +56,9 @@ const Statistics = (): JSX.Element => {
           ) : (
             ""
           )}
+        </div>
+        <div className="stat-item">
+          {users ? <div className="item-style">Users: {users}</div> : ""}
         </div>
       </div>
     </div>
