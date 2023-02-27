@@ -25,6 +25,7 @@ const Users = (): JSX.Element => {
     const param = new URLSearchParams(location.search);
     const query = param.get("mq");
     if (query) {
+      setInput(query);
       axios
         .get(`/users/username/${query}`)
         .then(({ data }) => {

@@ -35,6 +35,7 @@
   padding: 1rem;
   text-decoration: none;
   color: var(--font-light);
+  overflow: hidden;
 }
 
 .active-dash {
@@ -55,6 +56,10 @@
   transition: left 400ms ease-in-out;
 }
 
+.left {
+  left: 0;
+}
+
 @media screen and (max-width: 1500px) {
   .dash-nav {
     width: 20vw;
@@ -72,11 +77,14 @@
     top: 4.5rem;
     height: 100%;
     z-index: 10;
-    width: 30vw;
-    left: -30vw;
+    width: 13rem;
+    left: 0;
     transition: left 400ms ease-in-out;
   }
   .dash-ham {
     display: block;
+  }
+  .left {
+    left: -13rem;
   }
 }

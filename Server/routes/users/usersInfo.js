@@ -24,6 +24,16 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/userslength", async (req, res) => {
+  try {
+    const users = await getUsers();
+    const length = users.length;
+    res.status(200).json(length);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 router.get("/username/:name", async (req, res) => {
   try {
     const users = await getUsersByName(req.params.name);
