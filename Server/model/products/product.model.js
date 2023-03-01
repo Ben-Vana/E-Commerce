@@ -20,6 +20,7 @@ const productSchema = new Schema({
     },
   ],
   views: { type: Number, dafault: 0 },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Product = mongoose.model("products", productSchema);
@@ -53,9 +54,11 @@ const deleteReviewProduct = (pId, rId) =>
 
 const addView = (id) => Product.findByIdAndUpdate(id, { $inc: { views: 1 } });
 
-const mostViewed = () => Product.find({}).sort({ views: -1 }).limit(1);
+const mostViewed = () => Product.find({}).sort({ views: -1 }).limit(10);
 
 const highRate = () => Product.find({}).sort({ rating: -1 }).limit(1);
+
+const mostRecent = () => Product.find({}).sort({ createdAt: -1 }).limit(10);
 
 module.exports = {
   createProduct,
@@ -69,4 +72,5 @@ module.exports = {
   addView,
   mostViewed,
   highRate,
+  mostRecent,
 };

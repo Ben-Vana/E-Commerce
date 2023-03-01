@@ -24,6 +24,7 @@ const {
   addView,
   mostViewed,
   highRate,
+  mostRecent,
 } = require("../../model/products/product.model");
 
 const fileStorage = multer.diskStorage({
@@ -211,6 +212,15 @@ router.get("/highrate", userInfo, checkAdmin, async (req, res) => {
   try {
     const product = await highRate();
     res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.get("/mostrecent", async (req, res) => {
+  try {
+    const products = await mostRecent();
+    res.status(200).json(products);
   } catch (error) {
     res.status(400).json({ error });
   }
