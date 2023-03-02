@@ -1,12 +1,14 @@
 import { useEffect, useRef, RefObject, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./home.css";
+import { NavLink } from "react-router-dom";
 
 let clickNumP = 0;
 let clickNumR = 0;
 
 interface slideProp {
-  id: string;
+  _id: string;
   name: string;
   image: string[];
 }
@@ -15,13 +17,15 @@ const Home = (): JSX.Element => {
   const [recent, setRecent] = useState<slideProp[]>();
   const [popular, setPopular] = useState<slideProp[]>();
 
+  const navigate = useNavigate();
+
   const sliderRecent = useRef() as RefObject<HTMLDivElement>;
   const sliderPopular = useRef() as RefObject<HTMLDivElement>;
 
   useEffect((): void => {
     axios
       .get("/product/mostrecent")
-      .then(({ data }) => setRecent(data.concat(data)))
+      .then(({ data }) => setRecent(data))
       .catch((err) => console.log(err));
     axios
       .get("/product/mostview")
@@ -100,57 +104,66 @@ const Home = (): JSX.Element => {
   return (
     <>
       <h1 className="title">Puzzle Store</h1>
-      <h2 className="sub-title">Popular products:</h2>
-      <div className="carousel-container">
-        <span className="arrow left" onClick={() => handleSlideLeft()}>
-          &#8249;
-        </span>
-        <span className="arrow right" onClick={() => handleSlideRight()}>
-          &#8250;
-        </span>
-        <div className="grid-container" ref={sliderPopular}>
-          {popular &&
-            popular.map((item, index: number) => (
-              <div
-                className="grid-col"
-                style={{ "--i": index + 1 } as React.CSSProperties}
-                key={item.name + index}
-              >
-                <img
-                  src={`http://localhost:8181/public/images/${item.image[0]}`}
-                  alt={item.name}
-                  crossOrigin="anonymous"
-                />
-              </div>
-            ))}
+      <div className="home-content">
+        <h2 className="sub-title">Popular products:</h2>
+        <div className="carousel-container">
+          <span className="arrow left" onClick={() => handleSlideLeft()}>
+            &#8249;
+          </span>
+          <span className="arrow right" onClick={() => handleSlideRight()}>
+            &#8250;
+          </span>
+          <div className="grid-container" ref={sliderPopular}>
+            {popular &&
+              popular.map((item, index: number) => (
+                <div
+                  className="grid-col"
+                  style={{ "--i": index + 1 } as React.CSSProperties}
+                  key={item.name + index}
+                  onClick={() => navigate(`/product?pid=${item._id}`)}
+                >
+                  <img
+                    src={`http://localhost:8181/public/images/${item.image[0]}`}
+                    alt={item.name}
+                    crossOrigin="anonymous"
+                  />
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
-      <h2 className="sub-title">New to the shop:</h2>
-      <div className="carousel-container">
-        <span className="arrow left" onClick={() => handleSlideLeft("recent")}>
-          &#8249;
-        </span>
-        <span
-          className="arrow right"
-          onClick={() => handleSlideRight("recent")}
-        >
-          &#8250;
-        </span>
-        <div className="grid-container" ref={sliderRecent}>
-          {recent &&
-            recent.map((item, index: number) => (
-              <div
-                className="grid-col"
-                style={{ "--i": index + 1 } as React.CSSProperties}
-                key={item.name + index}
-              >
-                <img
-                  src={`http://localhost:8181/public/images/${item.image[0]}`}
-                  alt={item.name}
-                  crossOrigin="anonymous"
-                />
-              </div>
-            ))}
+        <h2 className="sub-title" style={{ marginTop: "3rem" }}>
+          New to the shop:
+        </h2>
+        <div className="carousel-container">
+          <span
+            className="arrow left"
+            onClick={() => handleSlideLeft("recent")}
+          >
+            &#8249;
+          </span>
+          <span
+            className="arrow right"
+            onClick={() => handleSlideRight("recent")}
+          >
+            &#8250;
+          </span>
+          <div className="grid-container" ref={sliderRecent}>
+            {recent &&
+              recent.map((item, index: number) => (
+                <div
+                  className="grid-col"
+                  style={{ "--i": index + 1 } as React.CSSProperties}
+                  key={item.name + index}
+                  onClick={() => navigate(`/product?pid=${item._id}`)}
+                >
+                  <img
+                    src={`http://localhost:8181/public/images/${item.image[0]}`}
+                    alt={item.name}
+                    crossOrigin="anonymous"
+                  />
+                </div>
+              ))}
+          </div>
         </div>
       </div>
     </>
