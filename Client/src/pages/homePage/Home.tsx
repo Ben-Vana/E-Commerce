@@ -52,8 +52,7 @@ const Home = (): JSX.Element => {
         clickNumR--;
       }
     } else if (popular) {
-      if (popular.length < 6) return;
-      const numOfSlide = Math.ceil(popular.length / 5);
+      const numOfSlide = popular.length;
       if (clickNumP === 0) {
         slider.style.setProperty("--transform-i", `${numOfSlide - 1}`);
         clickNumP = numOfSlide - 1;
@@ -86,8 +85,7 @@ const Home = (): JSX.Element => {
         clickNumR++;
       }
     } else if (popular) {
-      if (popular.length < 6) return;
-      const numOfSlide = Math.ceil(popular.length / 5);
+      const numOfSlide = popular.length;
       if (clickNumP === numOfSlide - 1) {
         slider.style.setProperty("--transform-i", "0");
         clickNumP = 0;
@@ -103,22 +101,22 @@ const Home = (): JSX.Element => {
 
   return (
     <>
-      <h1 className="title">Puzzle Store</h1>
       <div className="home-content">
-        <h2 className="sub-title">Popular products:</h2>
         <div className="carousel-container">
-          <span className="arrow left" onClick={() => handleSlideLeft()}>
+          <span className="arrow left-arrow" onClick={() => handleSlideLeft()}>
             &#8249;
           </span>
-          <span className="arrow right" onClick={() => handleSlideRight()}>
+          <span
+            className="arrow right-arrow"
+            onClick={() => handleSlideRight()}
+          >
             &#8250;
           </span>
-          <div className="grid-container" ref={sliderPopular}>
+          <div className="main-flex-container" ref={sliderPopular}>
             {popular &&
               popular.map((item, index: number) => (
                 <div
-                  className="grid-col"
-                  style={{ "--i": index + 1 } as React.CSSProperties}
+                  className="flex-col"
                   key={item.name + index}
                   onClick={() => navigate(`/product?pid=${item._id}`)}
                 >
@@ -131,18 +129,18 @@ const Home = (): JSX.Element => {
               ))}
           </div>
         </div>
-        <h2 className="sub-title" style={{ marginTop: "3rem" }}>
+        <h3 className="sub-title" style={{ marginTop: "3rem" }}>
           New to the shop:
-        </h2>
+        </h3>
         <div className="carousel-container">
           <span
-            className="arrow left"
+            className="arrow left-arrow"
             onClick={() => handleSlideLeft("recent")}
           >
             &#8249;
           </span>
           <span
-            className="arrow right"
+            className="arrow right-arrow"
             onClick={() => handleSlideRight("recent")}
           >
             &#8250;
