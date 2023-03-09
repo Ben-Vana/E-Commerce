@@ -2,7 +2,6 @@ import { useEffect, useRef, RefObject, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./home.css";
-import { NavLink } from "react-router-dom";
 
 let clickNumP = 0;
 let clickNumR = 0;
@@ -25,7 +24,7 @@ const Home = (): JSX.Element => {
   useEffect((): void => {
     axios
       .get("/product/mostrecent")
-      .then(({ data }) => setRecent(data))
+      .then(({ data }) => setRecent(data.concat(data.concat(data))))
       .catch((err) => console.log(err));
     axios
       .get("/product/mostview")
@@ -99,16 +98,32 @@ const Home = (): JSX.Element => {
     }
   };
 
+  const handleAutoScroll = (index: number): void => {
+    if (index === 1) setInterval((): void => handleSlideRight(), 7000);
+    else return;
+  };
+
   return (
     <>
       <div className="home-content">
         <div className="carousel-container">
-          <span className="arrow left-arrow" onClick={() => handleSlideLeft()}>
+          <span
+            className="arrow left-arrow"
+            onClick={() => handleSlideLeft()}
+            style={{
+              left: "0.2rem",
+              backgroundColor: "rgba(190, 190, 190, 0.2)",
+            }}
+          >
             &#8249;
           </span>
           <span
             className="arrow right-arrow"
             onClick={() => handleSlideRight()}
+            style={{
+              right: "0.2rem",
+              backgroundColor: "rgba(190, 190, 190, 0.2)",
+            }}
           >
             &#8250;
           </span>
@@ -119,6 +134,9 @@ const Home = (): JSX.Element => {
                   className="flex-col"
                   key={item.name + index}
                   onClick={() => navigate(`/product?pid=${item._id}`)}
+                  onLoad={(): void =>
+                    handleAutoScroll(index === popular.length - 1 ? 1 : 0)
+                  }
                 >
                   <img
                     src={`http://localhost:8181/public/images/${item.image[0]}`}
@@ -132,19 +150,23 @@ const Home = (): JSX.Element => {
         <h3 className="sub-title" style={{ marginTop: "3rem" }}>
           New to the shop:
         </h3>
-        <div className="carousel-container">
-          <span
-            className="arrow left-arrow"
-            onClick={() => handleSlideLeft("recent")}
-          >
-            &#8249;
-          </span>
-          <span
-            className="arrow right-arrow"
-            onClick={() => handleSlideRight("recent")}
-          >
-            &#8250;
-          </span>
+        <div className="carousel-container" style={{ marginBottom: "4rem" }}>
+          {recent && recent.length > 4 && (
+            <div className="arrow-container">
+              <span
+                className="arrow left-arrow"
+                onClick={() => handleSlideLeft("recent")}
+              >
+                &#8249;
+              </span>
+              <span
+                className="arrow right-arrow"
+                onClick={() => handleSlideRight("recent")}
+              >
+                &#8250;
+              </span>
+            </div>
+          )}
           <div className="grid-container" ref={sliderRecent}>
             {recent &&
               recent.map((item, index: number) => (
