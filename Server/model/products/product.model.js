@@ -58,7 +58,7 @@ const mostViewed = () => Product.find({}).sort({ views: -1 }).limit(5);
 
 const highRate = () => Product.find({}).sort({ rating: -1 }).limit(1);
 
-const mostRecent = () => Product.find({}).sort({ createdAt: -1 }).limit(10);
+const mostRecent = () => Product.find({}).sort({ createdAt: -1 }).limit(14);
 
 module.exports = {
   createProduct,

@@ -15,6 +15,7 @@ interface slideProp {
 const Home = (): JSX.Element => {
   const [recent, setRecent] = useState<slideProp[]>();
   const [popular, setPopular] = useState<slideProp[]>();
+  const [err, setErr] = useState(false);
 
   const navigate = useNavigate();
 
@@ -24,12 +25,16 @@ const Home = (): JSX.Element => {
   useEffect((): void => {
     axios
       .get("/product/mostrecent")
-      .then(({ data }) => setRecent(data.concat(data.concat(data))))
-      .catch((err) => console.log(err));
+      .then(({ data }) => {
+        if (data.length < 14 && sliderRecent.current)
+          sliderRecent.current.style.setProperty("--items-num", data.length);
+        setRecent(data);
+      })
+      .catch(() => setErr(true));
     axios
       .get("/product/mostview")
       .then(({ data }) => setPopular(data))
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   }, []);
 
   const handleSlideLeft = (name?: string): void => {
@@ -99,93 +104,100 @@ const Home = (): JSX.Element => {
   };
 
   const handleAutoScroll = (index: number): void => {
-    if (index === 1) setInterval((): void => handleSlideRight(), 7000);
-    else return;
+    // if (index === 1) setInterval((): void => handleSlideRight(), 7000);
+    // else return;
   };
 
   return (
     <>
-      <div className="home-content">
-        <div className="carousel-container">
-          <span
-            className="arrow left-arrow"
-            onClick={() => handleSlideLeft()}
-            style={{
-              left: "0.2rem",
-              backgroundColor: "rgba(190, 190, 190, 0.2)",
-            }}
-          >
-            &#8249;
-          </span>
-          <span
-            className="arrow right-arrow"
-            onClick={() => handleSlideRight()}
-            style={{
-              right: "0.2rem",
-              backgroundColor: "rgba(190, 190, 190, 0.2)",
-            }}
-          >
-            &#8250;
-          </span>
-          <div className="main-flex-container" ref={sliderPopular}>
-            {popular &&
-              popular.map((item, index: number) => (
-                <div
-                  className="flex-col"
-                  key={item.name + index}
-                  onClick={() => navigate(`/product?pid=${item._id}`)}
-                  onLoad={(): void =>
-                    handleAutoScroll(index === popular.length - 1 ? 1 : 0)
-                  }
-                >
-                  <img
-                    src={`http://localhost:8181/public/images/${item.image[0]}`}
-                    alt={item.name}
-                    crossOrigin="anonymous"
-                  />
-                </div>
-              ))}
-          </div>
-        </div>
-        <h3 className="sub-title" style={{ marginTop: "3rem" }}>
-          New to the shop:
-        </h3>
-        <div className="carousel-container" style={{ marginBottom: "4rem" }}>
-          {recent && recent.length > 4 && (
-            <div className="arrow-container">
-              <span
-                className="arrow left-arrow"
-                onClick={() => handleSlideLeft("recent")}
-              >
-                &#8249;
-              </span>
-              <span
-                className="arrow right-arrow"
-                onClick={() => handleSlideRight("recent")}
-              >
-                &#8250;
-              </span>
+      {err === false ? (
+        <div className="home-content">
+          <div className="carousel-container">
+            <span
+              className="arrow left-arrow"
+              onClick={() => handleSlideLeft()}
+              style={{
+                left: "0.2rem",
+                backgroundColor: "rgba(190, 190, 190, 0.2)",
+              }}
+            >
+              &#8249;
+            </span>
+            <span
+              className="arrow right-arrow"
+              onClick={() => handleSlideRight()}
+              style={{
+                right: "0.2rem",
+                backgroundColor: "rgba(190, 190, 190, 0.2)",
+              }}
+            >
+              &#8250;
+            </span>
+            <div className="main-flex-container" ref={sliderPopular}>
+              {popular &&
+                popular.map((item, index: number) => (
+                  <div
+                    className="flex-col"
+                    key={item.name + index}
+                    onClick={() => navigate(`/product?pid=${item._id}`)}
+                    onLoad={(): void =>
+                      handleAutoScroll(index === popular.length - 1 ? 1 : 0)
+                    }
+                  >
+                    <img
+                      src={`http://localhost:8181/public/images/${item.image[0]}`}
+                      alt={item.name}
+                      crossOrigin="anonymous"
+                    />
+                    <div className="carousel-name">
+                      <div className="name-txt">{item.name}</div>
+                    </div>
+                  </div>
+                ))}
             </div>
-          )}
-          <div className="grid-container" ref={sliderRecent}>
-            {recent &&
-              recent.map((item, index: number) => (
-                <div
-                  className="grid-col"
-                  style={{ "--i": index + 1 } as React.CSSProperties}
-                  key={item.name + index}
-                  onClick={() => navigate(`/product?pid=${item._id}`)}
+          </div>
+          <h3 className="sub-title" style={{ marginTop: "3rem" }}>
+            New to the shop:
+          </h3>
+          <div className="carousel-container" style={{ marginBottom: "4rem" }}>
+            {recent && recent.length > 6 && (
+              <div className="arrow-container">
+                <span
+                  className="arrow left-arrow"
+                  onClick={() => handleSlideLeft("recent")}
                 >
-                  <img
-                    src={`http://localhost:8181/public/images/${item.image[0]}`}
-                    alt={item.name}
-                    crossOrigin="anonymous"
-                  />
-                </div>
-              ))}
+                  &#8249;
+                </span>
+                <span
+                  className="arrow right-arrow"
+                  onClick={() => handleSlideRight("recent")}
+                >
+                  &#8250;
+                </span>
+              </div>
+            )}
+            <div className="grid-container" ref={sliderRecent}>
+              {recent &&
+                recent.map((item, index: number) => (
+                  <div
+                    className="grid-col"
+                    style={{ "--i": index + 1 } as React.CSSProperties}
+                    key={item.name + index}
+                    onClick={() => navigate(`/product?pid=${item._id}`)}
+                  >
+                    <img
+                      src={`http://localhost:8181/public/images/${item.image[0]}`}
+                      alt={item.name}
+                      crossOrigin="anonymous"
+                    />
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="server-error">Server Error Please Try Again Later!</div>
+      )}
     </>
   );
 };
