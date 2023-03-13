@@ -37,7 +37,7 @@
   background-color: var(--container-background);
   margin-bottom: 1rem;
   font-size: 1.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
   border: none;
   border-bottom: 1px solid var(--font-light);
   color: var(--font-light);

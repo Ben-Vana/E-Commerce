@@ -199,7 +199,7 @@ router.patch("/product/addview", async (req, res) => {
   }
 });
 
-router.get("/mostview", userInfo, checkAdmin, async (req, res) => {
+router.get("/mostview", async (req, res) => {
   try {
     const product = await mostViewed();
     res.status(200).json(product);

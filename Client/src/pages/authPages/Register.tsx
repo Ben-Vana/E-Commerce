@@ -16,6 +16,8 @@ const Register = (): JSX.Element => {
     password: false,
   });
 
+  const [serverErr, setServerErr] = useState(false);
+
   const nameLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const emailLabel = useRef() as React.RefObject<HTMLLabelElement>;
   const passwordLabel = useRef() as React.RefObject<HTMLLabelElement>;
@@ -116,9 +118,9 @@ const Register = (): JSX.Element => {
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     axios
-      .post("/auth/register", input)
+      .post("/auth/registeraaa", input)
       .then(() => navigate("/login"))
-      .catch((error) => console.log(error));
+      .catch(() => setServerErr(true));
   };
 
   return (
@@ -191,6 +193,7 @@ const Register = (): JSX.Element => {
             }
             required
             ref={passwordInput}
+            style={{ paddingRight: "2.5rem" }}
           />
           <span className="password-eye" onClick={handleShowPassword}>
             &#128065;
@@ -200,6 +203,11 @@ const Register = (): JSX.Element => {
           <span className="err-msg">
             Password must have 8+ characters, at least 1 number, 1 letter and 1
             special charater.
+          </span>
+        )}
+        {serverErr && (
+          <span className="err-msg" style={{ fontSize: "1.3rem" }}>
+            Server Error Please Refresh Or Try Again Later!
           </span>
         )}
         <button className="submit-btn">Register</button>

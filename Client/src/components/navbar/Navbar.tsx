@@ -29,7 +29,7 @@ const navLinks: [
 const adminLink: [{ label: string; link: string }] = [
   {
     label: "Dashboard",
-    link: "/dashboard/statistics",
+    link: "/dashboard",
   },
 ];
 

@@ -101,10 +101,7 @@ const DashAddProduct = (): JSX.Element => {
       axios
         .post("/product", formData)
         .then(({ data }) => navigate(`/product?pid=${data._id}`))
-        .catch((err) => {
-          console.log(err);
-          setError(true);
-        });
+        .catch(() => setError(true));
     }
   };
 
@@ -144,7 +141,7 @@ const DashAddProduct = (): JSX.Element => {
           </div>
           {error && (
             <div className="submit-error">
-              *Error has occured, Please try again later.
+              *Server Error Please Try Again Later.
             </div>
           )}
           {sizeErr && (
