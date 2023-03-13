@@ -34,7 +34,10 @@ const Home = (): JSX.Element => {
     axios
       .get("/product/mostview")
       .then(({ data }) => setPopular(data))
-      .catch(() => setErr(true));
+      .catch((err) => {
+        setErr(true);
+        console.log(err);
+      });
   }, []);
 
   const handleSlideLeft = (name?: string): void => {
@@ -104,8 +107,8 @@ const Home = (): JSX.Element => {
   };
 
   const handleAutoScroll = (index: number): void => {
-    // if (index === 1) setInterval((): void => handleSlideRight(), 7000);
-    // else return;
+    if (index === 1) setInterval((): void => handleSlideRight(), 6000);
+    else return;
   };
 
   return (

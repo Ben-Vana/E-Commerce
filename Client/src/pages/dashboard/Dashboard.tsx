@@ -1,13 +1,14 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./dashboard.css";
 
 const Dashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const dashHam = useRef() as React.RefObject<HTMLDivElement>;
 
@@ -16,8 +17,9 @@ const Dashboard = (): JSX.Element => {
       .get("/users/userinfo")
       .then(({ data }) => {
         if (data.admin === false) document.location.reload();
+        else navigate("/dashboard/statistics");
       })
-      .catch((err) => console.log(err));
+      .catch(() => navigate("/"));
   }, []);
 
   const handleDashHam = (ev: React.MouseEvent<HTMLDivElement>): void => {
