@@ -41,6 +41,7 @@ const ProductPage = (): JSX.Element => {
     cart: false,
     review: false,
   });
+  const [err, setErr] = useState(false);
 
   const imageRef = useRef() as React.RefObject<HTMLImageElement>;
 
@@ -60,7 +61,7 @@ const ProductPage = (): JSX.Element => {
         data.productReviews = data.productReviews.reverse();
         setProduct(data);
       })
-      .catch((error) => console.log(error));
+      .catch(() => setErr(true));
   }, []);
 
   const handleImgSize = () => {
@@ -82,7 +83,7 @@ const ProductPage = (): JSX.Element => {
           return { cart: true, review: state.review };
         })
       )
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   };
 
   const handleReviewChange = (
@@ -109,7 +110,7 @@ const ProductPage = (): JSX.Element => {
     axios
       .patch("/review/addreport", { uId, rId })
       .then(() => {})
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   };
 
   const handleSubmitReview = (ev: React.FormEvent<HTMLFormElement>): void => {
@@ -121,15 +122,13 @@ const ProductPage = (): JSX.Element => {
     axios
       .get("/users/userreviewinfo")
       .then(({ data }) => {
-        console.log(data);
         const dbDate =
           data.userReviews.length > 0
             ? data.userReviews[data.userReviews.length - 1].createdAt
             : 0;
         const d1 = new Date().getTime();
         const d2 = new Date(dbDate).getTime();
-        if (d1 - d2 < 0) {
-          //86400000
+        if (d1 - d2 < 86400000) {
           setPostedReview({
             post: true,
             err: "You have to wait 24 hours before posting your next review.",
@@ -149,15 +148,15 @@ const ProductPage = (): JSX.Element => {
                 return { cart: state.cart, review: true };
               })
             )
-            .catch((err) => console.log(err));
+            .catch(() => setErr(true));
         }
       })
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   };
 
   return (
     <div className="product-page">
-      {product ? (
+      {product && !err && (
         <div className="page-content-container">
           <h3 className="product-name show-name">{product.name}</h3>
           <div className="product-gallery-container">
@@ -262,81 +261,83 @@ const ProductPage = (): JSX.Element => {
             </div>
           </div>
         </div>
-      ) : (
-        ""
       )}
-      <div className="review-container">
-        <form className="user-review" onSubmit={handleSubmitReview}>
-          <label className="review-label" htmlFor="description">
-            Write your review:
-          </label>
-          <textarea
-            className="review-input"
-            name="description"
-            id="description"
-            value={addReview.description}
-            onChange={handleReviewChange}
-            required
-          />
-          <div className="rating-container">
-            <label className="rating-label" htmlFor="rating">
-              Rating:
+      {!err ? (
+        <div className="review-container">
+          <form className="user-review" onSubmit={handleSubmitReview}>
+            <label className="review-label" htmlFor="description">
+              Write your review:
             </label>
-            <select
-              className="rating-select"
-              name="rating"
-              id="rating"
+            <textarea
+              className="review-input"
+              name="description"
+              id="description"
+              value={addReview.description}
               onChange={handleReviewChange}
-            >
-              <option className="rating-option" value="1">
-                1
-              </option>
-              <option className="rating-option" value="2">
-                2
-              </option>
-              <option className="rating-option" value="3">
-                3
-              </option>
-              <option className="rating-option" value="4">
-                4
-              </option>
-              <option className="rating-option" value="5">
-                5
-              </option>
-            </select>
-          </div>
-          <button
-            className="submit-review add-cart-btn"
-            disabled={addedRevOrCart.review}
-          >
-            {addedRevOrCart.review ? "Submitted review" : "Submit review"}
-          </button>
-          {postedReview.err && (
-            <div style={{ color: "#f00", marginTop: "0.5rem" }}>
-              {postedReview.err}
+              required
+            />
+            <div className="rating-container">
+              <label className="rating-label" htmlFor="rating">
+                Rating:
+              </label>
+              <select
+                className="rating-select"
+                name="rating"
+                id="rating"
+                onChange={handleReviewChange}
+              >
+                <option className="rating-option" value="1">
+                  1
+                </option>
+                <option className="rating-option" value="2">
+                  2
+                </option>
+                <option className="rating-option" value="3">
+                  3
+                </option>
+                <option className="rating-option" value="4">
+                  4
+                </option>
+                <option className="rating-option" value="5">
+                  5
+                </option>
+              </select>
             </div>
-          )}
-        </form>
-        <div className="reviews">
-          {product &&
-            product.productReviews.map((item, index) => (
-              <ReviewsComponent
-                key={item.createdAt + index}
-                userId={item.userId}
-                revId={item._id}
-                user={item.userName}
-                revBody={item.description}
-                revRate={item.rating}
-                report={handleReportReview}
-              />
-            ))}
-          {product && product.productReviews[0] && (
-            <NavLink to={handleReviewsLink()} className="see-reviews">
-              See all reviews
-            </NavLink>
-          )}
+            <button
+              className="submit-review add-cart-btn"
+              disabled={addedRevOrCart.review}
+            >
+              {addedRevOrCart.review ? "Submitted review" : "Submit review"}
+            </button>
+            {postedReview.err && (
+              <div style={{ color: "#f00", marginTop: "0.5rem" }}>
+                {postedReview.err}
+              </div>
+            )}
+          </form>
+          <div className="reviews">
+            {product &&
+              product.productReviews.map((item, index) => (
+                <ReviewsComponent
+                  key={item.createdAt + index}
+                  userId={item.userId}
+                  revId={item._id}
+                  user={item.userName}
+                  revBody={item.description}
+                  revRate={item.rating}
+                  report={handleReportReview}
+                />
+              ))}
+            {product && product.productReviews[0] && (
+              <NavLink to={handleReviewsLink()} className="see-reviews">
+                See all reviews
+              </NavLink>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="server-error">Server Error Please Try Again Later!</div>
+      )}
     </div>
   );
 };

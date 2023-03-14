@@ -25,6 +25,7 @@ interface productInterface {
 const ReviewsPage = (): JSX.Element => {
   const [reviews, setReviews] = useState<productInterface>();
   const [limit, setLimit] = useState<number | null>();
+  const [err, setErr] = useState(false);
   const location = useLocation();
 
   useEffect((): void => {
@@ -38,7 +39,7 @@ const ReviewsPage = (): JSX.Element => {
         setReviews(data.product);
         setLimit(data.limit);
       })
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   }, [location]);
 
   const renderButtons = (): Array<JSX.Element> => {
@@ -93,13 +94,14 @@ const ReviewsPage = (): JSX.Element => {
   const handleReportReview = (uId: string, rId: string) => {
     axios
       .patch("/review/addreport", { uId, rId })
-      .then(() => {})
-      .catch((err) => console.log(err));
+      .then()
+      .catch(() => setErr(true));
   };
 
   return (
     <div className="reviews-container">
       {reviews &&
+        !err &&
         reviews.productReviews.map((item, index) => (
           <ReviewsComponent
             key={item.createdAt + index}
@@ -111,8 +113,13 @@ const ReviewsPage = (): JSX.Element => {
             report={handleReportReview}
           />
         ))}
-      {limit !== 0 && (
+      {limit !== 0 && !err && (
         <div className="rev-btns-container">{renderButtons()}</div>
+      )}
+      {err && (
+        <div style={{ width: "100vw" }} className="server-error">
+          Server Error Please Try Again Later!
+        </div>
       )}
     </div>
   );

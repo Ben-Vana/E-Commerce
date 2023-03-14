@@ -18,6 +18,7 @@ interface userProps {
 const Users = (): JSX.Element => {
   const [usersArr, setUsers] = useState([]);
   const [userInput, setInput] = useState("");
+  const [err, setErr] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,7 +32,7 @@ const Users = (): JSX.Element => {
         .then(({ data }) => {
           setUsers(data);
         })
-        .catch((err) => console.log(err));
+        .catch(() => setErr(true));
     } else setUsers([]);
   }, [location]);
 
@@ -50,7 +51,7 @@ const Users = (): JSX.Element => {
           data.sort((a: userProps, b: userProps) => a.reports < b.reports)
         )
       )
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   };
 
   return (
@@ -84,6 +85,7 @@ const Users = (): JSX.Element => {
       </div>
       <div className="search-page-container ap-res">
         {usersArr &&
+          !err &&
           usersArr.map((item: userProps, index) => (
             <div key={item.name + index} className="user-card">
               <NavLink
@@ -98,6 +100,11 @@ const Users = (): JSX.Element => {
               </div>
             </div>
           ))}
+        {err && (
+          <div className="server-error">
+            Server Error Please Try Again Later!
+          </div>
+        )}
       </div>
     </div>
   );

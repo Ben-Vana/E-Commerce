@@ -137,9 +137,8 @@ router.delete("/:pid", userInfo, checkAdmin, async (req, res) => {
     let dir = data.image[0].split("/")[0];
     if (!dir) dir = "NON_EXIST";
     const dirPath = path.join(process.cwd() + `/public/images/${dir}`);
-    if (fs.existsSync(dirPath)) {
+    if (fs.existsSync(dirPath))
       fs.rmSync(dirPath, { recursive: true, force: true });
-    }
     await deleteProduct(data._id);
     res.status(200).json({ msg: "Product has been deleted" });
   } catch (error) {

@@ -1,7 +1,8 @@
-import axios from "axios";
-import FormComponent from "../../../components/FormComponent";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import FormComponent from "../../../components/FormComponent";
+import axios from "axios";
+import "../../homePage/home.css";
 import "../addProduct/dashform.css";
 
 interface formInterface {
@@ -24,11 +25,12 @@ const DashEditProduct = (): JSX.Element => {
     quantity: "",
   });
 
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState(false);
   const [productImages, setImages] = useState<FileList | null>(null);
   const [oldProductImages, setOldImages] = useState<Array<string> | null>(null);
   const [delProductImages, setDelImages] = useState<Array<string>>([]);
   const [sizeErr, setSizeErr] = useState(false);
+  const [serverErr, setServerErr] = useState(false);
 
   const navigate = useNavigate();
   const param = useParams();
@@ -55,7 +57,7 @@ const DashEditProduct = (): JSX.Element => {
         });
         setOldImages(data.image);
       })
-      .catch((err) => console.log(err));
+      .catch(() => setServerErr(true));
   }, []);
 
   const handleFocus = (labelName: string): void => {
@@ -140,91 +142,97 @@ const DashEditProduct = (): JSX.Element => {
 
   return (
     <div className="form-wrapper dash-wrapper">
-      <form
-        className="form-container dash-form-container"
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-      >
-        <div className="dash-input-container">
-          {formLabels.map((item, index) => (
-            <FormComponent
-              key={index + item.formName}
-              formLabel={item.formName}
-              reactRef={item.formRef}
-              blur={handleBlur}
-              focus={handleFocus}
-              change={handleInputChange}
-              inputValue={productInfo[item.formName as keyof infoInterface]}
-              edit={true}
-            />
-          ))}
-          <div className="input-container">
-            <label className="file-label" htmlFor="images">
-              Image:
-            </label>
-            <input
-              style={{ paddingRight: "1.5rem" }}
-              className="file-input"
-              type="file"
-              id="images"
-              onChange={handleFileChange}
-              multiple
-            />
-          </div>
-          {error && (
-            <div className="submit-error">
-              *Error has occured, Please try again later.
+      {!serverErr ? (
+        <form
+          className="form-container dash-form-container"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
+          <div className="dash-input-container">
+            {formLabels.map((item, index) => (
+              <FormComponent
+                key={index + item.formName}
+                formLabel={item.formName}
+                reactRef={item.formRef}
+                blur={handleBlur}
+                focus={handleFocus}
+                change={handleInputChange}
+                inputValue={productInfo[item.formName as keyof infoInterface]}
+                edit={true}
+              />
+            ))}
+            <div className="input-container">
+              <label className="file-label" htmlFor="images">
+                Image:
+              </label>
+              <input
+                style={{ paddingRight: "1.5rem" }}
+                className="file-input"
+                type="file"
+                id="images"
+                onChange={handleFileChange}
+                multiple
+              />
             </div>
-          )}
-          {sizeErr && (
-            <div className="submit-error">*File size is too big.</div>
-          )}
-          <button className="product-submit hide">Update Product Info</button>
-        </div>
-        <div className="text-area-desc">
-          <label className="text-area-head" htmlFor="description">
-            Description:
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            className="text-area-style"
-            value={productInfo.description}
-            onChange={(ev: React.ChangeEvent<HTMLTextAreaElement>) =>
-              handleInputChange(ev)
-            }
-            required
-          />
-          <div className="text-area-info">
-            <span style={{ textDecoration: "underline", fontSize: "1.2rem" }}>
-              Note
-            </span>
-            : For a better description in the product page, please separate the
-            text to different paragraphs by going down one line between each
-            paragraph.
+            {error && (
+              <div className="submit-error">
+                *Error has occured, Please try again later.
+              </div>
+            )}
+            {sizeErr && (
+              <div className="submit-error">*File size is too big.</div>
+            )}
+            <button className="product-submit hide">Update Product Info</button>
           </div>
-          <div className="add-img-container">
-            {oldProductImages &&
-              oldProductImages.map((item, index) => (
-                <div key={index} className="img-frame">
-                  <img
-                    src={`http://localhost:8181/public/images/${item}`}
-                    alt={productInfo.name}
-                    className="added-img"
-                    crossOrigin="anonymous"
-                  />
-                  <span
-                    className="remove-img"
-                    onClick={() => handleDeleteImage(item)}
-                  >
-                    +
-                  </span>
-                </div>
-              ))}
+          <div className="text-area-desc">
+            <label className="text-area-head" htmlFor="description">
+              Description:
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              className="text-area-style"
+              value={productInfo.description}
+              onChange={(ev: React.ChangeEvent<HTMLTextAreaElement>) =>
+                handleInputChange(ev)
+              }
+              required
+            />
+            <div className="text-area-info">
+              <span style={{ textDecoration: "underline", fontSize: "1.2rem" }}>
+                Note
+              </span>
+              : For a better description in the product page, please separate
+              the text to different paragraphs by going down one line between
+              each paragraph.
+            </div>
+            <div className="add-img-container">
+              {oldProductImages &&
+                oldProductImages.map((item, index) => (
+                  <div key={index} className="img-frame">
+                    <img
+                      src={`http://localhost:8181/public/images/${item}`}
+                      alt={productInfo.name}
+                      className="added-img"
+                      crossOrigin="anonymous"
+                    />
+                    <span
+                      className="remove-img"
+                      onClick={() => handleDeleteImage(item)}
+                    >
+                      +
+                    </span>
+                  </div>
+                ))}
+            </div>
           </div>
+          <button className="product-submit show">Update Product Info</button>
+        </form>
+      ) : (
+        <div className="server-error" style={{ width: "100%" }}>
+          Server Error Please Try Again Later!
         </div>
-        <button className="product-submit show">Update Product Info</button>
-      </form>
+      )}
     </div>
   );
 };
