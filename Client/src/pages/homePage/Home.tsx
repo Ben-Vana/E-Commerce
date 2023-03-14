@@ -34,10 +34,7 @@ const Home = (): JSX.Element => {
     axios
       .get("/product/mostview")
       .then(({ data }) => setPopular(data))
-      .catch((err) => {
-        setErr(true);
-        console.log(err);
-      });
+      .catch(() => setErr(true));
   }, []);
 
   const handleSlideLeft = (name?: string): void => {
@@ -93,10 +90,10 @@ const Home = (): JSX.Element => {
       }
     } else if (popular) {
       const numOfSlide = popular.length;
-      if (clickNumP === numOfSlide - 1) {
+      if (clickNumP === numOfSlide - 1 && slider) {
         slider.style.setProperty("--transform-i", "0");
         clickNumP = 0;
-      } else {
+      } else if (slider) {
         const sliderIndex = parseInt(
           getComputedStyle(slider).getPropertyValue("--transform-i")
         );
@@ -117,21 +114,19 @@ const Home = (): JSX.Element => {
         <div className="home-content">
           <div className="carousel-container">
             <span
-              className="arrow left-arrow"
+              className="main-arrow arrow left-arrow"
               onClick={() => handleSlideLeft()}
               style={{
                 left: "0.2rem",
-                backgroundColor: "rgba(190, 190, 190, 0.2)",
               }}
             >
               &#8249;
             </span>
             <span
-              className="arrow right-arrow"
+              className="main-arrow arrow right-arrow"
               onClick={() => handleSlideRight()}
               style={{
                 right: "0.2rem",
-                backgroundColor: "rgba(190, 190, 190, 0.2)",
               }}
             >
               &#8250;

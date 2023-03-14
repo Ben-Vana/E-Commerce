@@ -16,6 +16,7 @@ interface cartItems {
 const ShoppingCart = (): JSX.Element => {
   const [cart, setCart] = useState<cartItems[]>([]);
   const [price, setPrice] = useState(0);
+  const [err, setErr] = useState(false);
 
   useEffect((): void => {
     axios
@@ -40,10 +41,10 @@ const ShoppingCart = (): JSX.Element => {
               });
               setPrice((state) => state + parseInt(data.price));
             })
-            .catch((err) => console.log(err));
+            .catch(() => setErr(true));
         }
       })
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   }, []);
 
   const handleRemoveProduct = (id: string): void => {
@@ -60,7 +61,7 @@ const ShoppingCart = (): JSX.Element => {
         tempCart = tempCart.filter((item: cartItems) => item._id !== id);
         setCart(tempCart);
       })
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   };
 
   const handleSumPrice = (
@@ -80,7 +81,7 @@ const ShoppingCart = (): JSX.Element => {
 
   return (
     <div className="cartpage-container">
-      {cart ? (
+      {cart && !err && (
         <div className="cart-items-container">
           {cart.map((item, index) => (
             <SearchPageCard
@@ -95,15 +96,20 @@ const ShoppingCart = (): JSX.Element => {
             />
           ))}
         </div>
-      ) : (
-        ""
       )}
-      <div className="cart-price-wrapper">
-        <div className="cart-price">
-          <div>{price}$</div>
-          <button className="add-cart-btn checkout-btn">CheckOut</button>
+      {!err && (
+        <div className="cart-price-wrapper">
+          <div className="cart-price">
+            <div>{price}$</div>
+            <button className="add-cart-btn checkout-btn">CheckOut</button>
+          </div>
         </div>
-      </div>
+      )}
+      {err && (
+        <div style={{ width: "100vw" }} className="server-error">
+          Server Error Please Try Again Later!
+        </div>
+      )}
     </div>
   );
 };

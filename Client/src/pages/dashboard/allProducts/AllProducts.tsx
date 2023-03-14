@@ -5,6 +5,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../searchPage/search.css";
+import "../../homePage/home.css";
 import "./allproducts.css";
 
 interface cardProp {
@@ -19,6 +20,7 @@ interface cardProp {
 const AllProducts = (): JSX.Element => {
   const [userInput, setInput] = useState("");
   const [productsArr, setProductsArr] = useState<Array<cardProp>>();
+  const [err, setErr] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,7 +34,7 @@ const AllProducts = (): JSX.Element => {
       axios
         .get(`/product/search/${query}`)
         .then(({ data }) => setProductsArr(data))
-        .catch((err) => console.log(err));
+        .catch(() => setErr(true));
     }
   }, [location]);
 
@@ -41,7 +43,7 @@ const AllProducts = (): JSX.Element => {
     else return;
   };
 
-  const handleGetProduct = () =>
+  const handleGetProduct = (): void =>
     navigate(`/dashboard/manageproduct?mq=${userInput}`);
 
   const handleDeleteProduct = (id: string): void => {
@@ -52,7 +54,7 @@ const AllProducts = (): JSX.Element => {
           return state?.filter((item) => item._id !== id);
         })
       )
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   };
 
   return (
@@ -79,8 +81,12 @@ const AllProducts = (): JSX.Element => {
           </div>
         </div>
       </div>
+      {err && (
+        <div className="server-error">Server Error Please Try Again Later!</div>
+      )}
       <div className="search-page-container ap-res">
         {productsArr &&
+          !err &&
           productsArr.map((item: cardProp, index) => (
             <SearchPageCard
               key={item.name + index}

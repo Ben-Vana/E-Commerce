@@ -252,7 +252,7 @@ const Navbar = () => {
                     <NavLink
                       key={item.label + index}
                       to={item.link}
-                      className="cart"
+                      className={({ isActive }) => (isActive ? "cart" : "cart")}
                     >
                       <FontAwesomeIcon icon={faCartShopping} />
                     </NavLink>

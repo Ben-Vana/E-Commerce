@@ -17,7 +17,14 @@ const Dashboard = (): JSX.Element => {
       .get("/users/userinfo")
       .then(({ data }) => {
         if (data.admin === false) document.location.reload();
-        else navigate("/dashboard/statistics");
+        else
+          navigate(
+            location.pathname === "/dashboard"
+              ? "/dashboard/statistics"
+              : location.search
+              ? location.pathname + location.search
+              : location.pathname
+          );
       })
       .catch(() => navigate("/"));
   }, []);

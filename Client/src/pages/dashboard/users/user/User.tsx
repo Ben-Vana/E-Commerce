@@ -30,6 +30,7 @@ interface userInterface {
 const User = (): JSX.Element => {
   const [user, setUser] = useState<userInterface>();
   const [confirm, setConfirm] = useState(false);
+  const [err, setErr] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const User = (): JSX.Element => {
         data.createdAt = date;
         setUser(data);
       })
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   }, []);
 
   const handleDeleteReview = (
@@ -69,9 +70,9 @@ const User = (): JSX.Element => {
             data.createdAt = new Date(data.createdAt);
             setUser(data);
           })
-          .catch((err) => console.log(err));
+          .catch(() => setErr(true));
       })
-      .catch((err) => console.log(err));
+      .catch(() => setErr(true));
   };
 
   const handleOpenSort = () => {
@@ -116,7 +117,7 @@ const User = (): JSX.Element => {
       axios
         .delete(`/users/deleteuser/${id}`)
         .then(() => navigate("/dashboard/users"))
-        .catch((err) => console.log(err));
+        .catch(() => setErr(true));
     }
   };
 
@@ -127,7 +128,7 @@ const User = (): JSX.Element => {
       axios
         .patch("/users/resetreports", { id })
         .then(() => window.location.reload())
-        .catch((err) => console.log(err));
+        .catch(() => setErr(true));
     }
   };
 
@@ -138,7 +139,7 @@ const User = (): JSX.Element => {
       axios
         .patch("/users/switchadmin", { id })
         .then(() => window.location.reload())
-        .catch((err) => console.log(err));
+        .catch(() => setErr(true));
     }
   };
 
@@ -153,7 +154,6 @@ const User = (): JSX.Element => {
       axios.patch("/review/removereport", { uId: id, rId }).then(() => {
         if (ev.target && parent) {
           parent.style.border = "none";
-          console.log(ev);
           (ev.target as HTMLButtonElement).disabled = true;
           (ev.target as HTMLButtonElement).style.width = "10rem";
           (ev.target as HTMLButtonElement).innerText = "Refresh to see changes";
@@ -164,7 +164,7 @@ const User = (): JSX.Element => {
 
   return (
     <div className="user-page-container">
-      {user ? (
+      {user && !err ? (
         <div className="user-info">
           <div>Name: {user.name}</div>
           <div>Email: {user.email}</div>
@@ -279,7 +279,7 @@ const User = (): JSX.Element => {
           </div>
         </div>
       ) : (
-        ""
+        <div className="server-error">Server Error Please Try Again Later!</div>
       )}
     </div>
   );

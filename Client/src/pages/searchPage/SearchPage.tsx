@@ -20,6 +20,7 @@ let resultArrLength: number;
 const SearchPage = (): JSX.Element => {
   const [productsArr, setProductsArr] = useState<Array<cardProp>>([]);
   const [userSearch, setUserSearch] = useState<string | null>("");
+  const [err, setErr] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const SearchPage = (): JSX.Element => {
         resultArrLength = data.length;
         setProductsArr(sortData(data, sort, page, numberOfCardsPerPage));
       })
-      .catch((err): void => console.log(err));
+      .catch(() => setErr(true));
   }, [location]);
 
   const handleShowSort = () => {
@@ -187,58 +188,64 @@ const SearchPage = (): JSX.Element => {
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "7rem" }}>
       <h3 className="search-result">Search result for "{userSearch}":</h3>
-      <div className="search-page-container">
-        <div className="sort-container">
-          <span className="sort-txt" onClick={handleShowSort}>
-            Sort &#709;
-          </span>
-          <div className="sort-options" ref={sortRef}>
-            <span
-              className={handleActiveStyle("price")}
-              onClick={(): void => handleSort("priceHTL")}
-            >
-              Price high to low
+      {!err ? (
+        <div className="search-page-container">
+          <div className="sort-container">
+            <span className="sort-txt" onClick={handleShowSort}>
+              Sort &#709;
             </span>
-            <span
-              className={handleActiveStyle("price")}
-              onClick={(): void => handleSort("priceLTH")}
-            >
-              Price low to high
-            </span>
-            <span
-              className={handleActiveStyle("name")}
-              onClick={(): void => handleSort("nameAZ")}
-            >
-              Name A-Z
-            </span>
-            <span
-              className={handleActiveStyle("name")}
-              onClick={(): void => handleSort("nameZA")}
-            >
-              Name Z-A
-            </span>
+            <div className="sort-options" ref={sortRef}>
+              <span
+                className={handleActiveStyle("price")}
+                onClick={(): void => handleSort("priceHTL")}
+              >
+                Price high to low
+              </span>
+              <span
+                className={handleActiveStyle("price")}
+                onClick={(): void => handleSort("priceLTH")}
+              >
+                Price low to high
+              </span>
+              <span
+                className={handleActiveStyle("name")}
+                onClick={(): void => handleSort("nameAZ")}
+              >
+                Name A-Z
+              </span>
+              <span
+                className={handleActiveStyle("name")}
+                onClick={(): void => handleSort("nameZA")}
+              >
+                Name Z-A
+              </span>
+            </div>
           </div>
+          <div className="sort-rule"></div>
+          {productsArr[0] && !err ? (
+            productsArr.map((item: cardProp, index) => (
+              <SearchPageCard
+                key={item.name + index}
+                id={item._id}
+                name={item.name}
+                price={item.price}
+                rating={item.rating}
+                image={item.image[0]}
+                addView={handleAddView}
+              />
+            ))
+          ) : (
+            <div className="server-error">Product was not found</div>
+          )}
         </div>
-        <div className="sort-rule"></div>
-        {productsArr[0] ? (
-          productsArr.map((item: cardProp, index) => (
-            <SearchPageCard
-              key={item.name + index}
-              id={item._id}
-              name={item.name}
-              price={item.price}
-              rating={item.rating}
-              image={item.image[0]}
-              addView={handleAddView}
-            />
-          ))
-        ) : (
-          <div>Wrong</div>
-        )}
-      </div>
-      {productsArr[0] && <div className="page-buttons">{renderButton()}</div>}
+      ) : (
+        <div className="server-error">Server Error Please Try Again Later!</div>
+      )}
+      {productsArr[0] && !err && (
+        <div className="page-buttons">{renderButton()}</div>
+      )}
     </div>
   );
 };
