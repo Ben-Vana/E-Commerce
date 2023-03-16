@@ -13,7 +13,7 @@ interface cardProp {
   rating: number;
   image: Array<string>;
 }
-const numberOfCardsPerPage = 10;
+const numberOfCardsPerPage = 2;
 let buttonLength = 1;
 let resultArrLength: number;
 

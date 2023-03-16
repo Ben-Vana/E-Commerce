@@ -96,7 +96,7 @@ const ProductPage = (): JSX.Element => {
 
   const handleChangeImage = (img: string): void => {
     if (imageRef.current) {
-      imageRef.current.src = `http://localhost:8181/public/images/${img}`;
+      imageRef.current.src = require(`../../../../Server/public/images/${img}`);
     }
   };
 
@@ -163,7 +163,7 @@ const ProductPage = (): JSX.Element => {
             <div className="product-img-container">
               <img
                 ref={imageRef}
-                src={`http://localhost:8181/public/images/${product.image[0]}`}
+                src={require(`../../../../Server/public/images/${product.image[0]}`)}
                 alt={product.name}
                 className="product-image"
                 onLoad={handleImgSize}
@@ -178,7 +178,7 @@ const ProductPage = (): JSX.Element => {
                   onClick={() => handleChangeImage(item)}
                 >
                   <img
-                    src={`http://localhost:8181/public/images/${item}`}
+                    src={require(`../../../../Server/public/images/${item}`)}
                     alt={product.name}
                     className="product-img"
                     crossOrigin="anonymous"

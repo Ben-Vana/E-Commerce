@@ -100,7 +100,7 @@ const DashAddProduct = (): JSX.Element => {
       for (const field of fields) formData.append(field, tempProduct[field]);
       axios
         .post("/product", formData)
-        .then(({ data }) => navigate(`/product?pid=${data._id}`))
+        .then(() => document.location.reload())
         .catch(() => setError(true));
     }
   };

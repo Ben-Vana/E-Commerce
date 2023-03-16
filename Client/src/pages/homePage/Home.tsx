@@ -113,24 +113,28 @@ const Home = (): JSX.Element => {
       {err === false ? (
         <div className="home-content">
           <div className="carousel-container">
-            <span
-              className="main-arrow arrow left-arrow"
-              onClick={() => handleSlideLeft()}
-              style={{
-                left: "0.2rem",
-              }}
-            >
-              &#8249;
-            </span>
-            <span
-              className="main-arrow arrow right-arrow"
-              onClick={() => handleSlideRight()}
-              style={{
-                right: "0.2rem",
-              }}
-            >
-              &#8250;
-            </span>
+            {popular && popular.length > 1 && (
+              <div className="arrow-container">
+                <span
+                  className="main-arrow arrow left-arrow"
+                  onClick={() => handleSlideLeft()}
+                  style={{
+                    left: "0.2rem",
+                  }}
+                >
+                  &#8249;
+                </span>
+                <span
+                  className="main-arrow arrow right-arrow"
+                  onClick={() => handleSlideRight()}
+                  style={{
+                    right: "0.2rem",
+                  }}
+                >
+                  &#8250;
+                </span>
+              </div>
+            )}
             <div className="main-flex-container" ref={sliderPopular}>
               {popular &&
                 popular.map((item, index: number) => (
@@ -143,9 +147,8 @@ const Home = (): JSX.Element => {
                     }
                   >
                     <img
-                      src={`http://localhost:8181/public/images/${item.image[0]}`}
+                      src={require(`../../../../Server/public/images/${item.image[0]}`)}
                       alt={item.name}
-                      crossOrigin="anonymous"
                     />
                     <div className="carousel-name">
                       <div className="name-txt">{item.name}</div>
@@ -184,7 +187,7 @@ const Home = (): JSX.Element => {
                     onClick={() => navigate(`/product?pid=${item._id}`)}
                   >
                     <img
-                      src={`http://localhost:8181/public/images/${item.image[0]}`}
+                      src={require(`../../../../Server/public/images/${item.image[0]}`)}
                       alt={item.name}
                       crossOrigin="anonymous"
                     />

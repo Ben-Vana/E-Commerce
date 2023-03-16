@@ -211,7 +211,7 @@ const DashEditProduct = (): JSX.Element => {
                 oldProductImages.map((item, index) => (
                   <div key={index} className="img-frame">
                     <img
-                      src={`http://localhost:8181/public/images/${item}`}
+                      src={require(`../../../../../Server/public/images/${item}`)}
                       alt={productInfo.name}
                       className="added-img"
                       crossOrigin="anonymous"

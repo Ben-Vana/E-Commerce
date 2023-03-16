@@ -14,12 +14,14 @@ const SearchNavButtons = ({
 }: buttonInterface): JSX.Element => {
   const location = useLocation();
   const qParams = new URLSearchParams(location.search);
-  let isExact = false;
-  if (qParams.get("p") === `${index}`) isExact = true;
+  let isExactBtn = false;
+  if (qParams.get("p") === `${index}`) isExactBtn = true;
   return (
     <>
       <NavLink
-        className={isExact ? "active-button nav-button" : "nav-button"}
+        className={({ isActive }) =>
+          isActive && isExactBtn ? "active-button nav-button" : "nav-button"
+        }
         to={search ? `/search?q=${search}&p=${index}&s=${sort}` : "/"}
       >
         {index}

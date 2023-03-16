@@ -17,6 +17,7 @@ import Users from "./pages/dashboard/users/Users";
 import User from "./pages/dashboard/users/user/User";
 import Statistics from "./pages/dashboard/statistics/Statistics";
 import ShoppingCart from "./pages/shoppingCart/ShoppingCart";
+import NotFoundPage from "./pages/notFoundPage/NotFoundPage";
 import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -83,6 +84,7 @@ const App = (): JSX.Element => {
                 <Route path="/dashboard/users" element={<Users />} />
                 <Route path="/dashboard/users/user" element={<User />} />
               </Route>
+              <Route path="/*" element={<NotFoundPage />} />
             </Routes>
           </div>
         </div>

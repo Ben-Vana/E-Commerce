@@ -1,6 +1,6 @@
 import LinkSort from "../LinkSort";
-import { authActions } from "../../store/auth";
-import { NavLink } from "react-router-dom";
+import { useRef, useEffect, RefObject, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,21 +8,14 @@ import {
   faBars,
   faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch, useSelector } from "react-redux";
-import { useRef, useEffect, RefObject, useState } from "react";
+import { authActions } from "../../store/auth";
+import { NavLink } from "react-router-dom";
 import "./navbar.css";
 
-const navLinks: [
-  { label: string; link: string },
-  { label: string; link: string }
-] = [
+const navLinks: [{ label: string; link: string }] = [
   {
     label: "Home",
     link: "/",
-  },
-  {
-    label: "About Us",
-    link: "/aboutus",
   },
 ];
 
@@ -191,6 +184,9 @@ const Navbar = () => {
         )}
         <div className="nav" ref={navBarContainerRef}>
           <ul className="first-row">
+            <div className="nav-logo">
+              <img src={require("./logo/logo.png")} alt="logo" />
+            </div>
             {navLinks.map((item, index) => (
               <LinkSort
                 key={item.label + index}
