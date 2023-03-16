@@ -52,7 +52,7 @@ const SearchPageCard = ({
         <NavLink to={`/product?pid=${id}`}>
           <img
             className="card-image"
-            src={`http://localhost:8181/public/images/${image}`}
+            src={require(`../../../Server/public/images/${image}`)}
             alt={name}
             crossOrigin="anonymous"
           />

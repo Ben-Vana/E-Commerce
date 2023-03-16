@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import axios from "axios";
 import "./auth.css";
 
 const Register = (): JSX.Element => {
@@ -210,6 +211,9 @@ const Register = (): JSX.Element => {
             Server Error Please Refresh Or Try Again Later!
           </span>
         )}
+        <NavLink to="/login" className="forgot-link">
+          Login With Google
+        </NavLink>
         <button className="submit-btn">Register</button>
       </form>
     </div>
