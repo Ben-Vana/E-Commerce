@@ -11,7 +11,12 @@ const emailSchema = Joi.object({
 });
 
 const passwordSchema = Joi.object({
-  password: Joi.string().min(2).max(64).required().trim(),
+  password: Joi.string()
+    .min(2)
+    .max(64)
+    .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
+    .required()
+    .trim(),
 });
 
 const validateLogin = (userInfo) => validate(loginSchema, userInfo);

@@ -64,9 +64,11 @@ const ProductPage = (): JSX.Element => {
       .catch(() => setErr(true));
   }, []);
 
-  const handleImgSize = () => {
+  const handleImgSize = (): void => {
     if (imageRef.current) {
       imageRef.current.naturalHeight > imageRef.current.naturalWidth
+        ? (imageRef.current.style.objectFit = "contain")
+        : imageRef.current.naturalHeight > 500
         ? (imageRef.current.style.objectFit = "contain")
         : (imageRef.current.style.objectFit = "cover");
     }
@@ -96,7 +98,7 @@ const ProductPage = (): JSX.Element => {
 
   const handleChangeImage = (img: string): void => {
     if (imageRef.current) {
-      imageRef.current.src = require(`../../../../Server/public/images/${img}`);
+      imageRef.current.src = `http://localhost:8181/public/images/${img}`;
     }
   };
 
@@ -163,7 +165,7 @@ const ProductPage = (): JSX.Element => {
             <div className="product-img-container">
               <img
                 ref={imageRef}
-                src={require(`../../../../Server/public/images/${product.image[0]}`)}
+                src={`http://localhost:8181/public/images/${product.image[0]}`}
                 alt={product.name}
                 className="product-image"
                 onLoad={handleImgSize}
@@ -178,7 +180,7 @@ const ProductPage = (): JSX.Element => {
                   onClick={() => handleChangeImage(item)}
                 >
                   <img
-                    src={require(`../../../../Server/public/images/${item}`)}
+                    src={`http://localhost:8181/public/images/${item}`}
                     alt={product.name}
                     className="product-img"
                     crossOrigin="anonymous"

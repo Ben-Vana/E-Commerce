@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import "../../homePage/home.css";
 import "./statistics.css";
 
 interface item {
@@ -14,11 +15,21 @@ const Statistics = (): JSX.Element => {
   const [mostViewed, setMostViewed] = useState<item | null>(null);
   const [highRate, setHighRate] = useState<item | null>(null);
   const [users, setUsers] = useState<number | null>(null);
+  const [err, setErr] = useState(false);
 
   useEffect((): void => {
-    axios.get("/product/mostview").then(({ data }) => setMostViewed(data[0]));
-    axios.get("/product/highrate").then(({ data }) => setHighRate(data[0]));
-    axios.get("/users/userslength").then(({ data }) => setUsers(data));
+    axios
+      .get("/product/mostview")
+      .then(({ data }) => setMostViewed(data[0]))
+      .catch(() => setErr(true));
+    axios
+      .get("/product/highrate")
+      .then(({ data }) => setHighRate(data[0]))
+      .catch(() => setErr(true));
+    axios
+      .get("/users/userslength")
+      .then(({ data }) => setUsers(data))
+      .catch(() => setErr(true));
   }, []);
 
   return (
@@ -26,7 +37,7 @@ const Statistics = (): JSX.Element => {
       <div className="stat-items-container">
         <div className="stat-item">
           Most Viewed Product
-          {mostViewed ? (
+          {mostViewed && (
             <div className="item-style">
               <NavLink
                 className="stat-name"
@@ -36,13 +47,11 @@ const Statistics = (): JSX.Element => {
               </NavLink>
               Views: {mostViewed.views}
             </div>
-          ) : (
-            ""
           )}
         </div>
         <div className="stat-item">
           Highest Rate Product
-          {highRate ? (
+          {highRate && (
             <div className="item-style">
               <NavLink
                 className="stat-name"
@@ -53,13 +62,16 @@ const Statistics = (): JSX.Element => {
               Rating:{" "}
               {highRate.rating ? Math.round(highRate.rating) : highRate.rating}
             </div>
-          ) : (
-            ""
           )}
         </div>
         <div className="stat-item">
-          {users ? <div className="item-style">Users: {users}</div> : ""}
+          {users && <div className="item-style">Users: {users}</div>}
         </div>
+        {err && (
+          <div className="server-error">
+            Server Error Please Try Again Later!
+          </div>
+        )}
       </div>
     </div>
   );

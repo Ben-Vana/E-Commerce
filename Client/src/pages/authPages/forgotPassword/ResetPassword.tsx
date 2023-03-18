@@ -112,7 +112,7 @@ const ResetPassword = (): JSX.Element => {
             value={password.newPassword}
             minLength={8}
             maxLength={64}
-            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$"
+            pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
             onChange={handleInputChange}
             onFocus={(): void => handelLabel("newPassword")}
             onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
@@ -143,7 +143,7 @@ const ResetPassword = (): JSX.Element => {
             value={password.checkPassword}
             minLength={8}
             maxLength={64}
-            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$"
+            pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
             onChange={handleInputChange}
             onFocus={(): void => handelLabel("checkPassword")}
             onBlur={(ev: React.FocusEvent<HTMLInputElement>): void =>
@@ -166,8 +166,8 @@ const ResetPassword = (): JSX.Element => {
             fontSize: "0.9rem",
           }}
         >
-          *Password must be 8+ characters long have at least 1 number, 1 letter
-          and 1 special charater
+          *Password must be 8+ characters long have at least 1 number, 1
+          uppercase letter and 1 special charater
         </div>
         {error && (
           <span className="err-msg" style={{ marginTop: "0rem" }}>
