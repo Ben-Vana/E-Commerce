@@ -16,11 +16,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(express.static("/public"));
+app.use("/api", apiRouter);
+
 app.use(
   "/public/images",
   express.static(path.join(__dirname, "/public/images"))
 );
-app.use("/api", apiRouter);
 
 module.exports = app;

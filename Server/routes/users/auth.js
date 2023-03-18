@@ -22,7 +22,6 @@ const { createGoogleUser } = require("../../model/users/googleUsers.model");
 const { createHash, compareHash } = require("../../config/bcrypt");
 const { generateToken, verifyToken } = require("../../config/jwt");
 const sendResetMail = require("../../services/sendEmail");
-const userInfo = require("../../middleware/userInfo.middleware");
 
 router.post("/register", async (req, res) => {
   try {
@@ -85,8 +84,9 @@ router.post("/googlelogin", async (req, res) => {
 
 router.post("/forgotpassword", async (req, res) => {
   try {
-    const value = await validateEmail(req.body);
-    const userData = await findUserById(value.email);
+    const value = await validateEmail({ email: req.body.email });
+    console.log("hi");
+    const userData = await findByEmail(value.email);
     if (!userData) throw "User not found";
     const tempToken = await generateToken({ email: userData.email }, "1h");
     const emailRes = await sendResetMail(userData.email, tempToken);

@@ -99,7 +99,7 @@ const Register = (): JSX.Element => {
           tempErrMsg.email = false;
           setErrMsg(tempErrMsg);
           break;
-        case "pasword":
+        case "password":
           tempErrMsg.password = false;
           setErrMsg(tempErrMsg);
           break;
@@ -119,7 +119,7 @@ const Register = (): JSX.Element => {
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>): void => {
     ev.preventDefault();
     axios
-      .post("/auth/registeraaa", input)
+      .post("/auth/register", input)
       .then(() => navigate("/login"))
       .catch(() => setServerErr(true));
   };
@@ -185,7 +185,7 @@ const Register = (): JSX.Element => {
             id="password"
             value={input.password}
             onChange={handleInputChange}
-            pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]*$"
+            pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
             minLength={8}
             maxLength={64}
             onFocus={(): void => handelLabel("password")}
@@ -202,8 +202,8 @@ const Register = (): JSX.Element => {
         </div>
         {errMsg.password && (
           <span className="err-msg">
-            Password must have 8+ characters, at least 1 number, 1 letter and 1
-            special charater.
+            Password must have 8+ characters, at least 1 number, 1 uppercase
+            letter and 1 special charater.
           </span>
         )}
         {serverErr && (
@@ -211,7 +211,11 @@ const Register = (): JSX.Element => {
             Server Error Please Refresh Or Try Again Later!
           </span>
         )}
-        <NavLink to="/login" className="forgot-link">
+        <NavLink
+          to="/login"
+          className="forgot-link"
+          style={{ marginTop: "1rem" }}
+        >
           Login With Google
         </NavLink>
         <button className="submit-btn">Register</button>

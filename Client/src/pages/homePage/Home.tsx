@@ -147,8 +147,9 @@ const Home = (): JSX.Element => {
                     }
                   >
                     <img
-                      src={require(`../../../../Server/public/images/${item.image[0]}`)}
+                      src={`http://localhost:8181/public/images/${item.image[0]}`}
                       alt={item.name}
+                      crossOrigin="anonymous"
                     />
                     <div className="carousel-name">
                       <div className="name-txt">{item.name}</div>
@@ -187,7 +188,7 @@ const Home = (): JSX.Element => {
                     onClick={() => navigate(`/product?pid=${item._id}`)}
                   >
                     <img
-                      src={require(`../../../../Server/public/images/${item.image[0]}`)}
+                      src={`http://localhost:8181/public/images/${item.image[0]}`}
                       alt={item.name}
                       crossOrigin="anonymous"
                     />
