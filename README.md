@@ -1,6 +1,6 @@
 # E-Commerce website
 
-The website allows users to search for any item that available on the site and purchase it(the app has no payment system).
+A Gaming products website that allows users to search for any item that available on the site and purchase it(the app has no payment system).
 Only registered users can add products to cart, write reviews and report inappropriate reviews.
 User can Register the normal way with Email and Password or via their Google account.
 User can write one review every 24 hours to prevent spam.
