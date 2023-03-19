@@ -14,3 +14,8 @@ Back-End build using NodeJS with Express, Password encryption with BcryptJS, Req
 When resetting password an email will be sent via NodeMailer(Email can sometimes be sent to spam), Mongoose to create MongoDB database and Atlas, 
 Using Cors on server and Helmet for extra protection, When admin add new product images will be stored inside a folder in the server using Multer.
 
+
+Admin user to mess with:
+
+Email: admin@gmail.com
+password: Admin@pass1
